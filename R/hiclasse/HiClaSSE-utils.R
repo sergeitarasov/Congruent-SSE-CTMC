@@ -1,0 +1,656 @@
+
+
+generateUpperTriangularMatrix <- function(element, N) {
+  # Create an empty matrix
+  matrix_result <- matrix(numeric(0), nrow = N, ncol = N)
+
+  # Populate the matrix with indexed elements or 0 based on position
+  # i=1
+  # j=2
+  for (i in 1:N) {
+    for (j in 1:N) {
+      if (i <= j) {
+        if (class(element)=="character")
+          matrix_result[i, j] <- paste0(element, i-1, j-1)
+        else
+          matrix_result[i, j] <- (element)
+      } else {
+        matrix_result[i, j] <- 0
+      }
+    }
+  }
+
+  return(matrix_result)
+}
+# Test
+generateUpperTriangularMatrix('lam0', 3)
+generateUpperTriangularMatrix(1, 3)
+
+
+
+vector_to_upper_triangular_matrix <- function(N) {
+  # Compute the side length of the matrix
+  n <- (-1 + sqrt(1 + 8 * length(N))) / 2
+  n <- as.integer(n)
+
+  # Initialize a zero matrix of size n x n
+  matrix <- matrix(0, n, n)
+
+  counter <- 1
+  for(i in 1:n) {
+    for(j in i:n) {
+      matrix[i, j] <- N[counter]
+      counter <- counter + 1
+    }
+  }
+
+  return(matrix)
+}
+# Test
+vector_to_upper_triangular_matrix(c(1,2,3,4,5,6))
+
+
+extract_upper_triangular <- function(matrix) {
+  n <- nrow(matrix)
+  upper_triangular_values <- c()
+
+  for (i in 1:n) {
+    for (j in i:n) {
+      upper_triangular_values <- c(upper_triangular_values, matrix[i, j])
+    }
+  }
+
+  return(upper_triangular_values)
+}
+# Test
+u <- matrix(c(1,0,0,2,3,0,4,5,6), nrow=3, ncol=3)
+extract_upper_triangular(u)
+u <- generateUpperTriangularMatrix('lam0', 4)
+u
+u.ex <- extract_upper_triangular(u)
+vector_to_upper_triangular_matrix(u.ex)
+
+
+
+makeSymmetricMatrix <- function(upperTriangularMatrix) {
+  # Add the upper triangular matrix to its transpose
+  symmetricMatrix <- upperTriangularMatrix + t(upperTriangularMatrix)
+
+  # Subtract the diagonal
+  diag_values <- diag(upperTriangularMatrix)
+  symmetricMatrix <- symmetricMatrix - diag(diag_values)
+
+  return(symmetricMatrix)
+}
+# Test
+u <- generateUpperTriangularMatrix(2, 3)
+u
+makeSymmetricMatrix(u)
+
+
+make_matrix_diag2 <- function(N) {
+  # Create an N x N matrix filled with 1s
+  mat <- matrix(1, nrow=N, ncol=N)
+
+  # Change the diagonal to 2
+  diag(mat) <- 2
+
+  return(mat)
+}
+# Test
+make_matrix_diag2(3)
+
+
+OffDiagonalHalve <- function(N) {
+  # Create an N x N matrix filled with 1/2
+  mat <- matrix(0.5, nrow=N, ncol=N)
+
+  # Change the diagonal to 1
+  diag(mat) <- 1
+
+  return(mat)
+}
+# Test
+OffDiagonalHalve(3)
+
+
+
+create_mu_vector <- function(N) {
+  mu_vector <- paste0("mu", 0:(N-1))
+  return(mu_vector)
+}
+# Test
+create_mu_vector(3)
+
+
+generateRateMatrix <- function(N) {
+  # Generate a matrix filled with symbols qij
+  matrix <- matrix(0, nrow=N, ncol=N)
+  for(i in 1:N) {
+    for(j in 1:N) {
+      if(i != j) {
+        element_name <- paste0("q", i-1, j-1)
+        matrix[i, j] <- element_name
+      }
+    }
+  }
+
+  # Set diagonal elements such that row sums are zero
+  for(i in 1:N) {
+    row_sum <- sum(ifelse(is.numeric(matrix[i, ]), matrix[i, ], 0))
+    matrix[i, i] <- -row_sum
+  }
+
+  return(matrix)
+}
+generateRateMatrix(3)
+
+
+extract_off_diagonal <- function(matrix) {
+  N <- nrow(matrix) # Assuming it's a square matrix
+  off_diagonal_elements <- c()
+
+  for (i in 1:N) {
+    for (j in 1:N) {
+      if (i != j) {
+        off_diagonal_elements <- c(off_diagonal_elements, matrix[i, j])
+      }
+    }
+  }
+
+  return(off_diagonal_elements)
+}
+# Test
+QQ <- generateRateMatrix(3)
+QQ
+extract_off_diagonal(QQ)
+
+
+fill_off_diagonal <- function(off_diagonal_elements, N) {
+  # Determine N based on length of off_diagonal_elements
+  #N <- (1 + sqrt(1 + 8 * length(off_diagonal_elements))) / 2
+  #N <- as.integer(N)
+
+  # Create an N x N zero matrix
+  matrix <- matrix(0, nrow=N, ncol=N)
+
+  counter <- 1
+
+  for (i in 1:N) {
+    for (j in 1:N) {
+      if (i != j) {
+        matrix[i, j] <- off_diagonal_elements[counter]
+        counter <- counter + 1
+      }
+    }
+  }
+
+  return(matrix)
+}
+# Test
+QQ <- generateRateMatrix(3)
+QQ
+extr <- extract_off_diagonal(QQ)
+extr
+fill_off_diagonal(extr, 3)
+
+
+argnames_HiClaSSE <- function(Nstates){
+  #Nstates <- 2
+  # lam0 <- generateUpperTriangularMatrix('lam0', Nstates)
+  # lam1 <- generateUpperTriangularMatrix('lam1', Nstates)
+  #lam.tensor <- list(lam0, lam1)
+
+  lam.tensor <- vector("list", length=Nstates)
+  for (i in 1:Nstates){
+    lamX <- generateUpperTriangularMatrix(paste0('lam', i-1), Nstates)
+    lam.tensor[[i]] <- lamX
+  }
+
+  mu <- create_mu_vector(Nstates)
+  Q <- generateRateMatrix(Nstates)
+
+  lam.pars <- lapply(lam.tensor, function(x) extract_upper_triangular(x))
+  lam.pars <- unlist(lam.pars)
+  Q.pars <- extract_off_diagonal(Q)
+
+  list(pars=c(lam.pars, mu, Q.pars), arrays=list(lam.tensor=lam.tensor, mu=mu, Q=Q))
+}
+# Test
+argnames_HiClaSSE(3)
+
+
+
+split_vector <- function(vec, K) {
+  # Create a sequence repeating from 1 to (N/K) for each element of vec
+  f <- rep(1:(length(vec)/K), each=K)
+
+  # Split the vector based on the sequence
+  list_of_vectors <- split(vec, f)
+
+  return(list_of_vectors)
+}
+# Test
+vec <- 1:20  # A vector with 20 elements
+K <- 5       # We want to split it into vectors of size 5
+result <- split_vector(vec, K)
+result
+
+
+
+
+pars_to_arrays <- function(pars, Nstates){
+  # number of lambdas
+  #0.5*(Nstates*Nstates-Nstates)+Nstates
+  Nlambdas_one_state <- (0.5*(Nstates*Nstates+Nstates))
+  Nlambdas <- Nlambdas_one_state*Nstates
+  #Nqs <- Nstates*Nstates - Nstates
+
+  lambdas <- pars[1:Nlambdas]
+  mu <- pars[(Nlambdas+1):(Nlambdas+Nstates)]
+  qs <- pars[-1:-(Nlambdas+Nstates)]
+
+  lam.tensor <- split_vector(lambdas, Nlambdas_one_state)
+  lam.tensor <- lapply(lam.tensor, function(x) vector_to_upper_triangular_matrix(x))
+  Q <- fill_off_diagonal(qs, Nstates)
+  diag(Q) <- -rowSums(Q)
+
+  return(list(lam.tensor=lam.tensor, mu=mu, Q=Q))
+}
+# Test
+Nstates = 3
+argsHiClaSSE2 <- argnames_HiClaSSE(Nstates)
+argsHiClaSSE2$pars
+argsHiClaSSE2$arrays
+pars <- c(1:27)
+names(pars) <- argsHiClaSSE2$pars
+pars
+pars_to_arrays(pars, Nstates)
+
+
+
+convert_to_array <- function(list_of_matrices) {
+  # Check if the list is empty
+  if (length(list_of_matrices) == 0) {
+    stop("The list is empty.")
+  }
+
+  # Get the dimension of the first matrix
+  matrix_dim <- dim(list_of_matrices[[1]])
+
+  # Check if all matrices have the same dimension
+  for (matrix in list_of_matrices) {
+    if (!all(dim(matrix) == matrix_dim)) {
+      stop("All matrices in the list must have the same dimension.")
+    }
+  }
+
+  # Combine matrices into an array
+  array_dim <- c(matrix_dim, length(list_of_matrices))
+  result_array <- array(unlist(list_of_matrices), dim = array_dim)
+
+  return(result_array)
+}
+# Example usage:
+mat1 <- matrix(1:4, 2, 2)
+mat2 <- matrix(5:8, 2, 2)
+list_of_mats <- list(mat1, mat2)
+convert_to_array(list_of_mats)
+
+
+# reoder paramaters given partitioning scheme
+reoder_lambdas <- function(arrays, v){
+  tensor.neworder <- lapply(arrays$lam.tensor, function(x) x[v,v])
+  tensor.neworder <- tensor.neworder[v]
+  list(lam.tensor=tensor.neworder, mu=arrays$mu[v], Q=arrays$Q[v,v])
+}
+reoder_lambdas(argnames_HiClaSSE(4)$arrays, c(1,3, 2,4))
+
+
+
+make_Qcol <- function(N, value_vector){
+  if (length(value_vector) != N) {
+    stop("Length of value_vector must be equal to N")
+  }
+
+  mat <- matrix(0, nrow = N, ncol = N)
+  for (i in 1:N) {
+    mat[, i] <- rep(value_vector[i], N)
+
+  }
+
+  diag(mat) <- 0
+  diag(mat) <- -rowSums(mat)
+  return(mat)
+}
+# Example usage
+N <- 3
+value_vector <- c(1, 2, 3)
+make_Qcol(N, value_vector)
+
+
+Lik <- function(y){
+  lapply(y , function(x) x$loglik) %>% unlist
+}
+
+Aik <- function(y){
+  lapply(y , function(x) x$AIC) %>% unlist
+}
+
+
+convert2ratesHisse <- function(lam, mu){
+  turnover <- lam+mu
+  eps <- mu/lam
+  list(turnover=turnover, eps=eps)
+}
+
+
+# Function to set right diagonal elements to zero
+set_right_diagonal_zero <- function(mat) {
+  # Check if the matrix is square
+  if (nrow(mat) != ncol(mat)) {
+    stop("The matrix must be square.")
+  }
+
+  # Reverse the rows
+  reversed_mat <- mat[nrow(mat):1,]
+
+  # Get the indices of the diagonal elements in the reversed matrix
+  diag_indices <- seq_len(nrow(mat)) + (seq_len(ncol(mat)) - 1) * nrow(mat)
+
+  # Set the diagonal elements of the reversed matrix to zero
+  reversed_mat[diag_indices] <- 0
+
+  # Reverse the rows back to get the original matrix with right diagonal set to zero
+  mat <- reversed_mat[nrow(reversed_mat):1,]
+
+  return(mat)
+}
+
+# Test the function
+my_matrix <- matrix(c(1, 2, 3, 4, 5, 6, 7, 8, 9), nrow = 3)
+print("Original matrix:")
+print(my_matrix)
+
+new_matrix <- set_right_diagonal_zero(my_matrix)
+print("Matrix with right diagonal set to zero:")
+print(new_matrix)
+
+
+# make arguments and global variables for HiClaSSE
+makeArgs <- function(Args) {
+  newArgs <- list(
+    name = paste0('hiclasse', Args$Nstates),
+    Nstates = as.integer(Args$Nstates),
+    ny = as.integer(Args$Nstates*2L),
+    idx.e = as.integer(c(1:Args$Nstates)),
+    idx.d = as.integer(c(((Args$Nstates+1):(2*Args$Nstates)))),
+    y = Args$y
+  )
+
+  ## Global vars to speed up likelihood computation
+  # they are used internally by HiClasse
+  MY_Nstates <<- as.integer(Args$Nstates)
+  matrix_times_2    <<- make_matrix_diag2(as.integer(Args$Nstates))
+  matrix_times_half <<- OffDiagonalHalve(as.integer(Args$Nstates))
+  flat_vec          <<- rep(1, as.integer(Args$Nstates))
+
+  return(newArgs)
+}
+
+# print global variables for HiClaSSE
+printArgsGlobal <- function(){
+  print('MY_Nstates:')
+  print(MY_Nstates)
+  print('matrix_times_2:')
+  print(matrix_times_2)
+  print('matrix_times_half:')
+  print(matrix_times_half)
+  print('flat_vec:')
+  print(flat_vec)
+}
+
+# Args <- list(
+#   Nstates = 4L,
+#   y = list(
+#     c(0,0,0,0, 1,1,0,0),
+#     c(0,0,0,0, 0,0,1,1)
+#   )
+# )
+# Args <- makeArgs(Args)
+# printArgsGlobal()
+
+
+reoder_pars <- function(pars.array, v){
+  lam.tensor <- pars.array$lam.tensor
+  mu <- pars.array$mu
+  Q <- pars.array$Q
+
+  lam.tensor <- lapply(lam.tensor, function(x) x[v,v])
+  lam.tensor <- lam.tensor[v]
+  mu <- mu[v]
+  Q <-Q[v,v]
+
+  list(lam.tensor=lam.tensor, mu=mu, Q=Q)
+}
+
+names2array <- function(pars.array, names){
+  lam.tensor <- pars.array$lam.tensor
+  mu <- pars.array$mu
+  Q <- pars.array$Q
+
+  lam.tensor <- lapply(lam.tensor, function(x) {rownames(x) <- colnames(x) <- names; x})
+  names(lam.tensor) <- names
+  names(mu) <- names
+  rownames(Q) <- colnames(Q) <- names
+
+  list(lam.tensor=lam.tensor, mu=mu, Q=Q)
+}
+
+
+get_item <- function(list, item, unlist=TRUE){
+  list <- lapply(list, function(x) x[[item]])
+  if (unlist) list <- unlist(list)
+  list
+}
+
+get_aic <- function(vec, npar){
+  2*npar - 2*vec
+}
+
+#X=pars.hc
+formulas_zero_pars <- function(X) {
+  # Find the names of the entities that have a value of 0
+  zero_entities <- names(X[X == 0])
+
+  # Create the output strings in the format 'entity_name ~ 0'
+  output_strings <- paste0(zero_entities, " ~ 0")
+
+  f <- lapply(output_strings, function(x) as.formula(x))
+  return(f)
+  # # Combine the output strings into a single line
+  # output_line <- paste(output_strings, collapse = ", ")
+  #
+  # # Print the output line
+  # print(output_line)
+}
+
+
+perturb_parameters <- function(params, mean = 0, sd = 0.1) {
+  # Generate random perturbations from a normal distribution
+  perturbations <- rnorm(length(params), mean, sd)
+
+  # Add the perturbations to the original parameters
+  perturbed_params <- params + perturbations
+
+  # Ensure all values are >= 0
+  perturbed_params <- pmax(perturbed_params, 0)
+  perturbed_params <- perturbed_params + 0.00001
+
+  return(perturbed_params)
+}
+
+# Example usage
+original_params <- c(1.0, 2.0, 3.0, 4.0, 5.0)
+perturb_parameters(original_params)
+
+
+assign_classes_pairwise <- function(A, B) {
+  # Initialize an empty list to store the classes
+  classes <- list()
+
+  # Initialize an empty vector to store zero-value pairs
+  zero_pairs <- c()
+
+  # Get the dimensions of the matrices
+  n <- dim(A)[1]
+
+  # Loop through the matrix A to find unique values and corresponding names in B
+  for (i in 1:n) {
+    for (j in 1:n) {
+      # Skip NA and diagonal elements
+      if (is.na(A[i, j]) || i == j) {
+        next
+      }
+
+      # Handle zero-value pairs
+      if (A[i, j] == 0) {
+        zero_pairs <- c(zero_pairs, paste(B[i, j], "~ 0"))
+        next
+      }
+
+      # Get the value from A
+      value <- A[i, j]
+
+      # Get the name from B
+      name <- B[i, j]
+
+      # Check if the value already exists in the classes list
+      if (value %in% names(classes)) {
+        # Append the name to the existing class
+        classes[[as.character(value)]] <- c(classes[[as.character(value)]], name)
+      } else {
+        # Create a new class with the name
+        classes[[as.character(value)]] <- c(name)
+      }
+    }
+  }
+
+  # Generate the output in formula notation
+  output <- c()
+  for (value in names(classes)) {
+    #value="0.05"
+    class_names <- classes[[value]]
+
+    # Generate all pair-wise combinations for each class
+    #pairs <- combn(class_names, 2, simplify = TRUE)
+    if (length(class_names)>1){
+      base <- class_names[1]
+      formula <- paste(class_names[-1], paste0(" ~ ", base))
+      output <- c(output, formula)
+    }
+  }
+
+  # Add zero-value pairs to the output
+  #output <- c(output, zero_pairs)
+  output <- lapply(output, function(x) as.formula(x))
+
+  return(output)
+}
+
+# Example usage
+A <- matrix(c(NA, 0.05, 0.05, 0.00,
+              0.05, NA, 0.00, 0.05,
+              0.20, 0.00, NA, 0.05,
+              0.00, 0.20, 0.05, NA), nrow = 4, byrow = TRUE)
+
+B <- matrix(c("0", "q01", "q02", "q03",
+              "q10", "0", "q12", "q13",
+              "q20", "q21", "0", "q23",
+              "q30", "q31", "q32", "0"), nrow = 4, byrow = TRUE)
+
+assign_classes_pairwise(A, B)
+
+
+
+
+# Function to get the right diagonal of a matrix
+diagR <- function(mat) {
+  if (nrow(mat) != ncol(mat)) {
+    stop("The matrix must be square.")
+  }
+
+  right_diagonal <- numeric(nrow(mat))
+
+  for (i in 1:nrow(mat)) {
+    right_diagonal[i] <- mat[i, ncol(mat) - i + 1]
+  }
+
+  return(right_diagonal)
+}
+
+# Function to set the right diagonal of a matrix
+`diagR<-` <- function(mat, value) {
+  if (nrow(mat) != ncol(mat)) {
+    stop("The matrix must be square.")
+  }
+
+  if (length(value) != nrow(mat)) {
+    stop("The length of the value vector must match the dimensions of the square matrix.")
+  }
+
+  for (i in 1:nrow(mat)) {
+    mat[i, ncol(mat) - i + 1] <- value[i]
+  }
+
+  return(mat)
+}
+
+# check matrix commutativity
+Mcom <- function(A,B){
+  A%*%B - B%*%A
+}
+
+
+#derivs.HiClasse_cpp_List(t=1, y=y, pars=pars.hc)
+derivs.HiClasse_cpp_List <- function(t, y, pars){
+  list(derivs.HiClasse_cpp(t, y, pars))
+}
+
+
+make_diag <- function(Q){
+  diag(Q) <- 0
+  diag(Q) <- - rowSums(Q)
+  return(Q)
+}
+
+table_to_markdown <- function(vec) {
+  headers <- names(vec)
+  values <- vec
+  header_line <- paste("|", paste(headers, collapse = " | "), "|")
+  separator_line <- paste("|", paste(rep("---", length(headers)), collapse = " | "), "|")
+  values_line <- paste("|", paste(values, collapse = " | "), "|")
+
+  markdown_table <- paste(header_line, separator_line, values_line, sep = "\n")
+  return(markdown_table)
+}
+
+
+
+library(igraph)
+
+createGraph <- function(adj_matrix) {
+  # Make sure the diagonal of the adjacency matrix is 0
+  diag(adj_matrix) <- 0
+  adj_matrix[adj_matrix>0] <- 1
+
+  # Create a graph from the adjacency matrix
+  graph <- graph.adjacency(adj_matrix, mode = "undirected")
+
+  return(graph)
+}
+
+# Example usage:
+# Assuming Qcon is your adjacency matrix
+# graph <- createGraph(Qcon)
+
