@@ -1,5 +1,28 @@
-bookdown::render_book("Rmd", output_format = "bookdown::gitbook", output_dir = '../Report')
-bookdown::render_book("Rmd", output_format = "bookdown::pdf_book", output_dir = '../Report-pdf')
+---
+title: "Misse"
+author: "Sergei Tarasov"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+params:
+  output_dir: "/output"
+---
+
+# Misse
+
+
+```{r, setup, include=FALSE}
+library(DT)
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(here)
+knitr::opts_knit$set(root.dir = here())
+```
+
+```{r message=FALSE}
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##  ~ installations and dependencies  ----
@@ -11,72 +34,43 @@ source('R/hiclasse/HiClaSSE-R.R') # pure R implementation of HiCLaSSE
 source('R/hiclasse/HiClaSSE_cpp.R') # fast implementation
 
 
+```
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            --
-##------------------------- SIMULATE DATA: CID-4 MODEL--------------------------
-##                                                                            --
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Read in data:
 
-NSIM=10 # N of trees to simulate
-max.taxa = 100
-
-Q_hisse <- TransMatMakerHiSSE(hidden.traits=1)
-Q_t <- initQ(c(0,1), c(0.05,0.2)) # trait
-Q_r <- initQ(c('A','B'), c(0.2,0.05)) # diversification regimes
-Q_cid <- amaSMM(Q_r, Q_t, diag.as = NA)
-Q_cid
-# > Q_cid # same state order as in Q_hisse
-#      A0   A1  B0   B1
-# A0   NA 0.05 0.2 0.00
-# A1 0.20   NA 0.0 0.20
-# B0 0.05 0.00  NA 0.05
-# B1 0.00 0.05 0.2   NA
-v = c(1,3, 2, 4)
-Q_cid[v,v] # lumpable with respect to trait
-
-# diversification pars
-#lam <- c(0.05, 0.05, 0.1, 0.1)
-lam <- c(0.1, 0.1, 0.05, 0.05)
-mu <- rep(0, 4)
-div.pars <- convert2ratesHisse(lam, mu)
-div.pars
-
-phy<- list()
-i=1
-for (i in 1:NSIM){
-  simulated.result <- SimulateHisse(div.pars$turnover, div.pars$eps, Q_cid, max.taxa=max.taxa, x0 = sample(0:3, 1), nstart = 2)
-  simulated.result
-  phy[[i]] <- SimToPhylo(simulated.result$results, include.extinct=FALSE)
-  
-}
-
-#saveRDS(phy, file='R/data/phy_CID4.RDS')
+```{r}
+NSIM = 10
 phy <- readRDS(file='R/data/phy_CID4.RDS')
+```
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                      SET-UP INFERENCE                                    ----
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Q3 <- initQ(c(0,1,2), c(0.01,0.01, 0.01))
-Q3 <- make_Qcol(4, c(0.01, 0.03, 0.05, 0))
+
+## SET-UP Q matrix for inference
+
+```{r}
+# Q3 <- make_Qcol(4, c(0.01, 0.03, 0.05, 0))
+# Q3[1,3] <- Q3[2,1] <- Q3[3,2] <- 0
+# Q3[4,] <- Q3[4,] <- rep(0, 4)
+# v=c(1,3,2)
+# Q3[v,v]
+# diag(Q3) <- NA
+# Q3
+
+Q3 <- make_Qcol(4, c(0.01, 0.01, 0.01, 0))
 Q3[1,3] <- Q3[2,1] <- Q3[3,2] <- 0
 Q3[4,] <- Q3[4,] <- rep(0, 4)
 v=c(1,3,2)
 Q3[v,v]
 diag(Q3) <- NA
 Q3
-# > Q3
-#       [,1] [,2] [,3] [,4]
-# [1,]   NA 0.01 0.00    0
-# [2,] 0.00   NA 0.05    0
-# [3,] 0.03 0.00   NA    0
-# [4,] 0.00 0.00 0.00   NA
+```
 
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                      MiSSE-2                                            ----
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+## MiSSE-2 
+
+```{r}
+
+# this is character coding at tips. It sets MiSSE model
 Args <- list(
   Nstates = 2L,
   y = list(
@@ -104,6 +98,12 @@ pars.hc['q10'] <- Q3[3,1]
 pars.hc
 pars_to_arrays(pars.hc, 2)
 
+```
+
+
+Run inference
+
+```{r message=FALSE}
 
 Misse2 <- list()
 i=1
@@ -111,25 +111,28 @@ for (i in 1:NSIM){
   print(paste0('Working on: ', i))
   tree <- phy[[i]]
   states<- tree$tip.state
-  # states<- mapvalues(states, from = c("0", "1", "2"), to=c(0, 1, 0) )
   states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
   root <- rep(1/2, 2)
   
   lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
-  #res <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
-  lik.const <- constrain(lik.c, lam001~0, lam011~0, lam100~0, lam101~0, mu0 ~ mu1)
+  lik.const <- constrain(lik.c, lam001~0, lam011~0, lam100~0, lam101~0, mu0 ~ mu1, q01 ~ q10)
   arg.const <- argnames(lik.const)
   starting.point <- pars.hc[arg.const]
   Misse2[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
 }
 
+```
+
+
+Some helper function to assess the inference parameters
+```{r}
 get_item(Misse2, 'lnLik')
 pars_to_arrays(Misse2[[1]]$par.full, 2)
+```
 
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                      MiSSE-3     Congruent                           ----
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+## MiSSE-3     Congruent  
+```{r}
 
 Args <- list(
   Nstates = 3L,
@@ -167,12 +170,17 @@ pars_to_arrays(pars.hc, 3)
 zero.constr <- formulas_zero_pars(pars.hc)
 #f.qs <- c(q10 ~ q01, q02 ~ q01, q03 ~ q01, q20 ~ q01, q23 ~ q01, q31 ~ q01, q32 ~ q01, q12 ~ q13)
 #f.qs <- c(q02 ~ q03, q12 ~ q13, q20 ~ q13, q21 ~ q13, q30 ~ q03, q31 ~ q03)
-f.qs <- c(q12 ~ q20, q10 ~ q20)
+f.qs <- c(q12 ~ q20, q10 ~ q20, q01 ~ q20)
 f.mu <- c(mu1 ~ mu0, mu2 ~ mu0)
 f.lams <- c(lam222 ~  lam111)
 f.list<- c(zero.constr,  f.lams, f.mu, f.qs)
 
 
+```
+
+ Run inference
+ 
+```{r message=FALSE}
 
 Misse3C <- list()
 i=1
@@ -184,25 +192,25 @@ for (i in 1:NSIM){
   root <- c(1/2, 1/4, 1/4)
   
   lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
-  #res <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
   lik.const <- constrain(lik.c, formulae = f.list)
   arg.const <- argnames(lik.const)
   starting.point <- pars.hc[arg.const]
   Misse3C[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
 }
+```
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                      MiSSE-3     Inferred Pars                          ----
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pars_to_arrays(Misse2[[1]]$par.full, 2)
+
+Some helper function to assess the inference parameters
+```{r}
+get_item(Misse3C, 'lnLik')
+#get_item(Misse2, 'lnLik')
 pars_to_arrays(Misse3C[[1]]$par.full, 3)
+```
 
 
+## MiSSE-3     Inferred Pars  
 
-
-
-
-
+```{r message=FALSE}
 Misse3C_pars <- list()
 i=1
 for (i in 1:NSIM){
@@ -216,7 +224,7 @@ for (i in 1:NSIM){
   pars.hc['lam222'] <- mi2_est['lam111']
   pars.hc['mu0'] <-pars.hc['mu1'] <-pars.hc['mu2'] <- mi2_est['mu1']
   qs <- extract_off_diagonal(Q30)
-  pars.hc[22:27] <- c(mi2_est['q01'], 0, mi2_est['q10'], mi2_est['q10'], mi2_est['q10'], 0)
+  pars.hc[22:27] <- c(mi2_est['q10'], 0, mi2_est['q10'], mi2_est['q10'], mi2_est['q10'], 0)
   #pars.hc
   #pars_to_arrays(pars.hc, 3)
   #---
@@ -230,9 +238,13 @@ for (i in 1:NSIM){
   
 }
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                      MiSSE-3     Non-congruent                           ----
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+
+
+## MiSSE-3     Non-congruent    
+
+```{r}
 
 Args <- list(
   Nstates = 3L,
@@ -269,12 +281,17 @@ pars_to_arrays(pars.hc, 3)
 zero.constr <- formulas_zero_pars(pars.hc)
 #f.qs <- c(q10 ~ q01, q02 ~ q01, q03 ~ q01, q20 ~ q01, q23 ~ q01, q31 ~ q01, q32 ~ q01, q12 ~ q13)
 #f.qs <- c(q02 ~ q03, q12 ~ q13, q20 ~ q13, q21 ~ q13, q30 ~ q03, q31 ~ q03)
-f.qs <- c(q12 ~ q20)
+# f.qs <- c(q12 ~ q20, q10 ~ q20, q01 ~ q20)
+f.qs <- c(q12 ~ q20, q01 ~ q20)
 f.mu <- c(mu1 ~ mu0, mu2 ~ mu0)
 f.lams <- c(lam222 ~  lam111)
 f.list<- c(zero.constr,  f.lams, f.mu, f.qs)
 
+```
 
+Inference
+
+```{r message=FALSE}
 
 Misse3 <- list()
 i=1
@@ -293,32 +310,69 @@ for (i in 1:NSIM){
   Misse3[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
 }
 
+```
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                      Results                                             ----
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+## Results 
+
+Likelihood table
+
+```{r}
+
 
 mi2 = get_item(Misse2, 'lnLik')
 mi3c = get_item(Misse3C, 'lnLik')
 mi3c_pars = unlist(Misse3C_pars)
 mi3 = get_item(Misse3, 'lnLik')
 
-mi2
-mi3c
-mi3c_pars
-mi3
+misse <- tibble(
+"N" = c(1:10),
+"MiSSE2" = mi2,
+"congruent MiSSE3 (MiSSE2)"=mi3c,
+"congruent MiSSE3 (pars of MiSSE2)"= mi3c_pars,
+"Non-congruent MiSSE3" = mi3)
 
-abs(mi2-mi3c) %>% mean()
-abs(mi2-mi3c_pars) %>% mean()
-abs(mi2-mi3) %>% mean()
+kable(misse, "html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+Mean absolute error
+
+```{r}
+d1 =abs(mi2-mi3c) %>% mean()
+d2 =abs(mi2-mi3c_pars) %>% mean()
+d3 = abs(mi2-mi3) %>% mean()
+
+# Data
+delta_values <- tibble(
+  Delta = c("mi2-mi3_cong", "mi2-mi3_cong_pars", "mi3_noNcong"),
+  Value = c(d1, d2, d3)
+)
+
+kable(delta_values, "html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+# Create the plot
+ggplot(delta_values, aes(x = Delta, y = Value, label = sprintf("%.2e", Value))) +
+  geom_col(fill = c("blue", "green", "red")) +
+  geom_text(vjust = -0.5, angle = 45) +
+  labs(title = "Comparison of Ln Differences", x = "Deltas", y = "Magnitude") +
+  theme_minimal()
+
+
+
+```
+
+Parameter estimates 
+
+```{r}
 
 get_item(Misse2[1], 'par')
 get_item(Misse3C[1], 'par')
 get_item(Misse3[1], 'par')
 
-
 pars_to_arrays(Misse2[[1]]$par.full, 2)
 pars_to_arrays(Misse3C[[1]]$par.full, 3)
 pars_to_arrays(Misse3[[1]]$par.full, 3)
-
+```
 

@@ -298,7 +298,7 @@ list_of_mats <- list(mat1, mat2)
 convert_to_array(list_of_mats)
 
 
-# reoder paramaters given partitioning scheme
+# reorder paramaters given partitioning scheme
 reoder_lambdas <- function(arrays, v){
   tensor.neworder <- lapply(arrays$lam.tensor, function(x) x[v,v])
   tensor.neworder <- tensor.neworder[v]
