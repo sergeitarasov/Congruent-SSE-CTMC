@@ -1,6 +1,34 @@
 bookdown::render_book("Rmd", output_format = "bookdown::gitbook", output_dir = '../Report')
 bookdown::render_book("Rmd", output_format = "bookdown::pdf_book", output_dir = '../Report-pdf')
 
+Qnew <- edit(Q_cid8.t)
+mean <- edit(mean, editor = "xedit")
+
+# Create the matrix as a data frame
+matrix_data <- data.frame(
+  a0 = c(-4, 0, 1, 1, 1, 1, 0, 0),
+  b0 = c(0, -4, 1, 1, 1, 1, 0, 0),
+  c0 = c(1, 1, -4, 0, 0, 0, 1, 1),
+  d0 = c(1, 1, 0, -4, 0, 0, 1, 1),
+  a1 = c(1, 1, 0, 0, -4, 0, 1, 1),
+  b1 = c(1, 1, 0, 0, 0, -4, 1, 1),
+  c1 = c(0, 0, 1, 1, 1, 1, -4, 0),
+  d1 = c(0, 0, 1, 1, 1, 1, 0, -4)
+)
+
+# Set row names and column names
+rownames(matrix_data) <- colnames(matrix_data)
+matrix_data <-as.matrix(matrix_data)
+
+
+# Create a sample matrix
+my_matrix <- matrix(1:12, nrow = 4, ncol = 3)
+colnames(my_matrix) <- c("A", "B", "C")
+rownames(my_matrix) <- c("Row1", "Row2", "Row3", "Row4")
+
+edited_matrix <- edit(my_matrix)
+
+
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##  ~ installations and dependencies  ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

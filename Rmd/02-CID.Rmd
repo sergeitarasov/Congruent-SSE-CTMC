@@ -41,7 +41,7 @@ source('R/hiclasse/HiClaSSE_cpp.R') # fast implementation
 
 ```
 
-Read in data:
+## Read in data
 
 ```{r}
 NSIM = 10
@@ -605,9 +605,9 @@ Args <- list(
   ))
 
 newArgs <- makeArgs(Args)
-printArgsGlobal()
+#printArgsGlobal()
 args <- argnames_HiClaSSE(8)
-args
+args$arrays
 #args$pars
 #length(args$pars)
 
@@ -690,9 +690,9 @@ Args <- list(
   ))
 
 newArgs <- makeArgs(Args)
-printArgsGlobal()
+#printArgsGlobal()
 args <- argnames_HiClaSSE(8)
-args
+#args
 #args$pars
 #length(args$pars)
 
@@ -774,9 +774,9 @@ Args <- list(
   ))
 
 newArgs <- makeArgs(Args)
-printArgsGlobal()
+#printArgsGlobal()
 args <- argnames_HiClaSSE(8)
-args
+#args
 #args$pars
 #length(args$pars)
 
@@ -858,9 +858,9 @@ Args <- list(
   ))
 
 newArgs <- makeArgs(Args)
-printArgsGlobal()
+#printArgsGlobal()
 args <- argnames_HiClaSSE(8)
-args
+#args
 #args$pars
 #length(args$pars)
 
@@ -952,9 +952,9 @@ Args <- list(
   ))
 
 newArgs <- makeArgs(Args)
-printArgsGlobal()
+#printArgsGlobal()
 args <- argnames_HiClaSSE(8)
-args
+#args
 #args$pars
 #length(args$pars)
 
@@ -1080,6 +1080,74 @@ dcor.pars <- dcor.pars %>%
 
 column_means <- dcor.pars %>%
   summarise_all(~ mean(.))
+
+# Data
+delta_values <- tibble(
+  Delta = names(column_means),
+  Value = column_means %>% slice(1) %>% unlist()
+)
+
+kable(column_means, "html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+# Create the plot
+ggplot(delta_values, aes(x = Delta, y = Value, label = sprintf("%.2e", Value))) +
+  geom_col(fill = c("blue", "blue", "blue", "blue", "red",  "red")) +
+  geom_text(vjust = -0.5, angle = 45) +
+  labs(title = "Comparison of Ln Differences", x = "Deltas", y = "Magnitude") +
+  theme_minimal()
+
+
+```
+
+### Maximum Likelihood estimates
+
+#### Likelihood table
+
+```{r}
+
+cor.pars <- tibble(
+"N" = c(1:NSIM),
+"cid4" = cid4,
+"CID8"= get_item(CID8, 'lnLik'),
+"COR8-C"= get_item(COR8_C, 'lnLik'),
+"CLA8-C" = get_item(CLA8_C, 'lnLik'),
+"COR8-NC" = get_item(COR8_NC, 'lnLik'),
+"CLA8-NC" = append(get_item(CLA8_NC, 'lnLik'), NA, after=3),
+)
+
+kable(cor.pars, "html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+
+#### Mean absolute error
+
+```{r}
+
+dcor.pars <- tibble(
+"cid4" = cid4,
+"CID8"= get_item(CID8, 'lnLik'),
+"COR8-C"= get_item(COR8_C, 'lnLik'),
+"CLA8-C" = get_item(CLA8_C, 'lnLik'),
+"COR8-NC" = get_item(COR8_NC, 'lnLik'),
+"CLA8-NC" = append(get_item(CLA8_NC, 'lnLik'), NA, after=3),
+)
+
+# dcor.pars <- tibble(
+# "cid4" = cid4,
+# "CID8.pars"= CID8.pars %>% unlist,
+# "COR8-C.pars"= COR8_C.pars %>% unlist,
+# "CLA8-C.pars" = CLA8_C.pars %>% unlist,
+# "COR8-NC.pars" = COR8_NC.pars %>% unlist,
+# "CLA8-NC.pars" = CLA8_NC.pars %>% unlist,
+# )
+cid4t <- cid4
+dcor.pars <- dcor.pars %>%
+  mutate_all(~ abs(cid4t - .) )
+
+column_means <- dcor.pars %>%
+  summarise_all(~ mean(., na.rm = TRUE))
 
 # Data
 delta_values <- tibble(

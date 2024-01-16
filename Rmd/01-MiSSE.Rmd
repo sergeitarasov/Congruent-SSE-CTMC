@@ -315,7 +315,7 @@ for (i in 1:NSIM){
 
 ## Results 
 
-Likelihood table
+### Likelihood table
 
 ```{r}
 
@@ -336,7 +336,7 @@ kable(misse, "html") %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
-Mean absolute error
+### Mean absolute error
 
 ```{r}
 d1 =abs(mi2-mi3c) %>% mean()
@@ -363,7 +363,7 @@ ggplot(delta_values, aes(x = Delta, y = Value, label = sprintf("%.2e", Value))) 
 
 ```
 
-Parameter estimates 
+### Parameter estimates 
 
 ```{r}
 
