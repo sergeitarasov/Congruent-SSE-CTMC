@@ -1,0 +1,133 @@
+---
+title: "HiClaSSE and BiSSE-ness"
+author: "Sergei Tarasov"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+params:
+  output_dir: "/output"
+---
+
+# HiClaSSE and BiSSE-ness
+
+
+```{r, setup, include=FALSE}
+library(DT)
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(here)
+knitr::opts_knit$set(root.dir = here())
+```
+
+```{r message=FALSE}
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ installations and dependencies  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# source dependencies and install them if they are not
+source('R/utils/dependencies.R')
+#source('R-models/my-ClaSSE.R') # pure R implementation of HiCLaSSE
+source('R/hiclasse/HiClaSSE-R.R') # pure R implementation of HiCLaSSE
+source('R/hiclasse/HiClaSSE_cpp.R') # fast implementation
+
+
+```
+
+
+## Make data
+
+```{r}
+# BiSSE
+pars <- c(1.5, 0.5, .1, .1, 1.2, 1)
+names(pars) <- diversitree:::default.argnames.bisse()
+#pars
+phy <- tree.bisse(pars, max.taxa=100, x0=0)
+tree <- phy
+states <- phy$tip.state
+#states
+plot(tree)
+
+#plot(phy)
+#nodelabels()
+#axisPhylo()
+```
+
+
+
+## BiSSE-ness Ln
+
+
+```{r}
+##  BiSSEness:
+lambda0 = 1.2
+p0c = 0.7
+p0a = 0.1
+lambda1 = 2
+p1c = 0.6
+p1a = 0.4
+
+# lambda0, lambda1,  mu0, mu1,  q01, q10,   p0c, p0a, p1c, p1a
+pars.bi <-c(lambda0, lambda1,  0.03, 0.04,  5, 6, p0c, p0a,   p1c, p1a)
+#pars.bi
+lik.bisseness <- make.bisseness(tree, states)
+bisseness <- lik.bisseness(pars.bi, intermediates=F, root=ROOT.GIVEN, root.p=c(.5, .5))
+bisseness
+```
+
+## HiClaSSE2
+
+Make model
+
+```{r}
+Args <- list(
+  Nstates = 2L,
+  y = list(
+    c(0,0, 1,0),
+    c(0,0, 0,1)
+  ))
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(2)
+#args$pars
+
+```
+
+Parameter mapping
+
+```{r}
+lam000 = lambda0 * (1-p0c)
+lam001 = lambda0 * p0c*p0a
+lam011 = lambda0 * p0c*(1-p0a)
+lam100 = lambda1 * p1c*(1-p1a)
+lam101 = lambda1 * p1c*p1a
+lam111 = lambda1 * (1-p1c)
+
+pars.hi <- c(lam000,lam001,lam011,  lam100,lam101,lam111, 0.03, 0.04,  5, 6)
+names(pars.hi) <- args$pars
+print(pars.hi)
+```
+
+Inference
+
+```{r}
+
+lik.hiclasse <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+hiclasse <- lik.hiclasse(pars.hi, intermediates=F, root=ROOT.GIVEN, root.p=c(.5, .5), condition.surv=T)
+
+hiclasse
+```
+
+
+## Compare models
+
+The likelihood of BiSSE-ness and HiClaSSE2 are the same
+
+```{r}
+print(bisseness)
+print(hiclasse)
+```
+

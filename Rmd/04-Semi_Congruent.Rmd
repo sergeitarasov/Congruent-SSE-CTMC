@@ -1,0 +1,565 @@
+---
+title: "Semi-Congruent"
+author: "Sergei Tarasov"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+params:
+  output_dir: "/output"
+cache: TRUE
+---
+
+# EHE
+
+```{r, setup, include=FALSE}
+library(DT)
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(here)
+knitr::opts_knit$set(root.dir = here())
+```
+
+```{r message=FALSE}
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ installations and dependencies  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+source('R/utils/dependencies.R')
+source('R/hiclasse/HiClaSSE-R.R') # pure R implementation of HiCLaSSE
+source('R/hiclasse/HiClaSSE_cpp.R') # fast implementation
+
+
+```
+
+## Read in data
+
+```{r}
+NSIM = 10
+phy <- readRDS(file='R/data/phy_CID4.RDS')
+```
+
+## Setting-up Q matrices for inference
+
+### CID4
+
+```{r}
+# trait
+Q_t <- initQ(c(0,1), c(2, 2))
+# diversification regime
+Q_r2 <- initQ(c('A','B'), c(2,2))
+# speciation rates for tracking the order
+La4 <- diag(c(-3,-1),2)
+La4 = La4 %x% diag(1,2)
+# order according to regimes
+Q_cid4.r <- amaSMM(Q_r2, Q_t)
+
+# order according to trait
+v=c(1,3, 2,4)
+Q_cid4.t <- Q_cid4.r[v,v]
+
+print(Q_cid4.r)
+print(La4)
+print(Q_cid4.t)
+print(La4[v,v])
+
+
+```
+
+### CID8 (congruent to CID4)
+
+```{r}
+# diversification regime
+# Q_r4 <- initQ(c('a','b', 'c', 'd'), c(2,2))
+Q_r4 <- amaSMM(Q_r2, Q_r2)
+colnames(Q_r4) <- rownames(Q_r4) <- c('a','b', 'c', 'd')
+
+# speciation rates for tracking the order
+La8 <- diag(c(-3,-1),2)
+La8 = La8 %x% diag(1,4)
+
+# order according to regimes
+Q_cid8.r <- amaSMM(Q_r4, Q_t) 
+
+# order according to trait
+v=c(1,3,5,7, 2,4,6,8)
+Q_cid8.t <- Q_cid8.r[v,v]
+
+print(Q_cid8.r)
+print(La8)
+print(Q_cid8.t)
+print(La8[v,v])
+
+```
+
+### EHE8-C (correlated evolution, congruent to CID4)
+
+```{r}
+
+# Qnew <- Q_cid8.t
+# Qnew[Qnew==2] <- 1
+# Qnew <- edit(Qnew)
+# diag(Qnew) <- 0
+# diag(Qnew) <- -rowSums(Qnew)
+# Qnew
+
+# Create the matrix as a data frame
+Q_ehe8_C.t <- data.frame(
+  a0 = c(-4, 0, 1, 1, 1, 1, 0, 0),
+  b0 = c(0, -4, 1, 1, 1, 1, 0, 0),
+  c0 = c(1, 1, -4, 0, 0, 0, 1, 1),
+  d0 = c(1, 1, 0, -4, 0, 0, 1, 1),
+  a1 = c(1, 1, 0, 0, -4, 0, 1, 1),
+  b1 = c(1, 1, 0, 0, 0, -4, 1, 1),
+  c1 = c(0, 0, 1, 1, 1, 1, -4, 0),
+  d1 = c(0, 0, 1, 1, 1, 1, 0, -4)
+)
+
+# Set row names and column names
+rownames(Q_ehe8_C.t) <- colnames(Q_ehe8_C.t)
+Q_ehe8_C.t <-as.matrix(Q_ehe8_C.t)
+
+# bl <- matrix(c(0,.1,.1,0),2,2)
+# Q_cor8_C.t[1:2,5:6] <- bl
+# Q_cor8_C.t[3:4,7:8] <- bl
+# Q_cor8_C.t[5:6,1:2] <- bl
+# Q_cor8_C.t[7:8,3:4] <- bl
+
+v=c(1,5, 2,6, 3,7, 4,8)
+Q_ehe8_C.r <- Q_ehe8_C.t[v,v]
+
+print(Q_ehe8_C.r)
+#print(La8)
+print(Q_ehe8_C.t)
+#print(La8[v,v])
+
+```
+
+
+## Inferences using parameters from CID4
+
+### CID4; (4 pars)
+
+
+```{r}
+
+
+Args <- list(
+  Nstates = 4L,
+  y = list(
+    c(0,0,0,0, 1,0,1,0),
+    c(0,0,0,0, 0,1,0,1)
+  ))
+
+newArgs <- makeArgs(Args)
+printArgsGlobal()
+args <- argnames_HiClaSSE(4)
+args$arrays
+#args$pars
+#length(args$pars)
+reoder_lambdas(args$arrays, c(1,3, 2,4))
+```
+
+Run inference
+
+```{r message=FALSE}
+
+lam1=0.3
+lam2=0.1
+q=0.2
+mu=0.01
+
+CID4.pars <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  #-----------
+  pars.hc <- rep(0, length(args$pars))
+  names(pars.hc) <- args$pars
+  pars.hc['lam000'] <- lam1
+  pars.hc['lam111'] <- lam1
+  pars.hc['lam222'] <- lam2
+  pars.hc['lam333'] <- lam2
+  pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3']  <- mu
+  qs <- extract_off_diagonal(Q_cid4.r/10)
+  qsl=length(qs)
+  #qs[qs==1] <- est['q01']/2
+  pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+  
+  #pars.hc
+  pars_to_arrays(pars.hc, 4)
+  #------
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- rep(1/4, 4)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  CID4.pars[[i]] <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
+  
+}
+
+```
+
+Compare Ln
+
+```{r}
+#get_item(CID4, 'lnLik')
+CID4.pars %>% unlist
+```
+
+### EHE8-C; pars from CID4 (5 pars)
+
+```{r}
+
+
+Args <- list(
+  Nstates = 8L,
+  y = list(
+    c(0,0,0,0,0,0,0,0, 1,0,1,0,1,0,1,0),
+    c(0,0,0,0,0,0,0,0, 0,1,0,1,0,1,0,1)
+  ))
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(8)
+#args$arrays
+reoder_lambdas(args$arrays, c(1,3,5,7, 2,4,6,8))
+```
+
+Run inference
+
+```{r message=FALSE}
+
+lam1=0.3
+lam2=0.1
+q=0.2
+mu=0.01
+
+EHE8_C.pars <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  #-----------
+  pars.hc <- rep(0, length(args$pars))
+  names(pars.hc) <- args$pars
+  # pars.hc['lam000'] <- lam1
+  # pars.hc['lam111'] <- lam1
+  # pars.hc['lam222'] <- lam1
+  # pars.hc['lam333'] <- lam1
+  pars.hc['lam000'] <- pars.hc['lam002'] <- pars.hc['lam022'] <- lam1/3
+  pars.hc['lam200'] <- pars.hc['lam202'] <- pars.hc['lam222'] <- lam1/3
+  pars.hc['lam111'] <- pars.hc['lam113'] <- pars.hc['lam133'] <- lam1/3
+  pars.hc['lam311'] <- pars.hc['lam313'] <- pars.hc['lam333'] <- lam1/3
+  pars.hc['lam444'] <- lam2
+  pars.hc['lam555'] <- lam2
+  pars.hc['lam666'] <- lam2
+  pars.hc['lam777'] <- lam2
+  pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <- mu
+  qs <- extract_off_diagonal(Q_ehe8_C.r/10)
+  qsl=length(qs)
+  pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+  
+  #pars.hc
+  pars_to_arrays(pars.hc, 8)
+  reoder_lambdas(pars_to_arrays(pars.hc, 8), c(1,3,5,7, 2,4,6,8))
+  #------
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- rep(1/8, 8)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  EHE8_C.pars[[i]] <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
+  
+}
+
+```
+
+Compare Ln
+
+```{r}
+#get_item(CID4, 'lnLik')
+CID4.pars %>% unlist
+EHE8_C.pars %>% unlist
+```
+
+
+
+## Maximum Likelihood
+
+## All taxa
+
+```{r}
+
+NSIM=100
+files_base <- c('phy_CID4-100tips-100tr', 'phy_CID4-500tips-100tr', 'phy_CID4-1000tips-100tr')
+#phy <- readRDS(file='R/data/phy_CID4-100tips-100tr.RDS')
+#phy[[1]]
+
+```
+
+
+### CID4 (4 pars)
+
+```{r}
+
+
+Args <- list(
+  Nstates = 4L,
+  y = list(
+    c(0,0,0,0, 1,0,1,0),
+    c(0,0,0,0, 0,1,0,1)
+  ))
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(4)
+#args$arrays
+#args$pars
+#length(args$pars)
+
+pars.hc <- rep(0, length(args$pars))
+names(pars.hc) <- args$pars
+pars.hc['lam000'] <- 0.1
+pars.hc['lam111'] <- 0.1
+pars.hc['lam222'] <- 0.05
+pars.hc['lam333'] <- 0.05
+pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <-0.1
+qs <- extract_off_diagonal(Q_cid4.r)
+qsl=length(qs)
+pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+
+#pars.hc
+#pars_to_arrays(pars.hc,4)
+#args
+
+zero.constr <- formulas_zero_pars(pars.hc)
+f.qs <- assign_classes_pairwise(Q_cid4.r, args$arrays$Q)
+f.mu <- c(mu1 ~ mu0, mu2 ~ mu0, mu3 ~ mu0)
+f.lams <- c(lam111 ~ lam000, lam333 ~ lam222)
+f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
+
+```
+
+Run inference
+
+```{r eval=FALSE}
+
+for (base in files_base[2:3]){
+  file=file.path("R/data", paste0(base, '.RDS'))
+  print(paste0('Reading file: ',file))
+  phy <- readRDS(file=file)
+
+  CID4 <- list()
+  #i=1
+  #which(is.na(phy))
+  for (i in 1:NSIM){
+    print(paste0('Working on: ', i))
+    tree <- phy[[i]]
+    states<- tree$tip.state
+    states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+    root <- c(1/4, 1/4, 1/4, 1/4)
+    
+    lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+    lik.const <- constrain(lik.c, formulae = f.list)
+    arg.const <- argnames(lik.const)
+    starting.point <- pars.hc[arg.const]
+    CID4[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
+  }
+  file_out=paste0('R/data/lik-CID4-', base, '.RDS')
+  saveRDS(CID4, file= file_out)
+}
+```
+
+
+
+### EHE8-C
+
+```{r}
+lam1=0.3
+lam2=0.1
+q=0.2
+mu=0.01
+
+Args <- list(
+  Nstates = 8L,
+  y = list(
+    c(0,0,0,0,0,0,0,0, 1,0,1,0,1,0,1,0),
+    c(0,0,0,0,0,0,0,0, 0,1,0,1,0,1,0,1)
+  ))
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(8)
+#args$arrays
+#args$pars
+#length(args$pars)
+
+pars.hc <- rep(0, length(args$pars))
+names(pars.hc) <- args$pars
+pars.hc['lam000'] <- pars.hc['lam002'] <- pars.hc['lam022'] <- lam1/3
+pars.hc['lam200'] <- pars.hc['lam202'] <- pars.hc['lam222'] <- lam1/3
+
+pars.hc['lam111'] <- pars.hc['lam113'] <- pars.hc['lam133'] <- lam1/3
+pars.hc['lam311'] <- pars.hc['lam313'] <- pars.hc['lam333'] <- lam1/3
+
+pars.hc['lam444'] <- lam2
+pars.hc['lam555'] <- lam2
+pars.hc['lam666'] <- lam2
+pars.hc['lam777'] <- lam2
+pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <-mu
+qs <- extract_off_diagonal(Q_ehe8_C.r/10)
+qsl=length(qs)
+pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+
+#pars.hc
+#pars_to_arrays(pars.hc,8)
+#args
+
+zero.constr <- formulas_zero_pars(pars.hc)
+f.qs <- assign_classes_pairwise(Q_ehe8_C.r/10, args$arrays$Q)
+f.mu <- c(mu1 ~ mu0, mu2 ~ mu0, mu3 ~ mu0, mu4 ~ mu0, mu5 ~ mu0, mu6 ~ mu0, mu7 ~ mu0)
+f.lams <- c(lam002 ~ q01, lam022 ~ q01,
+            lam200 ~ q01, lam202 ~ q01, lam222 ~ q01,
+            lam111 ~ q01, lam113 ~ q01, lam133 ~ q01, 
+            lam311 ~ q01, lam313 ~ q01, lam333 ~ q01,
+            lam444 ~ q01, lam555 ~ q01, lam666 ~ q01, lam777 ~ q01,
+            lam000 ~ q01
+            )
+f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
+
+```
+
+Run inference
+
+```{r eval=FALSE}
+for (base in files_base){
+  file=file.path("R/data", paste0(base, '.RDS'))
+  print(paste0('Reading file: ',file))
+  phy <- readRDS(file=file)
+
+  EHE8_C <- list()
+  i=1
+  for (i in 1:NSIM){
+    print(paste0('Working on: ', i))
+    tree <- phy[[i]]
+    states<- tree$tip.state
+    states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+    root <- rep(1/8, 8)
+    
+    lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+    lik.const <- constrain(lik.c, formulae = f.list)
+    arg.const <- argnames(lik.const)
+    starting.point <- pars.hc[arg.const]
+    # starting.point <- get_item(CID4[i], 'par')
+    # names(starting.point) <- c('lam444', 'lam000', 'mu0', 'q01', 'q02')
+    # starting.point['q01'] <- starting.point['q02']/2
+    
+    EHE8_C[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
+  }
+  
+  file_out=paste0('R/data/lik-EHE8_C-', base, '.RDS')
+  saveRDS(EHE8_C, file= file_out)
+}
+```
+
+
+
+## Results
+
+```{r}
+
+# for (base in files_base){
+#   file_in=paste0('R/data/lik-CID4-', base, '.RDS')
+#   print(paste0('Reading file: ',file_in))
+#   rds <- readRDS(file=file_in)
+#   #aic = get_item(rds, 'lnLik') %>% get_aic(., 4)
+# }
+
+cid <- tibble(
+t100=get_item(readRDS(file='R/data/lik-CID4-phy_CID4-100tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4),
+t500=get_item(readRDS(file='R/data/lik-CID4-phy_CID4-500tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4),
+t1000=get_item(readRDS(file='R/data/lik-CID4-phy_CID4-1000tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4)
+)
+
+ehe <- tibble(
+t100=get_item(readRDS(file='R/data/lik-EHE8_C-phy_CID4-100tips-100tr.RDS'), 'lnLik') %>% get_aic(., 2),
+t500=get_item(readRDS(file='R/data/lik-EHE8_C-phy_CID4-500tips-100tr.RDS'), 'lnLik') %>% get_aic(., 2),
+t1000=get_item(readRDS(file='R/data/lik-EHE8_C-phy_CID4-1000tips-100tr.RDS'), 'lnLik') %>% get_aic(., 2)
+)
+
+```
+
+
+```{r}
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)  # Load tidyr package
+
+del <- cid-ehe
+
+
+# del <- data.frame(
+#   t100 = rnorm(100, 2, 3),
+#   t500 = rnorm(100, 5, 4),
+#   t1000 = rnorm(100, 5, 6)
+# )
+
+# Calculate ECDF for each column
+ecdf_del <- del %>%
+  summarise(
+    t100_ecdf = ecdf(t100),
+    t500_ecdf = ecdf(t500),
+    t1000_ecdf = ecdf(t1000)
+  )
+
+ecdf_del$t100_ecdf(2)
+ecdf_del$t500_ecdf(2)
+ecdf_del$t1000_ecdf(2)
+
+# Create a data frame for plotting
+ecdf_data <- data.frame(
+  Value = c(del$t100, del$t500, del$t1000),
+  Group = rep(c("100 tips", "500 tips", "1000 tips"), each = nrow(del))
+)
+
+# Plot the ECDFs for each group
+cdf_plot <-ggplot(ecdf_data, aes(x = Value, color = Group)) +
+  stat_ecdf(geom = "step") +
+  labs(x = expression(Delta~AIC), y = "CDF") +
+  theme_minimal() +
+  scale_x_continuous(
+    limits = c(-5, 4),
+    breaks = seq(-5, 4, by = 1)
+  ) +
+  theme(
+    panel.grid.minor.x = element_blank(),  # Remove minor grid lines on the x-axis
+    panel.grid.minor.y = element_blank()
+  ) +
+  guides(color = guide_legend(title = NULL)) +
+  geom_vline(xintercept=2, linetype="dashed",  color = "black", size=.5) +
+  theme(
+    #plot.background = element_rect(fill = "white"),
+    #panel.background = element_rect(fill = "white"),
+    legend.box.background = element_rect(fill = "white"),
+    legend.text = element_text(size = 8),
+    legend.position = c(0.25, 0.60)
+  )
+
+cdf_plot
+# Save the plot with a specific width in centimeters
+ggsave("Figs/cdf.eps", plot = cdf_plot , width = 8.7, height = 5, units = "cm")
+ggsave("Figs/cdf.png", plot = cdf_plot , width = 8.7, height = 5, units = "cm")
+
+  # scale_y_continuous(
+  #   breaks = seq(0, 1, by = 0.1)  # Adjust the sequence for your specific data
+  # # ) +
+  # theme(
+  #   panel.grid.minor.x = element_blank()  # Remove minor grid lines on the x-axis
+  # )
+```
+

@@ -145,7 +145,7 @@ for (i in 1:NSIM){
 
 }
 
-saveRDS(phy, file='R/data/phy_CID4-100tips-100tr.RDS')
+#saveRDS(phy, file='R/data/phy_CID4-100tips-100tr.RDS')
 ```
 
 

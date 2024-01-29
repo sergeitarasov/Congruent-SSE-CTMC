@@ -1,5 +1,5 @@
 ---
-title: "Correlated evolution and Model Congruence"
+title: "02a Correlated evolution and Model Congruence"
 author: "Sergei Tarasov"
 date: "`r Sys.Date()`"
 output:
@@ -9,7 +9,7 @@ params:
   output_dir: "/output"
 ---
 
-# Correlated evolution and Model Congruence
+# 02a Correlated evolution and Model Congruence
 
 | Model   | congruent to CID4 | Q matrix                  | speciation parameters                               |
 |--------------|--------------|--------------|--------------------------------|
@@ -57,7 +57,7 @@ phy <- readRDS(file='R/data/phy_CID4.RDS')
 Q_t <- initQ(c(0,1), c(.1, .1))
 
 # diversification regime
-Q_r2 <- initQ(c('A','B'), c(.02,.02))
+Q_r2 <- initQ(c('A','B'), c(.1,.1))
 
 
 # speciation rates for tracking the order
@@ -82,7 +82,10 @@ print(La4[v,v])
 
 ```{r}
 # diversification regime
-Q_r4 <- initQ(c('a','b', 'c', 'd'), c(.01,.01))
+#Q_r4 <- initQ(c('a','b', 'c', 'd'), c(.01,.01))
+
+Q_r4 <-amaSMM(Q_t, Q_t) 
+colnames(Q_r4) <- rownames(Q_r4) <- c('a','b', 'c', 'd')
 
 # speciation rates for tracking the order
 La8 <- diag(c(-0.1,-0.05),2)
@@ -148,7 +151,7 @@ print(Q_cor8_NC.t)
 
 ## Irreducible model
 
-### CID4 (5 pars)
+### CID4 (4 pars)
 
 ```{r}
 
@@ -161,11 +164,12 @@ Args <- list(
   ))
 
 newArgs <- makeArgs(Args)
-printArgsGlobal()
+#printArgsGlobal()
 args <- argnames_HiClaSSE(4)
-args$arrays
+#args$arrays
 #args$pars
 #length(args$pars)
+reoder_lambdas(args$arrays, c(1,3, 2,4))
 
 pars.hc <- rep(0, length(args$pars))
 names(pars.hc) <- args$pars
@@ -179,7 +183,7 @@ qsl=length(qs)
 pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
 
 #pars.hc
-pars_to_arrays(pars.hc,4)
+#pars_to_arrays(pars.hc,4)
 #args
 
 zero.constr <- formulas_zero_pars(pars.hc)
@@ -215,13 +219,13 @@ Some helper functions to assess the inference parameters.
 
 ```{r}
 get_item(CID4, 'lnLik')
-pars_to_arrays(CID4[[1]]$par.full, 4)
+pars_to_arrays(CID4[[1]]$par.full, 4) %>% reoder_lambdas(., c(1,3, 2,4))
 get_item(CID4[1], 'par')
 ```
 
 ## Inferences using parameters from CID4
 
-### CID8; pars from CID4 (5 pars)
+### CID8 (4 pars)
 
 ```{r}
 
@@ -234,10 +238,10 @@ Args <- list(
   ))
 
 newArgs <- makeArgs(Args)
-printArgsGlobal()
+#printArgsGlobal()
 args <- argnames_HiClaSSE(8)
 args$arrays
-
+#reoder_lambdas(args$arrays, c(1,3,5,7, 2,4,6,8))
 ```
 
 Run inference
@@ -268,8 +272,8 @@ for (i in 1:NSIM){
   qs[qs==0.01] <- est['q02']/2
   pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
   
-  pars.hc
-  pars_to_arrays(pars.hc, 8)
+  #pars.hc
+  #pars_to_arrays(pars.hc, 8)
   #------
   tree <- phy[[i]]
   states<- tree$tip.state
@@ -288,9 +292,11 @@ Compare Ln
 ```{r}
 get_item(CID4, 'lnLik')
 CID8.pars %>% unlist
+
+pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
-### COR8-C; pars from CID4 (5 pars)
+### COR8-C (4 pars)
 
 ```{r}
 
@@ -339,8 +345,8 @@ for (i in 1:NSIM){
   
   # pars.hc
   # pars_to_arrays(pars.hc, 8)
-  # v=c(1,3,5,7, 2,4,6,8)
-  # pars_to_arrays(pars.hc, 8)$Q[v,v]
+  #v=c(1,3,5,7, 2,4,6,8)
+  #pars_to_arrays(pars.hc, 8)$Q[v,v]
   
   #------
   tree <- phy[[i]]
@@ -360,9 +366,11 @@ Compare Ln
 ```{r}
 get_item(CID4, 'lnLik')
 COR8_C.pars %>% unlist
+
+pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
-### COR8-NC; pars from CID4 (5 pars)
+### COR8-NC (4 pars)
 
 ```{r}
 
@@ -432,9 +440,11 @@ Some helper function to assess the inference parameters
 ```{r}
 get_item(CID4, 'lnLik')
 COR8_NC.pars %>% unlist
+
+pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
-### CLA8-C; pars from CID4 (5 pars)
+### CLA8-C (4 pars)
 
 ```{r}
 
@@ -450,10 +460,7 @@ newArgs <- makeArgs(Args)
 #printArgsGlobal()
 args <- argnames_HiClaSSE(8)
 #args$arrays
-# v=c(1,3,5,7, 2,4,6,8)
 # reoder_lambdas(args$arrays, c(1,3,5,7, 2,4,6,8))
-# 
-# reoder_lambdas(pars_to_arrays(pars.hc, 8), c(1,3,5,7, 2,4,6,8))
 ```
 
 Run inference
@@ -515,9 +522,10 @@ Some helper function to assess the inference parameters
 ```{r}
 get_item(CID4, 'lnLik')
 CLA8_C.pars %>% unlist
+pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
-### CLA8-NC; pars from CID4 (5 pars)
+### CLA8-NC (4 pars)
 
 ```{r}
 
@@ -535,9 +543,6 @@ args <- argnames_HiClaSSE(8)
 #args$arrays
 #v=c(1,3,5,7, 2,4,6,8)
 #reoder_lambdas(args$arrays, c(1,3,5,7, 2,4,6,8))
-
-#pars_to_arrays(pars.hc, 8)
-#reoder_lambdas(pars_to_arrays(pars.hc, 8), c(1,3,5,7, 2,4,6,8))
 ```
 
 Run inference
@@ -592,9 +597,10 @@ Some helper function to assess the inference parameters
 ```{r}
 get_item(CID4, 'lnLik')
 CLA8_NC.pars %>% unlist
+pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
-## Maximum Likelihood
+## Maximum Likelihood. All models have 4 pars.
 
 ### CID8
 
@@ -611,7 +617,7 @@ Args <- list(
 newArgs <- makeArgs(Args)
 #printArgsGlobal()
 args <- argnames_HiClaSSE(8)
-args$arrays
+#args$arrays
 #args$pars
 #length(args$pars)
 
@@ -628,6 +634,7 @@ pars.hc['lam777'] <- 0.05
 pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <-0.1
 qs <- extract_off_diagonal(Q_cid8.r)
 qsl=length(qs)
+#unique(qs)
 pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
 
 #pars.hc
@@ -673,9 +680,12 @@ Assessing the inferred parameters
 ```{r}
 get_item(CID4, 'lnLik')
 get_item(CID8, 'lnLik')
-#pars_to_arrays(CID8[[1]]$par.full, 8)
+
 get_item(CID8[1], 'par')
 get_item(CID4[1], 'par')
+
+#pars_to_arrays(CID8[[1]]$par.full, 8)
+pars_to_arrays(CID8[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
 
@@ -759,9 +769,11 @@ Assessing the inferred parameters
 get_item(CID4, 'lnLik')
 get_item(CID8, 'lnLik')
 get_item(COR8_C, 'lnLik')
-#ps <- pars_to_arrays(COR8_C[[1]]$par.full, 8)
-#reoder_lambdas(ps, c(1,3,5,7, 2,4,6,8))
+
 get_item(COR8_C[1], 'par')
+
+pars_to_arrays(COR8_C[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+
 ```
 
 
@@ -817,7 +829,7 @@ Run inference
 ```{r}
 
 COR8_NC <- list()
-i=4
+i=1
 for (i in 1:NSIM){
   print(paste0('Working on: ', i))
   tree <- phy[[i]]
@@ -839,11 +851,11 @@ Assessing the inferred parameters
 ```{r}
 get_item(CID4, 'lnLik')
 get_item(CID8, 'lnLik')
-get_item(COR8_C, 'lnLik')
 get_item(COR8_NC, 'lnLik')
-#ps <- pars_to_arrays(COR8_C[[1]]$par.full, 8)
-#reoder_lambdas(ps, c(1,3,5,7, 2,4,6,8))
+
 get_item(CID8[1], 'par')
+
+pars_to_arrays(COR8_NC[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
 
@@ -931,13 +943,11 @@ Assessing the inferred parameters
 
 ```{r}
 get_item(CID4, 'lnLik')
-get_item(CID8, 'lnLik')
-get_item(COR8_C, 'lnLik')
-get_item(COR8_NC, 'lnLik')
 get_item(CLA8_C, 'lnLik')
-#ps <- pars_to_arrays(COR8_C[[1]]$par.full, 8)
-#reoder_lambdas(ps, c(1,3,5,7, 2,4,6,8))
+
 get_item(CID8[1], 'par')
+
+pars_to_arrays(CLA8_C[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
 
@@ -1029,14 +1039,12 @@ Assessing the inferred parameters
 
 ```{r}
 get_item(CID4, 'lnLik')
-get_item(CID8, 'lnLik')
-get_item(COR8_C, 'lnLik')
 get_item(COR8_NC, 'lnLik')
-get_item(CLA8_C, 'lnLik')
 get_item(CLA8_NC, 'lnLik')
-#ps <- pars_to_arrays(COR8_C[[1]]$par.full, 8)
-#reoder_lambdas(ps, c(1,3,5,7, 2,4,6,8))
+
 get_item(CID8[1], 'par')
+
+pars_to_arrays(CLA8_C[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
 
