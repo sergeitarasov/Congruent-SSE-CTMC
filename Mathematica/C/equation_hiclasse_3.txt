@@ -1,0 +1,49 @@
+#include <R.h>
+
+void do_derivs_hiclasse3(double *pars, const double *y, double *ydot) {
+	double E0 = y[0];
+	double E1 = y[1];
+	double E2 = y[2];
+	double D0 = y[3];
+	double D1 = y[4];
+	double D2 = y[5];
+	
+	double la000 = pars[0];
+	double la001 = pars[1];
+	double la002 = pars[2];
+	double la011 = pars[3];
+	double la012 = pars[4];
+	double la022 = pars[5];
+	double la100 = pars[6];
+	double la101 = pars[7];
+	double la102 = pars[8];
+	double la111 = pars[9];
+	double la112 = pars[10];
+	double la122 = pars[11];
+	double la200 = pars[12];
+	double la201 = pars[13];
+	double la202 = pars[14];
+	double la211 = pars[15];
+	double la212 = pars[16];
+	double la222 = pars[17];
+	double mu0 = pars[18];
+	double mu1 = pars[19];
+	double mu2 = pars[20];
+	double q01 = pars[21];
+	double q02 = pars[22];
+	double q10 = pars[23];
+	double q12 = pars[24];
+	double q20 = pars[25];
+	double q21 = pars[26];
+	
+	ydot[0] = pow(E0,2)*la000 + pow(E1,2)*la011 + pow(E2,2)*la022 + mu0 + E1*(E2*la012 + q01) + E2*q02 - E0*(la000 + la001 - E1*la001 + la002 - E2*la002 + la011 + la012 + la022 + mu0 + q01 + q02);
+	ydot[1] = pow(E0,2)*la100 + pow(E1,2)*la111 + pow(E2,2)*la122 + mu1 + E0*(E1*la101 + E2*la102 + q10) + E2*q12 - E1*(la100 + la101 + la102 + la111 + la112 - E2*la112 + la122 + mu1 + q10 + q12);
+	ydot[2] = pow(E0,2)*la200 + pow(E1,2)*la211 + pow(E2,2)*la222 + mu2 + E0*(E1*la201 + E2*la202 + q20) + E1*q21 - E2*(la200 + la201 + la202 + la211 + la212 - E1*la212 + la222 + mu2 + q20 + q21);
+	ydot[3] = 2*D0*E0*la000 + D1*E0*la001 + D0*E1*la001 + D2*E0*la002 + D0*E2*la002 + 2*D1*E1*la011 + D2*E1*la012 + D1*E2*la012 + 2*D2*E2*la022 - D0*(la000 + la001 + la002 + la011 + la012 + la022 + mu0) + D1*q01 + D2*q02 - D0*(q01 + q02);
+	ydot[4] = D0*(2*E0*la100 + E1*la101 + E2*la102 + q10) + D2*(E0*la102 + E1*la112 + 2*E2*la122 + q12) - D1*(la100 + la101 - E0*la101 + la102 + la111 - 2*E1*la111 + la112 - E2*la112 + la122 + mu1 + q10 + q12);
+	ydot[5] = D0*(2*E0*la200 + E1*la201 + E2*la202 + q20) + D1*(E0*la201 + 2*E1*la211 + E2*la212 + q21) - D2*(la200 + la201 + la202 - E0*la202 + la211 + la212 - E1*la212 + la222 - 2*E2*la222 + mu2 + q20 + q21);
+}
+
+void derivs_hiclasse3_gslode(int neqs, double t, double *pars, const double *y, double *dydt){
+	do_derivs_hiclasse3(pars, y, dydt);
+}

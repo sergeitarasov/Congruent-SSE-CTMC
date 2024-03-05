@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Page not found | R Notebook</title>
-  <meta name="description" content="Page not found | R Notebook" />
+  <title>Page not found | Report for Simulations using HiClaSSE model</title>
+  <meta name="description" content="Page not found | Report for Simulations using HiClaSSE model" />
   <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Page not found | R Notebook" />
+  <meta property="og:title" content="Page not found | Report for Simulations using HiClaSSE model" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Page not found | R Notebook" />
+  <meta name="twitter:title" content="Page not found | Report for Simulations using HiClaSSE model" />
   
   
   
@@ -23,7 +23,7 @@
 <meta name="author" content="Sergei Tarasov" />
 
 
-<meta name="date" content="2024-01-04" />
+<meta name="date" content="2024-02-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,6 +52,8 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -136,9 +138,146 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> First</a></li>
-<li class="chapter" data-level="2" data-path="second.html"><a href="second.html"><i class="fa fa-check"></i><b>2</b> Second</a></li>
-<li class="chapter" data-level="3" data-path="mine.html"><a href="mine.html"><i class="fa fa-check"></i><b>3</b> Mine</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Setting-up HiClaSSE</a></li>
+<li class="chapter" data-level="2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html"><i class="fa fa-check"></i><b>2</b> Validation of HiClaSSE</a>
+<ul>
+<li class="chapter" data-level="2.0.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#make-data"><i class="fa fa-check"></i><b>2.0.1</b> Make data</a></li>
+<li class="chapter" data-level="2.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#bisse-ness-and-hiclasse"><i class="fa fa-check"></i><b>2.1</b> BiSSE-ness and HiClaSSE</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#bisse-ness-likelihood"><i class="fa fa-check"></i><b>2.1.1</b> BiSSE-ness Likelihood</a></li>
+<li class="chapter" data-level="2.1.2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hiclasse2-likelihood"><i class="fa fa-check"></i><b>2.1.2</b> HiClaSSE2 Likelihood</a></li>
+<li class="chapter" data-level="2.1.3" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#compare-models"><i class="fa fa-check"></i><b>2.1.3</b> Compare models</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#bisse-and-hiclasse"><i class="fa fa-check"></i><b>2.2</b> BiSSE and HiClaSSE</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#bisse"><i class="fa fa-check"></i><b>2.2.1</b> BiSSE</a></li>
+<li class="chapter" data-level="2.2.2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hiclasse2"><i class="fa fa-check"></i><b>2.2.2</b> HiClaSSE2</a></li>
+<li class="chapter" data-level="2.2.3" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#compare-models-1"><i class="fa fa-check"></i><b>2.2.3</b> Compare models</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hisse4-and-hiclasse4"><i class="fa fa-check"></i><b>2.3</b> HiSSE4 and HiClaSSE4</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hiclasse4"><i class="fa fa-check"></i><b>2.3.1</b> HiClaSSE4</a></li>
+<li class="chapter" data-level="2.3.2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hisse4"><i class="fa fa-check"></i><b>2.3.2</b> HiSSE4</a></li>
+<li class="chapter" data-level="2.3.3" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#compare-models-2"><i class="fa fa-check"></i><b>2.3.3</b> Compare models</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#sampling-fraction-bisse-ness-and-hiclasse"><i class="fa fa-check"></i><b>2.4</b> Sampling fraction: BiSSE-ness and HiClaSSE</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#bisse-ness-likelihood-1"><i class="fa fa-check"></i><b>2.4.1</b> BiSSE-ness Likelihood</a></li>
+<li class="chapter" data-level="2.4.2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hiclasse2-likelihood-1"><i class="fa fa-check"></i><b>2.4.2</b> HiClaSSE2 Likelihood</a></li>
+<li class="chapter" data-level="2.4.3" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#compare-models-3"><i class="fa fa-check"></i><b>2.4.3</b> Compare models</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="misse-congruence.html"><a href="misse-congruence.html"><i class="fa fa-check"></i><b>3</b> MiSSE Congruence</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="misse-congruence.html"><a href="misse-congruence.html#set-up-q-matrix-for-inference"><i class="fa fa-check"></i><b>3.1</b> SET-UP Q matrix for inference</a></li>
+<li class="chapter" data-level="3.2" data-path="misse-congruence.html"><a href="misse-congruence.html#misse-2"><i class="fa fa-check"></i><b>3.2</b> MiSSE-2</a></li>
+<li class="chapter" data-level="3.3" data-path="misse-congruence.html"><a href="misse-congruence.html#misse-3-congruent"><i class="fa fa-check"></i><b>3.3</b> MiSSE-3 Congruent</a></li>
+<li class="chapter" data-level="3.4" data-path="misse-congruence.html"><a href="misse-congruence.html#misse-3-congruent-inferred-pars"><i class="fa fa-check"></i><b>3.4</b> MiSSE-3 Congruent, Inferred Pars</a></li>
+<li class="chapter" data-level="3.5" data-path="misse-congruence.html"><a href="misse-congruence.html#misse-3-non-congruent"><i class="fa fa-check"></i><b>3.5</b> MiSSE-3 Non-congruent</a></li>
+<li class="chapter" data-level="3.6" data-path="misse-congruence.html"><a href="misse-congruence.html#another-non-congruent-models"><i class="fa fa-check"></i><b>3.6</b> Another Non-congruent Models</a></li>
+<li class="chapter" data-level="3.7" data-path="misse-congruence.html"><a href="misse-congruence.html#zero-extinction"><i class="fa fa-check"></i><b>3.7</b> Zero Extinction</a></li>
+<li class="chapter" data-level="3.8" data-path="misse-congruence.html"><a href="misse-congruence.html#results"><i class="fa fa-check"></i><b>3.8</b> Results</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="misse-congruence.html"><a href="misse-congruence.html#likelihood-table"><i class="fa fa-check"></i><b>3.8.1</b> Likelihood table</a></li>
+<li class="chapter" data-level="3.8.2" data-path="misse-congruence.html"><a href="misse-congruence.html#mean-absolute-error"><i class="fa fa-check"></i><b>3.8.2</b> Mean absolute error</a></li>
+<li class="chapter" data-level="3.8.3" data-path="misse-congruence.html"><a href="misse-congruence.html#parameter-estimates"><i class="fa fa-check"></i><b>3.8.3</b> Parameter estimates</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html"><i class="fa fa-check"></i><b>4</b> Congruence between independent and dependent SSEs</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#read-in-data"><i class="fa fa-check"></i><b>4.1</b> Read in data</a></li>
+<li class="chapter" data-level="4.2" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#setting-up-q-matrices-for-inference"><i class="fa fa-check"></i><b>4.2</b> Setting-up Q matrices for inference</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cid4"><i class="fa fa-check"></i><b>4.2.1</b> CID4</a></li>
+<li class="chapter" data-level="4.2.2" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cid8-congruent-to-cid4"><i class="fa fa-check"></i><b>4.2.2</b> CID8 (congruent to CID4)</a></li>
+<li class="chapter" data-level="4.2.3" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-c-correlated-evolution-congruent-to-cid4"><i class="fa fa-check"></i><b>4.2.3</b> COR8-C (correlated evolution, congruent to CID4)</a></li>
+<li class="chapter" data-level="4.2.4" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-nc-non-correlated-evolution-congruent-to-cid4"><i class="fa fa-check"></i><b>4.2.4</b> COR8-NC (Non-correlated evolution, congruent to CID4)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#irreducible-model"><i class="fa fa-check"></i><b>4.3</b> Irreducible model</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cid4-4-pars"><i class="fa fa-check"></i><b>4.3.1</b> CID4 (4 pars)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#inferences-using-parameters-from-cid4"><i class="fa fa-check"></i><b>4.4</b> Inferences using parameters from CID4</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cid8-4-pars"><i class="fa fa-check"></i><b>4.4.1</b> CID8 (4 pars)</a></li>
+<li class="chapter" data-level="4.4.2" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-c-4-pars"><i class="fa fa-check"></i><b>4.4.2</b> COR8-C (4 pars)</a></li>
+<li class="chapter" data-level="4.4.3" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-nc-4-pars"><i class="fa fa-check"></i><b>4.4.3</b> COR8-NC (4 pars)</a></li>
+<li class="chapter" data-level="4.4.4" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cla8-c-4-pars"><i class="fa fa-check"></i><b>4.4.4</b> CLA8-C (4 pars)</a></li>
+<li class="chapter" data-level="4.4.5" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cla8-nc-4-pars"><i class="fa fa-check"></i><b>4.4.5</b> CLA8-NC (4 pars)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#maximum-likelihood.-all-models-have-4-pars."><i class="fa fa-check"></i><b>4.5</b> Maximum Likelihood. All models have 4 pars.</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cid8"><i class="fa fa-check"></i><b>4.5.1</b> CID8</a></li>
+<li class="chapter" data-level="4.5.2" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-c"><i class="fa fa-check"></i><b>4.5.2</b> COR8-C</a></li>
+<li class="chapter" data-level="4.5.3" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-nc"><i class="fa fa-check"></i><b>4.5.3</b> COR8-NC</a></li>
+<li class="chapter" data-level="4.5.4" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cla8-c"><i class="fa fa-check"></i><b>4.5.4</b> CLA8-C</a></li>
+<li class="chapter" data-level="4.5.5" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cla8-nc"><i class="fa fa-check"></i><b>4.5.5</b> CLA8-NC</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#results-1"><i class="fa fa-check"></i><b>4.6</b> Results</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#inferences-using-parameters-from-cid4-1"><i class="fa fa-check"></i><b>4.6.1</b> Inferences using parameters from CID4</a></li>
+<li class="chapter" data-level="4.6.2" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#maximum-likelihood-estimates"><i class="fa fa-check"></i><b>4.6.2</b> Maximum Likelihood estimates</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html"><i class="fa fa-check"></i><b>5</b> Equal Rate Hidden Expansion (EHE)</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#read-in-data-1"><i class="fa fa-check"></i><b>5.1</b> Read in data</a></li>
+<li class="chapter" data-level="5.2" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#setting-up-q-matrices-for-inference-1"><i class="fa fa-check"></i><b>5.2</b> Setting-up Q matrices for inference</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#cid4-1"><i class="fa fa-check"></i><b>5.2.1</b> CID4</a></li>
+<li class="chapter" data-level="5.2.2" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#cid8-congruent-to-cid4-1"><i class="fa fa-check"></i><b>5.2.2</b> CID8 (congruent to CID4)</a></li>
+<li class="chapter" data-level="5.2.3" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#ehe8-c-correlated-evolution-congruent-to-cid4"><i class="fa fa-check"></i><b>5.2.3</b> EHE8-C (correlated evolution, congruent to CID4)</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#inferences-using-parameters-from-cid4-2"><i class="fa fa-check"></i><b>5.3</b> Inferences using parameters from CID4</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#cid4-4-pars-1"><i class="fa fa-check"></i><b>5.3.1</b> CID4 (4 pars)</a></li>
+<li class="chapter" data-level="5.3.2" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#ehe8-c-2-pars"><i class="fa fa-check"></i><b>5.3.2</b> EHE8-C (2 pars)</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#compare-ln-estimates"><i class="fa fa-check"></i><b>5.4</b> Compare Ln estimates</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html"><i class="fa fa-check"></i><b>6</b> Semi-congruent Behavior</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#setting-up-q-matrices-for-inference-2"><i class="fa fa-check"></i><b>6.1</b> Setting-up Q matrices for inference</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#cid4-2"><i class="fa fa-check"></i><b>6.1.1</b> CID4</a></li>
+<li class="chapter" data-level="6.1.2" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#ehe8-c-correlated-evolution-congruent-to-cid4-1"><i class="fa fa-check"></i><b>6.1.2</b> EHE8-C (correlated evolution, congruent to CID4)</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#read-in-data-2"><i class="fa fa-check"></i><b>6.2</b> Read in data</a></li>
+<li class="chapter" data-level="6.3" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#maximum-likelihood"><i class="fa fa-check"></i><b>6.3</b> Maximum Likelihood</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#cid4-4-pars-2"><i class="fa fa-check"></i><b>6.3.1</b> CID4 (4 pars)</a></li>
+<li class="chapter" data-level="6.3.2" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#ehe8-c"><i class="fa fa-check"></i><b>6.3.2</b> EHE8-C</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#results-2"><i class="fa fa-check"></i><b>6.4</b> Results</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html"><i class="fa fa-check"></i><b>7</b> Congruence under varying Sampling Fraction</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#read-in-data-3"><i class="fa fa-check"></i><b>7.1</b> Read in data</a></li>
+<li class="chapter" data-level="7.2" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#setup-sampling-fraction"><i class="fa fa-check"></i><b>7.2</b> Setup Sampling Fraction</a></li>
+<li class="chapter" data-level="7.3" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#setting-up-q-matrices-for-inference-3"><i class="fa fa-check"></i><b>7.3</b> Setting-up Q matrices for inference</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cid4-3"><i class="fa fa-check"></i><b>7.3.1</b> CID4</a></li>
+<li class="chapter" data-level="7.3.2" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cid8-congruent-to-cid4-2"><i class="fa fa-check"></i><b>7.3.2</b> CID8 (congruent to CID4)</a></li>
+<li class="chapter" data-level="7.3.3" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cor8-c-correlated-evolution-congruent-to-cid4-1"><i class="fa fa-check"></i><b>7.3.3</b> COR8-C (correlated evolution, congruent to CID4)</a></li>
+<li class="chapter" data-level="7.3.4" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cor8-nc-non-correlated-evolution-congruent-to-cid4-1"><i class="fa fa-check"></i><b>7.3.4</b> COR8-NC (Non-correlated evolution, congruent to CID4)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#irreducible-model-1"><i class="fa fa-check"></i><b>7.4</b> Irreducible model</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cid4-4-pars-3"><i class="fa fa-check"></i><b>7.4.1</b> CID4 (4 pars)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#inferences-using-parameters-from-cid4-3"><i class="fa fa-check"></i><b>7.5</b> Inferences using parameters from CID4</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cid8-4-pars-1"><i class="fa fa-check"></i><b>7.5.1</b> CID8 (4 pars)</a></li>
+<li class="chapter" data-level="7.5.2" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cor8-c-4-pars-1"><i class="fa fa-check"></i><b>7.5.2</b> COR8-C (4 pars)</a></li>
+<li class="chapter" data-level="7.5.3" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cor8-nc-4-pars-1"><i class="fa fa-check"></i><b>7.5.3</b> COR8-NC (4 pars)</a></li>
+<li class="chapter" data-level="7.5.4" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cla8-c-4-pars-1"><i class="fa fa-check"></i><b>7.5.4</b> CLA8-C (4 pars)</a></li>
+<li class="chapter" data-level="7.5.5" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cla8-nc-4-pars-1"><i class="fa fa-check"></i><b>7.5.5</b> CLA8-NC (4 pars)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#results-3"><i class="fa fa-check"></i><b>7.6</b> Results</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#inferences-using-parameters-from-cid4-4"><i class="fa fa-check"></i><b>7.6.1</b> Inferences using parameters from CID4</a></li>
+</ul></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -148,7 +287,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R Notebook</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Report for Simulations using HiClaSSE model</a>
           </h1>
         </div>
 

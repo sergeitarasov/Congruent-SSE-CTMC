@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5 Equal Rate Hidden Expansion (EHE) | Report for Simulations using HiClaSSE model</title>
+  <meta name="description" content="5 Equal Rate Hidden Expansion (EHE) | Report for Simulations using HiClaSSE model" />
+  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="5 Equal Rate Hidden Expansion (EHE) | Report for Simulations using HiClaSSE model" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="5 Equal Rate Hidden Expansion (EHE) | Report for Simulations using HiClaSSE model" />
+  
+  
+  
+
+<meta name="author" content="Sergei Tarasov" />
+
+
+<meta name="date" content="2024-02-29" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="congruence-between-independent-and-dependent-sses.html"/>
+<link rel="next" href="semi-congruent-behavior.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Setting-up HiClaSSE</a></li>
+<li class="chapter" data-level="2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html"><i class="fa fa-check"></i><b>2</b> Validation of HiClaSSE</a>
+<ul>
+<li class="chapter" data-level="2.0.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#make-data"><i class="fa fa-check"></i><b>2.0.1</b> Make data</a></li>
+<li class="chapter" data-level="2.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#bisse-ness-and-hiclasse"><i class="fa fa-check"></i><b>2.1</b> BiSSE-ness and HiClaSSE</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#bisse-ness-likelihood"><i class="fa fa-check"></i><b>2.1.1</b> BiSSE-ness Likelihood</a></li>
+<li class="chapter" data-level="2.1.2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hiclasse2-likelihood"><i class="fa fa-check"></i><b>2.1.2</b> HiClaSSE2 Likelihood</a></li>
+<li class="chapter" data-level="2.1.3" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#compare-models"><i class="fa fa-check"></i><b>2.1.3</b> Compare models</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#bisse-and-hiclasse"><i class="fa fa-check"></i><b>2.2</b> BiSSE and HiClaSSE</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#bisse"><i class="fa fa-check"></i><b>2.2.1</b> BiSSE</a></li>
+<li class="chapter" data-level="2.2.2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hiclasse2"><i class="fa fa-check"></i><b>2.2.2</b> HiClaSSE2</a></li>
+<li class="chapter" data-level="2.2.3" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#compare-models-1"><i class="fa fa-check"></i><b>2.2.3</b> Compare models</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hisse4-and-hiclasse4"><i class="fa fa-check"></i><b>2.3</b> HiSSE4 and HiClaSSE4</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hiclasse4"><i class="fa fa-check"></i><b>2.3.1</b> HiClaSSE4</a></li>
+<li class="chapter" data-level="2.3.2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hisse4"><i class="fa fa-check"></i><b>2.3.2</b> HiSSE4</a></li>
+<li class="chapter" data-level="2.3.3" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#compare-models-2"><i class="fa fa-check"></i><b>2.3.3</b> Compare models</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#sampling-fraction-bisse-ness-and-hiclasse"><i class="fa fa-check"></i><b>2.4</b> Sampling fraction: BiSSE-ness and HiClaSSE</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#bisse-ness-likelihood-1"><i class="fa fa-check"></i><b>2.4.1</b> BiSSE-ness Likelihood</a></li>
+<li class="chapter" data-level="2.4.2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hiclasse2-likelihood-1"><i class="fa fa-check"></i><b>2.4.2</b> HiClaSSE2 Likelihood</a></li>
+<li class="chapter" data-level="2.4.3" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#compare-models-3"><i class="fa fa-check"></i><b>2.4.3</b> Compare models</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="misse-congruence.html"><a href="misse-congruence.html"><i class="fa fa-check"></i><b>3</b> MiSSE Congruence</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="misse-congruence.html"><a href="misse-congruence.html#set-up-q-matrix-for-inference"><i class="fa fa-check"></i><b>3.1</b> SET-UP Q matrix for inference</a></li>
+<li class="chapter" data-level="3.2" data-path="misse-congruence.html"><a href="misse-congruence.html#misse-2"><i class="fa fa-check"></i><b>3.2</b> MiSSE-2</a></li>
+<li class="chapter" data-level="3.3" data-path="misse-congruence.html"><a href="misse-congruence.html#misse-3-congruent"><i class="fa fa-check"></i><b>3.3</b> MiSSE-3 Congruent</a></li>
+<li class="chapter" data-level="3.4" data-path="misse-congruence.html"><a href="misse-congruence.html#misse-3-congruent-inferred-pars"><i class="fa fa-check"></i><b>3.4</b> MiSSE-3 Congruent, Inferred Pars</a></li>
+<li class="chapter" data-level="3.5" data-path="misse-congruence.html"><a href="misse-congruence.html#misse-3-non-congruent"><i class="fa fa-check"></i><b>3.5</b> MiSSE-3 Non-congruent</a></li>
+<li class="chapter" data-level="3.6" data-path="misse-congruence.html"><a href="misse-congruence.html#another-non-congruent-models"><i class="fa fa-check"></i><b>3.6</b> Another Non-congruent Models</a></li>
+<li class="chapter" data-level="3.7" data-path="misse-congruence.html"><a href="misse-congruence.html#zero-extinction"><i class="fa fa-check"></i><b>3.7</b> Zero Extinction</a></li>
+<li class="chapter" data-level="3.8" data-path="misse-congruence.html"><a href="misse-congruence.html#results"><i class="fa fa-check"></i><b>3.8</b> Results</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="misse-congruence.html"><a href="misse-congruence.html#likelihood-table"><i class="fa fa-check"></i><b>3.8.1</b> Likelihood table</a></li>
+<li class="chapter" data-level="3.8.2" data-path="misse-congruence.html"><a href="misse-congruence.html#mean-absolute-error"><i class="fa fa-check"></i><b>3.8.2</b> Mean absolute error</a></li>
+<li class="chapter" data-level="3.8.3" data-path="misse-congruence.html"><a href="misse-congruence.html#parameter-estimates"><i class="fa fa-check"></i><b>3.8.3</b> Parameter estimates</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html"><i class="fa fa-check"></i><b>4</b> Congruence between independent and dependent SSEs</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#read-in-data"><i class="fa fa-check"></i><b>4.1</b> Read in data</a></li>
+<li class="chapter" data-level="4.2" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#setting-up-q-matrices-for-inference"><i class="fa fa-check"></i><b>4.2</b> Setting-up Q matrices for inference</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cid4"><i class="fa fa-check"></i><b>4.2.1</b> CID4</a></li>
+<li class="chapter" data-level="4.2.2" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cid8-congruent-to-cid4"><i class="fa fa-check"></i><b>4.2.2</b> CID8 (congruent to CID4)</a></li>
+<li class="chapter" data-level="4.2.3" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-c-correlated-evolution-congruent-to-cid4"><i class="fa fa-check"></i><b>4.2.3</b> COR8-C (correlated evolution, congruent to CID4)</a></li>
+<li class="chapter" data-level="4.2.4" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-nc-non-correlated-evolution-congruent-to-cid4"><i class="fa fa-check"></i><b>4.2.4</b> COR8-NC (Non-correlated evolution, congruent to CID4)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#irreducible-model"><i class="fa fa-check"></i><b>4.3</b> Irreducible model</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cid4-4-pars"><i class="fa fa-check"></i><b>4.3.1</b> CID4 (4 pars)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#inferences-using-parameters-from-cid4"><i class="fa fa-check"></i><b>4.4</b> Inferences using parameters from CID4</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cid8-4-pars"><i class="fa fa-check"></i><b>4.4.1</b> CID8 (4 pars)</a></li>
+<li class="chapter" data-level="4.4.2" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-c-4-pars"><i class="fa fa-check"></i><b>4.4.2</b> COR8-C (4 pars)</a></li>
+<li class="chapter" data-level="4.4.3" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-nc-4-pars"><i class="fa fa-check"></i><b>4.4.3</b> COR8-NC (4 pars)</a></li>
+<li class="chapter" data-level="4.4.4" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cla8-c-4-pars"><i class="fa fa-check"></i><b>4.4.4</b> CLA8-C (4 pars)</a></li>
+<li class="chapter" data-level="4.4.5" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cla8-nc-4-pars"><i class="fa fa-check"></i><b>4.4.5</b> CLA8-NC (4 pars)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#maximum-likelihood.-all-models-have-4-pars."><i class="fa fa-check"></i><b>4.5</b> Maximum Likelihood. All models have 4 pars.</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cid8"><i class="fa fa-check"></i><b>4.5.1</b> CID8</a></li>
+<li class="chapter" data-level="4.5.2" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-c"><i class="fa fa-check"></i><b>4.5.2</b> COR8-C</a></li>
+<li class="chapter" data-level="4.5.3" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-nc"><i class="fa fa-check"></i><b>4.5.3</b> COR8-NC</a></li>
+<li class="chapter" data-level="4.5.4" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cla8-c"><i class="fa fa-check"></i><b>4.5.4</b> CLA8-C</a></li>
+<li class="chapter" data-level="4.5.5" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cla8-nc"><i class="fa fa-check"></i><b>4.5.5</b> CLA8-NC</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#results-1"><i class="fa fa-check"></i><b>4.6</b> Results</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#inferences-using-parameters-from-cid4-1"><i class="fa fa-check"></i><b>4.6.1</b> Inferences using parameters from CID4</a></li>
+<li class="chapter" data-level="4.6.2" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#maximum-likelihood-estimates"><i class="fa fa-check"></i><b>4.6.2</b> Maximum Likelihood estimates</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html"><i class="fa fa-check"></i><b>5</b> Equal Rate Hidden Expansion (EHE)</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#read-in-data-1"><i class="fa fa-check"></i><b>5.1</b> Read in data</a></li>
+<li class="chapter" data-level="5.2" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#setting-up-q-matrices-for-inference-1"><i class="fa fa-check"></i><b>5.2</b> Setting-up Q matrices for inference</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#cid4-1"><i class="fa fa-check"></i><b>5.2.1</b> CID4</a></li>
+<li class="chapter" data-level="5.2.2" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#cid8-congruent-to-cid4-1"><i class="fa fa-check"></i><b>5.2.2</b> CID8 (congruent to CID4)</a></li>
+<li class="chapter" data-level="5.2.3" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#ehe8-c-correlated-evolution-congruent-to-cid4"><i class="fa fa-check"></i><b>5.2.3</b> EHE8-C (correlated evolution, congruent to CID4)</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#inferences-using-parameters-from-cid4-2"><i class="fa fa-check"></i><b>5.3</b> Inferences using parameters from CID4</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#cid4-4-pars-1"><i class="fa fa-check"></i><b>5.3.1</b> CID4 (4 pars)</a></li>
+<li class="chapter" data-level="5.3.2" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#ehe8-c-2-pars"><i class="fa fa-check"></i><b>5.3.2</b> EHE8-C (2 pars)</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#compare-ln-estimates"><i class="fa fa-check"></i><b>5.4</b> Compare Ln estimates</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html"><i class="fa fa-check"></i><b>6</b> Semi-congruent Behavior</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#setting-up-q-matrices-for-inference-2"><i class="fa fa-check"></i><b>6.1</b> Setting-up Q matrices for inference</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#cid4-2"><i class="fa fa-check"></i><b>6.1.1</b> CID4</a></li>
+<li class="chapter" data-level="6.1.2" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#ehe8-c-correlated-evolution-congruent-to-cid4-1"><i class="fa fa-check"></i><b>6.1.2</b> EHE8-C (correlated evolution, congruent to CID4)</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#read-in-data-2"><i class="fa fa-check"></i><b>6.2</b> Read in data</a></li>
+<li class="chapter" data-level="6.3" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#maximum-likelihood"><i class="fa fa-check"></i><b>6.3</b> Maximum Likelihood</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#cid4-4-pars-2"><i class="fa fa-check"></i><b>6.3.1</b> CID4 (4 pars)</a></li>
+<li class="chapter" data-level="6.3.2" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#ehe8-c"><i class="fa fa-check"></i><b>6.3.2</b> EHE8-C</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#results-2"><i class="fa fa-check"></i><b>6.4</b> Results</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html"><i class="fa fa-check"></i><b>7</b> Congruence under varying Sampling Fraction</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#read-in-data-3"><i class="fa fa-check"></i><b>7.1</b> Read in data</a></li>
+<li class="chapter" data-level="7.2" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#setup-sampling-fraction"><i class="fa fa-check"></i><b>7.2</b> Setup Sampling Fraction</a></li>
+<li class="chapter" data-level="7.3" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#setting-up-q-matrices-for-inference-3"><i class="fa fa-check"></i><b>7.3</b> Setting-up Q matrices for inference</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cid4-3"><i class="fa fa-check"></i><b>7.3.1</b> CID4</a></li>
+<li class="chapter" data-level="7.3.2" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cid8-congruent-to-cid4-2"><i class="fa fa-check"></i><b>7.3.2</b> CID8 (congruent to CID4)</a></li>
+<li class="chapter" data-level="7.3.3" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cor8-c-correlated-evolution-congruent-to-cid4-1"><i class="fa fa-check"></i><b>7.3.3</b> COR8-C (correlated evolution, congruent to CID4)</a></li>
+<li class="chapter" data-level="7.3.4" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cor8-nc-non-correlated-evolution-congruent-to-cid4-1"><i class="fa fa-check"></i><b>7.3.4</b> COR8-NC (Non-correlated evolution, congruent to CID4)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#irreducible-model-1"><i class="fa fa-check"></i><b>7.4</b> Irreducible model</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cid4-4-pars-3"><i class="fa fa-check"></i><b>7.4.1</b> CID4 (4 pars)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#inferences-using-parameters-from-cid4-3"><i class="fa fa-check"></i><b>7.5</b> Inferences using parameters from CID4</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cid8-4-pars-1"><i class="fa fa-check"></i><b>7.5.1</b> CID8 (4 pars)</a></li>
+<li class="chapter" data-level="7.5.2" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cor8-c-4-pars-1"><i class="fa fa-check"></i><b>7.5.2</b> COR8-C (4 pars)</a></li>
+<li class="chapter" data-level="7.5.3" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cor8-nc-4-pars-1"><i class="fa fa-check"></i><b>7.5.3</b> COR8-NC (4 pars)</a></li>
+<li class="chapter" data-level="7.5.4" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cla8-c-4-pars-1"><i class="fa fa-check"></i><b>7.5.4</b> CLA8-C (4 pars)</a></li>
+<li class="chapter" data-level="7.5.5" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cla8-nc-4-pars-1"><i class="fa fa-check"></i><b>7.5.5</b> CLA8-NC (4 pars)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#results-3"><i class="fa fa-check"></i><b>7.6</b> Results</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#inferences-using-parameters-from-cid4-4"><i class="fa fa-check"></i><b>7.6.1</b> Inferences using parameters from CID4</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Report for Simulations using HiClaSSE model</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="equal-rate-hidden-expansion-ehe" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">5</span> Equal Rate Hidden Expansion (EHE)<a href="equal-rate-hidden-expansion-ehe.html#equal-rate-hidden-expansion-ehe" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>HE can be extended to a point when all permissible rates are equal, except extinctions. We refer to this transformation as Equal Rate Hidden Expansion (EHE).</p>
+<p>The EHE model can be created for any SSE, if we know parameter values of that SSE. In this example, we calculate likelihood for CID4 with known parameters and construct congruent EHE8-C model. We show that the likelihoods are identical up to numerical integration error.</p>
+<div class="sourceCode" id="cb314"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb314-1"><a href="equal-rate-hidden-expansion-ehe.html#cb314-1" tabindex="-1"></a><span class="do">##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span>
+<span id="cb314-2"><a href="equal-rate-hidden-expansion-ehe.html#cb314-2" tabindex="-1"></a><span class="do">##  ~ installations and dependencies  ----</span></span>
+<span id="cb314-3"><a href="equal-rate-hidden-expansion-ehe.html#cb314-3" tabindex="-1"></a><span class="do">##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span>
+<span id="cb314-4"><a href="equal-rate-hidden-expansion-ehe.html#cb314-4" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&#39;R/utils/dependencies.R&#39;</span>)</span>
+<span id="cb314-5"><a href="equal-rate-hidden-expansion-ehe.html#cb314-5" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&#39;R/hiclasse/HiClaSSE-R.R&#39;</span>) <span class="co"># pure R implementation of HiCLaSSE</span></span></code></pre></div>
+<pre><code>## [1] &quot;Original matrix:&quot;
+##      [,1] [,2] [,3]
+## [1,]    1    4    7
+## [2,]    2    5    8
+## [3,]    3    6    9
+## [1] &quot;Matrix with right diagonal set to zero:&quot;
+##      [,1] [,2] [,3]
+## [1,]    1    4    0
+## [2,]    2    0    8
+## [3,]    0    6    9</code></pre>
+<div class="sourceCode" id="cb316"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb316-1"><a href="equal-rate-hidden-expansion-ehe.html#cb316-1" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&#39;R/hiclasse/HiClaSSE_cpp.R&#39;</span>) <span class="co"># fast implementation</span></span></code></pre></div>
+<pre><code>## [1] &quot;Original matrix:&quot;
+##      [,1] [,2] [,3]
+## [1,]    1    4    7
+## [2,]    2    5    8
+## [3,]    3    6    9
+## [1] &quot;Matrix with right diagonal set to zero:&quot;
+##      [,1] [,2] [,3]
+## [1,]    1    4    0
+## [2,]    2    0    8
+## [3,]    0    6    9
+## [1] TRUE
+## [1] TRUE
+## [1] TRUE
+## [1] TRUE</code></pre>
+<div id="read-in-data-1" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Read in data<a href="equal-rate-hidden-expansion-ehe.html#read-in-data-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb318-1"><a href="equal-rate-hidden-expansion-ehe.html#cb318-1" tabindex="-1"></a>NSIM <span class="ot">=</span> <span class="dv">10</span></span>
+<span id="cb318-2"><a href="equal-rate-hidden-expansion-ehe.html#cb318-2" tabindex="-1"></a>phy <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file=</span><span class="st">&#39;R/data/phy_CID4.RDS&#39;</span>)</span></code></pre></div>
+</div>
+<div id="setting-up-q-matrices-for-inference-1" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Setting-up Q matrices for inference<a href="equal-rate-hidden-expansion-ehe.html#setting-up-q-matrices-for-inference-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="cid4-1" class="section level3 hasAnchor" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> CID4<a href="equal-rate-hidden-expansion-ehe.html#cid4-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb319"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb319-1"><a href="equal-rate-hidden-expansion-ehe.html#cb319-1" tabindex="-1"></a><span class="co"># trait</span></span>
+<span id="cb319-2"><a href="equal-rate-hidden-expansion-ehe.html#cb319-2" tabindex="-1"></a>Q_t <span class="ot">&lt;-</span> <span class="fu">initQ</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb319-3"><a href="equal-rate-hidden-expansion-ehe.html#cb319-3" tabindex="-1"></a><span class="co"># diversification regime</span></span>
+<span id="cb319-4"><a href="equal-rate-hidden-expansion-ehe.html#cb319-4" tabindex="-1"></a>Q_r2 <span class="ot">&lt;-</span> <span class="fu">initQ</span>(<span class="fu">c</span>(<span class="st">&#39;A&#39;</span>,<span class="st">&#39;B&#39;</span>), <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb319-5"><a href="equal-rate-hidden-expansion-ehe.html#cb319-5" tabindex="-1"></a><span class="co"># speciation rates for tracking the order</span></span>
+<span id="cb319-6"><a href="equal-rate-hidden-expansion-ehe.html#cb319-6" tabindex="-1"></a>La4 <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>,<span class="sc">-</span><span class="dv">1</span>),<span class="dv">2</span>)</span>
+<span id="cb319-7"><a href="equal-rate-hidden-expansion-ehe.html#cb319-7" tabindex="-1"></a>La4 <span class="ot">=</span> La4 <span class="sc">%x%</span> <span class="fu">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb319-8"><a href="equal-rate-hidden-expansion-ehe.html#cb319-8" tabindex="-1"></a><span class="co"># order according to regimes</span></span>
+<span id="cb319-9"><a href="equal-rate-hidden-expansion-ehe.html#cb319-9" tabindex="-1"></a>Q_cid4.r <span class="ot">&lt;-</span> <span class="fu">amaSMM</span>(Q_r2, Q_t)</span>
+<span id="cb319-10"><a href="equal-rate-hidden-expansion-ehe.html#cb319-10" tabindex="-1"></a></span>
+<span id="cb319-11"><a href="equal-rate-hidden-expansion-ehe.html#cb319-11" tabindex="-1"></a><span class="co"># order according to trait</span></span>
+<span id="cb319-12"><a href="equal-rate-hidden-expansion-ehe.html#cb319-12" tabindex="-1"></a>v<span class="ot">=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>, <span class="dv">2</span>,<span class="dv">4</span>)</span>
+<span id="cb319-13"><a href="equal-rate-hidden-expansion-ehe.html#cb319-13" tabindex="-1"></a>Q_cid4.t <span class="ot">&lt;-</span> Q_cid4.r[v,v]</span>
+<span id="cb319-14"><a href="equal-rate-hidden-expansion-ehe.html#cb319-14" tabindex="-1"></a></span>
+<span id="cb319-15"><a href="equal-rate-hidden-expansion-ehe.html#cb319-15" tabindex="-1"></a><span class="fu">print</span>(Q_cid4.r)</span></code></pre></div>
+<pre><code>##    A0 A1 B0 B1
+## A0 -4  2  2  0
+## A1  2 -4  0  2
+## B0  2  0 -4  2
+## B1  0  2  2 -4</code></pre>
+<div class="sourceCode" id="cb321"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb321-1"><a href="equal-rate-hidden-expansion-ehe.html#cb321-1" tabindex="-1"></a><span class="fu">print</span>(La4)</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]   -3    0    0    0
+## [2,]    0   -3    0    0
+## [3,]    0    0   -1    0
+## [4,]    0    0    0   -1</code></pre>
+<div class="sourceCode" id="cb323"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb323-1"><a href="equal-rate-hidden-expansion-ehe.html#cb323-1" tabindex="-1"></a><span class="fu">print</span>(Q_cid4.t)</span></code></pre></div>
+<pre><code>##    A0 B0 A1 B1
+## A0 -4  2  2  0
+## B0  2 -4  0  2
+## A1  2  0 -4  2
+## B1  0  2  2 -4</code></pre>
+<div class="sourceCode" id="cb325"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb325-1"><a href="equal-rate-hidden-expansion-ehe.html#cb325-1" tabindex="-1"></a><span class="fu">print</span>(La4[v,v])</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]   -3    0    0    0
+## [2,]    0   -1    0    0
+## [3,]    0    0   -3    0
+## [4,]    0    0    0   -1</code></pre>
+</div>
+<div id="cid8-congruent-to-cid4-1" class="section level3 hasAnchor" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> CID8 (congruent to CID4)<a href="equal-rate-hidden-expansion-ehe.html#cid8-congruent-to-cid4-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb327"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb327-1"><a href="equal-rate-hidden-expansion-ehe.html#cb327-1" tabindex="-1"></a><span class="co"># diversification regime</span></span>
+<span id="cb327-2"><a href="equal-rate-hidden-expansion-ehe.html#cb327-2" tabindex="-1"></a><span class="co"># Q_r4 &lt;- initQ(c(&#39;a&#39;,&#39;b&#39;, &#39;c&#39;, &#39;d&#39;), c(2,2))</span></span>
+<span id="cb327-3"><a href="equal-rate-hidden-expansion-ehe.html#cb327-3" tabindex="-1"></a>Q_r4 <span class="ot">&lt;-</span> <span class="fu">amaSMM</span>(Q_r2, Q_r2)</span>
+<span id="cb327-4"><a href="equal-rate-hidden-expansion-ehe.html#cb327-4" tabindex="-1"></a><span class="fu">colnames</span>(Q_r4) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(Q_r4) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;a&#39;</span>,<span class="st">&#39;b&#39;</span>, <span class="st">&#39;c&#39;</span>, <span class="st">&#39;d&#39;</span>)</span>
+<span id="cb327-5"><a href="equal-rate-hidden-expansion-ehe.html#cb327-5" tabindex="-1"></a></span>
+<span id="cb327-6"><a href="equal-rate-hidden-expansion-ehe.html#cb327-6" tabindex="-1"></a><span class="co"># speciation rates for tracking the order</span></span>
+<span id="cb327-7"><a href="equal-rate-hidden-expansion-ehe.html#cb327-7" tabindex="-1"></a>La8 <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>,<span class="sc">-</span><span class="dv">1</span>),<span class="dv">2</span>)</span>
+<span id="cb327-8"><a href="equal-rate-hidden-expansion-ehe.html#cb327-8" tabindex="-1"></a>La8 <span class="ot">=</span> La8 <span class="sc">%x%</span> <span class="fu">diag</span>(<span class="dv">1</span>,<span class="dv">4</span>)</span>
+<span id="cb327-9"><a href="equal-rate-hidden-expansion-ehe.html#cb327-9" tabindex="-1"></a></span>
+<span id="cb327-10"><a href="equal-rate-hidden-expansion-ehe.html#cb327-10" tabindex="-1"></a><span class="co"># order according to regimes</span></span>
+<span id="cb327-11"><a href="equal-rate-hidden-expansion-ehe.html#cb327-11" tabindex="-1"></a>Q_cid8.r <span class="ot">&lt;-</span> <span class="fu">amaSMM</span>(Q_r4, Q_t) </span>
+<span id="cb327-12"><a href="equal-rate-hidden-expansion-ehe.html#cb327-12" tabindex="-1"></a></span>
+<span id="cb327-13"><a href="equal-rate-hidden-expansion-ehe.html#cb327-13" tabindex="-1"></a><span class="co"># order according to trait</span></span>
+<span id="cb327-14"><a href="equal-rate-hidden-expansion-ehe.html#cb327-14" tabindex="-1"></a>v<span class="ot">=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>, <span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">8</span>)</span>
+<span id="cb327-15"><a href="equal-rate-hidden-expansion-ehe.html#cb327-15" tabindex="-1"></a>Q_cid8.t <span class="ot">&lt;-</span> Q_cid8.r[v,v]</span>
+<span id="cb327-16"><a href="equal-rate-hidden-expansion-ehe.html#cb327-16" tabindex="-1"></a></span>
+<span id="cb327-17"><a href="equal-rate-hidden-expansion-ehe.html#cb327-17" tabindex="-1"></a><span class="fu">print</span>(Q_cid8.r)</span></code></pre></div>
+<pre><code>##    a0 a1 b0 b1 c0 c1 d0 d1
+## a0 -6  2  2  0  2  0  0  0
+## a1  2 -6  0  2  0  2  0  0
+## b0  2  0 -6  2  0  0  2  0
+## b1  0  2  2 -6  0  0  0  2
+## c0  2  0  0  0 -6  2  2  0
+## c1  0  2  0  0  2 -6  0  2
+## d0  0  0  2  0  2  0 -6  2
+## d1  0  0  0  2  0  2  2 -6</code></pre>
+<div class="sourceCode" id="cb329"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb329-1"><a href="equal-rate-hidden-expansion-ehe.html#cb329-1" tabindex="-1"></a><span class="fu">print</span>(La8)</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+## [1,]   -3    0    0    0    0    0    0    0
+## [2,]    0   -3    0    0    0    0    0    0
+## [3,]    0    0   -3    0    0    0    0    0
+## [4,]    0    0    0   -3    0    0    0    0
+## [5,]    0    0    0    0   -1    0    0    0
+## [6,]    0    0    0    0    0   -1    0    0
+## [7,]    0    0    0    0    0    0   -1    0
+## [8,]    0    0    0    0    0    0    0   -1</code></pre>
+<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb331-1"><a href="equal-rate-hidden-expansion-ehe.html#cb331-1" tabindex="-1"></a><span class="fu">print</span>(Q_cid8.t)</span></code></pre></div>
+<pre><code>##    a0 b0 c0 d0 a1 b1 c1 d1
+## a0 -6  2  2  0  2  0  0  0
+## b0  2 -6  0  2  0  2  0  0
+## c0  2  0 -6  2  0  0  2  0
+## d0  0  2  2 -6  0  0  0  2
+## a1  2  0  0  0 -6  2  2  0
+## b1  0  2  0  0  2 -6  0  2
+## c1  0  0  2  0  2  0 -6  2
+## d1  0  0  0  2  0  2  2 -6</code></pre>
+<div class="sourceCode" id="cb333"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb333-1"><a href="equal-rate-hidden-expansion-ehe.html#cb333-1" tabindex="-1"></a><span class="fu">print</span>(La8[v,v])</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+## [1,]   -3    0    0    0    0    0    0    0
+## [2,]    0   -3    0    0    0    0    0    0
+## [3,]    0    0   -1    0    0    0    0    0
+## [4,]    0    0    0   -1    0    0    0    0
+## [5,]    0    0    0    0   -3    0    0    0
+## [6,]    0    0    0    0    0   -3    0    0
+## [7,]    0    0    0    0    0    0   -1    0
+## [8,]    0    0    0    0    0    0    0   -1</code></pre>
+</div>
+<div id="ehe8-c-correlated-evolution-congruent-to-cid4" class="section level3 hasAnchor" number="5.2.3">
+<h3><span class="header-section-number">5.2.3</span> EHE8-C (correlated evolution, congruent to CID4)<a href="equal-rate-hidden-expansion-ehe.html#ehe8-c-correlated-evolution-congruent-to-cid4" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb335"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb335-1"><a href="equal-rate-hidden-expansion-ehe.html#cb335-1" tabindex="-1"></a><span class="co"># Create the matrix as a data frame</span></span>
+<span id="cb335-2"><a href="equal-rate-hidden-expansion-ehe.html#cb335-2" tabindex="-1"></a>Q_ehe8_C.t <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb335-3"><a href="equal-rate-hidden-expansion-ehe.html#cb335-3" tabindex="-1"></a>  <span class="at">a0 =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb335-4"><a href="equal-rate-hidden-expansion-ehe.html#cb335-4" tabindex="-1"></a>  <span class="at">b0 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="sc">-</span><span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb335-5"><a href="equal-rate-hidden-expansion-ehe.html#cb335-5" tabindex="-1"></a>  <span class="at">c0 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb335-6"><a href="equal-rate-hidden-expansion-ehe.html#cb335-6" tabindex="-1"></a>  <span class="at">d0 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb335-7"><a href="equal-rate-hidden-expansion-ehe.html#cb335-7" tabindex="-1"></a>  <span class="at">a1 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb335-8"><a href="equal-rate-hidden-expansion-ehe.html#cb335-8" tabindex="-1"></a>  <span class="at">b1 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb335-9"><a href="equal-rate-hidden-expansion-ehe.html#cb335-9" tabindex="-1"></a>  <span class="at">c1 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">4</span>, <span class="dv">0</span>),</span>
+<span id="cb335-10"><a href="equal-rate-hidden-expansion-ehe.html#cb335-10" tabindex="-1"></a>  <span class="at">d1 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">4</span>)</span>
+<span id="cb335-11"><a href="equal-rate-hidden-expansion-ehe.html#cb335-11" tabindex="-1"></a>)</span>
+<span id="cb335-12"><a href="equal-rate-hidden-expansion-ehe.html#cb335-12" tabindex="-1"></a></span>
+<span id="cb335-13"><a href="equal-rate-hidden-expansion-ehe.html#cb335-13" tabindex="-1"></a><span class="co"># Set row names and column names</span></span>
+<span id="cb335-14"><a href="equal-rate-hidden-expansion-ehe.html#cb335-14" tabindex="-1"></a><span class="fu">rownames</span>(Q_ehe8_C.t) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Q_ehe8_C.t)</span>
+<span id="cb335-15"><a href="equal-rate-hidden-expansion-ehe.html#cb335-15" tabindex="-1"></a>Q_ehe8_C.t <span class="ot">&lt;-</span><span class="fu">as.matrix</span>(Q_ehe8_C.t)</span>
+<span id="cb335-16"><a href="equal-rate-hidden-expansion-ehe.html#cb335-16" tabindex="-1"></a></span>
+<span id="cb335-17"><a href="equal-rate-hidden-expansion-ehe.html#cb335-17" tabindex="-1"></a>v<span class="ot">=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>, <span class="dv">2</span>,<span class="dv">6</span>, <span class="dv">3</span>,<span class="dv">7</span>, <span class="dv">4</span>,<span class="dv">8</span>)</span>
+<span id="cb335-18"><a href="equal-rate-hidden-expansion-ehe.html#cb335-18" tabindex="-1"></a>Q_ehe8_C.r <span class="ot">&lt;-</span> Q_ehe8_C.t[v,v]</span>
+<span id="cb335-19"><a href="equal-rate-hidden-expansion-ehe.html#cb335-19" tabindex="-1"></a></span>
+<span id="cb335-20"><a href="equal-rate-hidden-expansion-ehe.html#cb335-20" tabindex="-1"></a><span class="fu">print</span>(Q_ehe8_C.r)</span></code></pre></div>
+<pre><code>##    a0 a1 b0 b1 c0 c1 d0 d1
+## a0 -4  1  0  1  1  0  1  0
+## a1  1 -4  1  0  0  1  0  1
+## b0  0  1 -4  1  1  0  1  0
+## b1  1  0  1 -4  0  1  0  1
+## c0  1  0  1  0 -4  1  0  1
+## c1  0  1  0  1  1 -4  1  0
+## d0  1  0  1  0  0  1 -4  1
+## d1  0  1  0  1  1  0  1 -4</code></pre>
+<div class="sourceCode" id="cb337"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb337-1"><a href="equal-rate-hidden-expansion-ehe.html#cb337-1" tabindex="-1"></a><span class="co">#print(La8)</span></span>
+<span id="cb337-2"><a href="equal-rate-hidden-expansion-ehe.html#cb337-2" tabindex="-1"></a><span class="fu">print</span>(Q_ehe8_C.t)</span></code></pre></div>
+<pre><code>##    a0 b0 c0 d0 a1 b1 c1 d1
+## a0 -4  0  1  1  1  1  0  0
+## b0  0 -4  1  1  1  1  0  0
+## c0  1  1 -4  0  0  0  1  1
+## d0  1  1  0 -4  0  0  1  1
+## a1  1  1  0  0 -4  0  1  1
+## b1  1  1  0  0  0 -4  1  1
+## c1  0  0  1  1  1  1 -4  0
+## d1  0  0  1  1  1  1  0 -4</code></pre>
+<div class="sourceCode" id="cb339"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb339-1"><a href="equal-rate-hidden-expansion-ehe.html#cb339-1" tabindex="-1"></a><span class="fu">print</span>(La8[v,v])</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+## [1,]   -3    0    0    0    0    0    0    0
+## [2,]    0   -1    0    0    0    0    0    0
+## [3,]    0    0   -3    0    0    0    0    0
+## [4,]    0    0    0   -1    0    0    0    0
+## [5,]    0    0    0    0   -3    0    0    0
+## [6,]    0    0    0    0    0   -1    0    0
+## [7,]    0    0    0    0    0    0   -3    0
+## [8,]    0    0    0    0    0    0    0   -1</code></pre>
+</div>
+</div>
+<div id="inferences-using-parameters-from-cid4-2" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> Inferences using parameters from CID4<a href="equal-rate-hidden-expansion-ehe.html#inferences-using-parameters-from-cid4-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="cid4-4-pars-1" class="section level3 hasAnchor" number="5.3.1">
+<h3><span class="header-section-number">5.3.1</span> CID4 (4 pars)<a href="equal-rate-hidden-expansion-ehe.html#cid4-4-pars-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We assume that we know the parameter estimated for CID4</p>
+<div class="sourceCode" id="cb341"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb341-1"><a href="equal-rate-hidden-expansion-ehe.html#cb341-1" tabindex="-1"></a>lam1<span class="ot">=</span><span class="fl">0.3</span></span>
+<span id="cb341-2"><a href="equal-rate-hidden-expansion-ehe.html#cb341-2" tabindex="-1"></a>lam2<span class="ot">=</span><span class="fl">0.1</span></span>
+<span id="cb341-3"><a href="equal-rate-hidden-expansion-ehe.html#cb341-3" tabindex="-1"></a>q<span class="ot">=</span><span class="fl">0.2</span></span>
+<span id="cb341-4"><a href="equal-rate-hidden-expansion-ehe.html#cb341-4" tabindex="-1"></a>mu<span class="ot">=</span><span class="fl">0.01</span></span></code></pre></div>
+<p>Calculating likelihood</p>
+<div class="sourceCode" id="cb342"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb342-1"><a href="equal-rate-hidden-expansion-ehe.html#cb342-1" tabindex="-1"></a>Args <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb342-2"><a href="equal-rate-hidden-expansion-ehe.html#cb342-2" tabindex="-1"></a>  <span class="at">Nstates =</span> 4L,</span>
+<span id="cb342-3"><a href="equal-rate-hidden-expansion-ehe.html#cb342-3" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">list</span>(</span>
+<span id="cb342-4"><a href="equal-rate-hidden-expansion-ehe.html#cb342-4" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>, <span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb342-5"><a href="equal-rate-hidden-expansion-ehe.html#cb342-5" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>, <span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb342-6"><a href="equal-rate-hidden-expansion-ehe.html#cb342-6" tabindex="-1"></a>  ))</span>
+<span id="cb342-7"><a href="equal-rate-hidden-expansion-ehe.html#cb342-7" tabindex="-1"></a></span>
+<span id="cb342-8"><a href="equal-rate-hidden-expansion-ehe.html#cb342-8" tabindex="-1"></a>newArgs <span class="ot">&lt;-</span> <span class="fu">makeArgs</span>(Args)</span>
+<span id="cb342-9"><a href="equal-rate-hidden-expansion-ehe.html#cb342-9" tabindex="-1"></a><span class="co">#printArgsGlobal()</span></span>
+<span id="cb342-10"><a href="equal-rate-hidden-expansion-ehe.html#cb342-10" tabindex="-1"></a>args <span class="ot">&lt;-</span> <span class="fu">argnames_HiClaSSE</span>(<span class="dv">4</span>)</span>
+<span id="cb342-11"><a href="equal-rate-hidden-expansion-ehe.html#cb342-11" tabindex="-1"></a></span>
+<span id="cb342-12"><a href="equal-rate-hidden-expansion-ehe.html#cb342-12" tabindex="-1"></a>CID4.pars <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb342-13"><a href="equal-rate-hidden-expansion-ehe.html#cb342-13" tabindex="-1"></a>i<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb342-14"><a href="equal-rate-hidden-expansion-ehe.html#cb342-14" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>NSIM){</span>
+<span id="cb342-15"><a href="equal-rate-hidden-expansion-ehe.html#cb342-15" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&#39;Working on: &#39;</span>, i))</span>
+<span id="cb342-16"><a href="equal-rate-hidden-expansion-ehe.html#cb342-16" tabindex="-1"></a>  <span class="co">#-----------</span></span>
+<span id="cb342-17"><a href="equal-rate-hidden-expansion-ehe.html#cb342-17" tabindex="-1"></a>  pars.hc <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(args<span class="sc">$</span>pars))</span>
+<span id="cb342-18"><a href="equal-rate-hidden-expansion-ehe.html#cb342-18" tabindex="-1"></a>  <span class="fu">names</span>(pars.hc) <span class="ot">&lt;-</span> args<span class="sc">$</span>pars</span>
+<span id="cb342-19"><a href="equal-rate-hidden-expansion-ehe.html#cb342-19" tabindex="-1"></a>  pars.hc[<span class="st">&#39;lam000&#39;</span>] <span class="ot">&lt;-</span> lam1</span>
+<span id="cb342-20"><a href="equal-rate-hidden-expansion-ehe.html#cb342-20" tabindex="-1"></a>  pars.hc[<span class="st">&#39;lam111&#39;</span>] <span class="ot">&lt;-</span> lam1</span>
+<span id="cb342-21"><a href="equal-rate-hidden-expansion-ehe.html#cb342-21" tabindex="-1"></a>  pars.hc[<span class="st">&#39;lam222&#39;</span>] <span class="ot">&lt;-</span> lam2</span>
+<span id="cb342-22"><a href="equal-rate-hidden-expansion-ehe.html#cb342-22" tabindex="-1"></a>  pars.hc[<span class="st">&#39;lam333&#39;</span>] <span class="ot">&lt;-</span> lam2</span>
+<span id="cb342-23"><a href="equal-rate-hidden-expansion-ehe.html#cb342-23" tabindex="-1"></a>  pars.hc[<span class="st">&#39;mu0&#39;</span>] <span class="ot">&lt;-</span>pars.hc[<span class="st">&#39;mu1&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu2&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu3&#39;</span>]  <span class="ot">&lt;-</span> mu</span>
+<span id="cb342-24"><a href="equal-rate-hidden-expansion-ehe.html#cb342-24" tabindex="-1"></a>  qs <span class="ot">&lt;-</span> <span class="fu">extract_off_diagonal</span>(Q_cid4.r<span class="sc">/</span><span class="dv">10</span>)</span>
+<span id="cb342-25"><a href="equal-rate-hidden-expansion-ehe.html#cb342-25" tabindex="-1"></a>  qsl<span class="ot">=</span><span class="fu">length</span>(qs)</span>
+<span id="cb342-26"><a href="equal-rate-hidden-expansion-ehe.html#cb342-26" tabindex="-1"></a>  <span class="co">#qs[qs==1] &lt;- est[&#39;q01&#39;]/2</span></span>
+<span id="cb342-27"><a href="equal-rate-hidden-expansion-ehe.html#cb342-27" tabindex="-1"></a>  pars.hc[<span class="fu">c</span>(<span class="fu">length</span>(pars.hc)<span class="sc">-</span>qsl<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span><span class="fu">length</span>(pars.hc)] <span class="ot">&lt;-</span> qs</span>
+<span id="cb342-28"><a href="equal-rate-hidden-expansion-ehe.html#cb342-28" tabindex="-1"></a>  </span>
+<span id="cb342-29"><a href="equal-rate-hidden-expansion-ehe.html#cb342-29" tabindex="-1"></a>  <span class="co">#pars.hc</span></span>
+<span id="cb342-30"><a href="equal-rate-hidden-expansion-ehe.html#cb342-30" tabindex="-1"></a>  <span class="co">#pars_to_arrays(pars.hc, 4)</span></span>
+<span id="cb342-31"><a href="equal-rate-hidden-expansion-ehe.html#cb342-31" tabindex="-1"></a>  <span class="co">#------</span></span>
+<span id="cb342-32"><a href="equal-rate-hidden-expansion-ehe.html#cb342-32" tabindex="-1"></a>  tree <span class="ot">&lt;-</span> phy[[i]]</span>
+<span id="cb342-33"><a href="equal-rate-hidden-expansion-ehe.html#cb342-33" tabindex="-1"></a>  states<span class="ot">&lt;-</span> tree<span class="sc">$</span>tip.state</span>
+<span id="cb342-34"><a href="equal-rate-hidden-expansion-ehe.html#cb342-34" tabindex="-1"></a>  states<span class="ot">&lt;-</span> <span class="fu">mapvalues</span>(states, <span class="at">from =</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span>, <span class="st">&quot;1&quot;</span>, <span class="st">&quot;2&quot;</span>, <span class="st">&quot;3&quot;</span>), <span class="at">to=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>) )</span>
+<span id="cb342-35"><a href="equal-rate-hidden-expansion-ehe.html#cb342-35" tabindex="-1"></a>  root <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">4</span>, <span class="dv">4</span>)</span>
+<span id="cb342-36"><a href="equal-rate-hidden-expansion-ehe.html#cb342-36" tabindex="-1"></a>  </span>
+<span id="cb342-37"><a href="equal-rate-hidden-expansion-ehe.html#cb342-37" tabindex="-1"></a>  lik.c <span class="ot">&lt;-</span> <span class="fu">make.HiClasse_cpp</span>(tree, states,  <span class="at">sampling.f=</span><span class="cn">NULL</span>,  <span class="at">strict=</span><span class="cn">TRUE</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">backend =</span> <span class="st">&quot;gslode&quot;</span>), newArgs)</span>
+<span id="cb342-38"><a href="equal-rate-hidden-expansion-ehe.html#cb342-38" tabindex="-1"></a>  CID4.pars[[i]] <span class="ot">&lt;-</span> <span class="fu">lik.c</span>(pars.hc, <span class="at">intermediates=</span>F, <span class="at">root=</span>ROOT.GIVEN, <span class="at">root.p=</span>root, <span class="at">condition.surv=</span>T)</span>
+<span id="cb342-39"><a href="equal-rate-hidden-expansion-ehe.html#cb342-39" tabindex="-1"></a>  </span>
+<span id="cb342-40"><a href="equal-rate-hidden-expansion-ehe.html#cb342-40" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## [1] &quot;Working on: 1&quot;
+## [1] &quot;Recoding: 0010 -&gt; 00001010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 00000101&quot;
+## [1] &quot;Working on: 2&quot;
+## [1] &quot;Recoding: 0010 -&gt; 00001010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 00000101&quot;
+## [1] &quot;Working on: 3&quot;
+## [1] &quot;Recoding: 0010 -&gt; 00001010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 00000101&quot;
+## [1] &quot;Working on: 4&quot;
+## [1] &quot;Recoding: 0010 -&gt; 00001010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 00000101&quot;
+## [1] &quot;Working on: 5&quot;
+## [1] &quot;Recoding: 0010 -&gt; 00001010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 00000101&quot;
+## [1] &quot;Working on: 6&quot;
+## [1] &quot;Recoding: 0010 -&gt; 00001010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 00000101&quot;
+## [1] &quot;Working on: 7&quot;
+## [1] &quot;Recoding: 0010 -&gt; 00001010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 00000101&quot;
+## [1] &quot;Working on: 8&quot;
+## [1] &quot;Recoding: 0010 -&gt; 00001010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 00000101&quot;
+## [1] &quot;Working on: 9&quot;
+## [1] &quot;Recoding: 0010 -&gt; 00001010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 00000101&quot;
+## [1] &quot;Working on: 10&quot;
+## [1] &quot;Recoding: 0010 -&gt; 00001010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 00000101&quot;</code></pre>
+<p>This is CID4 model.</p>
+<div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb344-1"><a href="equal-rate-hidden-expansion-ehe.html#cb344-1" tabindex="-1"></a><span class="fu">pars_to_arrays</span>(pars.hc, <span class="dv">4</span>) <span class="sc">%&gt;%</span> <span class="fu">reoder_lambdas</span>(., <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>, <span class="dv">2</span>,<span class="dv">4</span>))</span></code></pre></div>
+<pre><code>## $lam.tensor
+## $lam.tensor$`1`
+##      [,1] [,2] [,3] [,4]
+## [1,]  0.3    0    0    0
+## [2,]  0.0    0    0    0
+## [3,]  0.0    0    0    0
+## [4,]  0.0    0    0    0
+## 
+## $lam.tensor$`3`
+##      [,1] [,2] [,3] [,4]
+## [1,]    0  0.0    0    0
+## [2,]    0  0.1    0    0
+## [3,]    0  0.0    0    0
+## [4,]    0  0.0    0    0
+## 
+## $lam.tensor$`2`
+##      [,1] [,2] [,3] [,4]
+## [1,]    0    0  0.0    0
+## [2,]    0    0  0.0    0
+## [3,]    0    0  0.3    0
+## [4,]    0    0  0.0    0
+## 
+## $lam.tensor$`4`
+##      [,1] [,2] [,3] [,4]
+## [1,]    0    0    0  0.0
+## [2,]    0    0    0  0.0
+## [3,]    0    0    0  0.0
+## [4,]    0    0    0  0.1
+## 
+## 
+## $mu
+##  mu0  mu2  mu1  mu3 
+## 0.01 0.01 0.01 0.01 
+## 
+## $Q
+##      [,1] [,2] [,3] [,4]
+## [1,] -0.4  0.2  0.2  0.0
+## [2,]  0.2 -0.4  0.0  0.2
+## [3,]  0.2  0.0 -0.4  0.2
+## [4,]  0.0  0.2  0.2 -0.4</code></pre>
+</div>
+<div id="ehe8-c-2-pars" class="section level3 hasAnchor" number="5.3.2">
+<h3><span class="header-section-number">5.3.2</span> EHE8-C (2 pars)<a href="equal-rate-hidden-expansion-ehe.html#ehe8-c-2-pars" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Now we create EHE8-C by decomposing our known parameter estimates into just two parameters: (1.) speciation and transitions rates equal to 0.1; and extinction equal to 0.01.</p>
+<div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb346-1"><a href="equal-rate-hidden-expansion-ehe.html#cb346-1" tabindex="-1"></a>Args <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb346-2"><a href="equal-rate-hidden-expansion-ehe.html#cb346-2" tabindex="-1"></a>  <span class="at">Nstates =</span> 8L,</span>
+<span id="cb346-3"><a href="equal-rate-hidden-expansion-ehe.html#cb346-3" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">list</span>(</span>
+<span id="cb346-4"><a href="equal-rate-hidden-expansion-ehe.html#cb346-4" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>, <span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb346-5"><a href="equal-rate-hidden-expansion-ehe.html#cb346-5" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>, <span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb346-6"><a href="equal-rate-hidden-expansion-ehe.html#cb346-6" tabindex="-1"></a>  ))</span>
+<span id="cb346-7"><a href="equal-rate-hidden-expansion-ehe.html#cb346-7" tabindex="-1"></a></span>
+<span id="cb346-8"><a href="equal-rate-hidden-expansion-ehe.html#cb346-8" tabindex="-1"></a>newArgs <span class="ot">&lt;-</span> <span class="fu">makeArgs</span>(Args)</span>
+<span id="cb346-9"><a href="equal-rate-hidden-expansion-ehe.html#cb346-9" tabindex="-1"></a><span class="co">#printArgsGlobal()</span></span>
+<span id="cb346-10"><a href="equal-rate-hidden-expansion-ehe.html#cb346-10" tabindex="-1"></a>args <span class="ot">&lt;-</span> <span class="fu">argnames_HiClaSSE</span>(<span class="dv">8</span>)</span>
+<span id="cb346-11"><a href="equal-rate-hidden-expansion-ehe.html#cb346-11" tabindex="-1"></a><span class="co">#args$arrays</span></span>
+<span id="cb346-12"><a href="equal-rate-hidden-expansion-ehe.html#cb346-12" tabindex="-1"></a><span class="co">#reoder_lambdas(args$arrays, c(1,3,5,7, 2,4,6,8))</span></span></code></pre></div>
+<p>Calculating Ln</p>
+<div class="sourceCode" id="cb347"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb347-1"><a href="equal-rate-hidden-expansion-ehe.html#cb347-1" tabindex="-1"></a>lam1<span class="ot">=</span><span class="fl">0.3</span></span>
+<span id="cb347-2"><a href="equal-rate-hidden-expansion-ehe.html#cb347-2" tabindex="-1"></a>lam2<span class="ot">=</span><span class="fl">0.1</span></span>
+<span id="cb347-3"><a href="equal-rate-hidden-expansion-ehe.html#cb347-3" tabindex="-1"></a>q<span class="ot">=</span><span class="fl">0.2</span></span>
+<span id="cb347-4"><a href="equal-rate-hidden-expansion-ehe.html#cb347-4" tabindex="-1"></a>mu<span class="ot">=</span><span class="fl">0.01</span></span>
+<span id="cb347-5"><a href="equal-rate-hidden-expansion-ehe.html#cb347-5" tabindex="-1"></a></span>
+<span id="cb347-6"><a href="equal-rate-hidden-expansion-ehe.html#cb347-6" tabindex="-1"></a>EHE8_C.pars <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb347-7"><a href="equal-rate-hidden-expansion-ehe.html#cb347-7" tabindex="-1"></a>i<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb347-8"><a href="equal-rate-hidden-expansion-ehe.html#cb347-8" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>NSIM){</span>
+<span id="cb347-9"><a href="equal-rate-hidden-expansion-ehe.html#cb347-9" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&#39;Working on: &#39;</span>, i))</span>
+<span id="cb347-10"><a href="equal-rate-hidden-expansion-ehe.html#cb347-10" tabindex="-1"></a>  <span class="co">#-----------</span></span>
+<span id="cb347-11"><a href="equal-rate-hidden-expansion-ehe.html#cb347-11" tabindex="-1"></a>  pars.hc <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(args<span class="sc">$</span>pars))</span>
+<span id="cb347-12"><a href="equal-rate-hidden-expansion-ehe.html#cb347-12" tabindex="-1"></a>  <span class="fu">names</span>(pars.hc) <span class="ot">&lt;-</span> args<span class="sc">$</span>pars</span>
+<span id="cb347-13"><a href="equal-rate-hidden-expansion-ehe.html#cb347-13" tabindex="-1"></a>  <span class="co"># pars.hc[&#39;lam000&#39;] &lt;- lam1</span></span>
+<span id="cb347-14"><a href="equal-rate-hidden-expansion-ehe.html#cb347-14" tabindex="-1"></a>  <span class="co"># pars.hc[&#39;lam111&#39;] &lt;- lam1</span></span>
+<span id="cb347-15"><a href="equal-rate-hidden-expansion-ehe.html#cb347-15" tabindex="-1"></a>  <span class="co"># pars.hc[&#39;lam222&#39;] &lt;- lam1</span></span>
+<span id="cb347-16"><a href="equal-rate-hidden-expansion-ehe.html#cb347-16" tabindex="-1"></a>  <span class="co"># pars.hc[&#39;lam333&#39;] &lt;- lam1</span></span>
+<span id="cb347-17"><a href="equal-rate-hidden-expansion-ehe.html#cb347-17" tabindex="-1"></a>  pars.hc[<span class="st">&#39;lam000&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam002&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam022&#39;</span>] <span class="ot">&lt;-</span> lam1<span class="sc">/</span><span class="dv">3</span></span>
+<span id="cb347-18"><a href="equal-rate-hidden-expansion-ehe.html#cb347-18" tabindex="-1"></a>  pars.hc[<span class="st">&#39;lam200&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam202&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam222&#39;</span>] <span class="ot">&lt;-</span> lam1<span class="sc">/</span><span class="dv">3</span></span>
+<span id="cb347-19"><a href="equal-rate-hidden-expansion-ehe.html#cb347-19" tabindex="-1"></a>  pars.hc[<span class="st">&#39;lam111&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam113&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam133&#39;</span>] <span class="ot">&lt;-</span> lam1<span class="sc">/</span><span class="dv">3</span></span>
+<span id="cb347-20"><a href="equal-rate-hidden-expansion-ehe.html#cb347-20" tabindex="-1"></a>  pars.hc[<span class="st">&#39;lam311&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam313&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam333&#39;</span>] <span class="ot">&lt;-</span> lam1<span class="sc">/</span><span class="dv">3</span></span>
+<span id="cb347-21"><a href="equal-rate-hidden-expansion-ehe.html#cb347-21" tabindex="-1"></a>  pars.hc[<span class="st">&#39;lam444&#39;</span>] <span class="ot">&lt;-</span> lam2</span>
+<span id="cb347-22"><a href="equal-rate-hidden-expansion-ehe.html#cb347-22" tabindex="-1"></a>  pars.hc[<span class="st">&#39;lam555&#39;</span>] <span class="ot">&lt;-</span> lam2</span>
+<span id="cb347-23"><a href="equal-rate-hidden-expansion-ehe.html#cb347-23" tabindex="-1"></a>  pars.hc[<span class="st">&#39;lam666&#39;</span>] <span class="ot">&lt;-</span> lam2</span>
+<span id="cb347-24"><a href="equal-rate-hidden-expansion-ehe.html#cb347-24" tabindex="-1"></a>  pars.hc[<span class="st">&#39;lam777&#39;</span>] <span class="ot">&lt;-</span> lam2</span>
+<span id="cb347-25"><a href="equal-rate-hidden-expansion-ehe.html#cb347-25" tabindex="-1"></a>  pars.hc[<span class="st">&#39;mu0&#39;</span>] <span class="ot">&lt;-</span>pars.hc[<span class="st">&#39;mu1&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu2&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu3&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu4&#39;</span>]<span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu5&#39;</span>]<span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu6&#39;</span>]<span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu7&#39;</span>] <span class="ot">&lt;-</span> mu</span>
+<span id="cb347-26"><a href="equal-rate-hidden-expansion-ehe.html#cb347-26" tabindex="-1"></a>  qs <span class="ot">&lt;-</span> <span class="fu">extract_off_diagonal</span>(Q_ehe8_C.r<span class="sc">/</span><span class="dv">10</span>)</span>
+<span id="cb347-27"><a href="equal-rate-hidden-expansion-ehe.html#cb347-27" tabindex="-1"></a>  qsl<span class="ot">=</span><span class="fu">length</span>(qs)</span>
+<span id="cb347-28"><a href="equal-rate-hidden-expansion-ehe.html#cb347-28" tabindex="-1"></a>  pars.hc[<span class="fu">c</span>(<span class="fu">length</span>(pars.hc)<span class="sc">-</span>qsl<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span><span class="fu">length</span>(pars.hc)] <span class="ot">&lt;-</span> qs</span>
+<span id="cb347-29"><a href="equal-rate-hidden-expansion-ehe.html#cb347-29" tabindex="-1"></a>  </span>
+<span id="cb347-30"><a href="equal-rate-hidden-expansion-ehe.html#cb347-30" tabindex="-1"></a>  <span class="co">#pars.hc</span></span>
+<span id="cb347-31"><a href="equal-rate-hidden-expansion-ehe.html#cb347-31" tabindex="-1"></a>  <span class="fu">pars_to_arrays</span>(pars.hc, <span class="dv">8</span>)</span>
+<span id="cb347-32"><a href="equal-rate-hidden-expansion-ehe.html#cb347-32" tabindex="-1"></a>  <span class="fu">reoder_lambdas</span>(<span class="fu">pars_to_arrays</span>(pars.hc, <span class="dv">8</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>, <span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">8</span>))</span>
+<span id="cb347-33"><a href="equal-rate-hidden-expansion-ehe.html#cb347-33" tabindex="-1"></a>  <span class="co">#------</span></span>
+<span id="cb347-34"><a href="equal-rate-hidden-expansion-ehe.html#cb347-34" tabindex="-1"></a>  tree <span class="ot">&lt;-</span> phy[[i]]</span>
+<span id="cb347-35"><a href="equal-rate-hidden-expansion-ehe.html#cb347-35" tabindex="-1"></a>  states<span class="ot">&lt;-</span> tree<span class="sc">$</span>tip.state</span>
+<span id="cb347-36"><a href="equal-rate-hidden-expansion-ehe.html#cb347-36" tabindex="-1"></a>  states<span class="ot">&lt;-</span> <span class="fu">mapvalues</span>(states, <span class="at">from =</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span>, <span class="st">&quot;1&quot;</span>, <span class="st">&quot;2&quot;</span>, <span class="st">&quot;3&quot;</span>), <span class="at">to=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>) )</span>
+<span id="cb347-37"><a href="equal-rate-hidden-expansion-ehe.html#cb347-37" tabindex="-1"></a>  root <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">8</span>, <span class="dv">8</span>)</span>
+<span id="cb347-38"><a href="equal-rate-hidden-expansion-ehe.html#cb347-38" tabindex="-1"></a>  </span>
+<span id="cb347-39"><a href="equal-rate-hidden-expansion-ehe.html#cb347-39" tabindex="-1"></a>  lik.c <span class="ot">&lt;-</span> <span class="fu">make.HiClasse_cpp</span>(tree, states,  <span class="at">sampling.f=</span><span class="cn">NULL</span>,  <span class="at">strict=</span><span class="cn">TRUE</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">backend =</span> <span class="st">&quot;gslode&quot;</span>), newArgs)</span>
+<span id="cb347-40"><a href="equal-rate-hidden-expansion-ehe.html#cb347-40" tabindex="-1"></a>  EHE8_C.pars[[i]] <span class="ot">&lt;-</span> <span class="fu">lik.c</span>(pars.hc, <span class="at">intermediates=</span>F, <span class="at">root=</span>ROOT.GIVEN, <span class="at">root.p=</span>root, <span class="at">condition.surv=</span>T)</span>
+<span id="cb347-41"><a href="equal-rate-hidden-expansion-ehe.html#cb347-41" tabindex="-1"></a>  </span>
+<span id="cb347-42"><a href="equal-rate-hidden-expansion-ehe.html#cb347-42" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## [1] &quot;Working on: 1&quot;
+## [1] &quot;Recoding: 0010 -&gt; 0000000010101010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 0000000001010101&quot;
+## [1] &quot;Working on: 2&quot;
+## [1] &quot;Recoding: 0010 -&gt; 0000000010101010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 0000000001010101&quot;
+## [1] &quot;Working on: 3&quot;
+## [1] &quot;Recoding: 0010 -&gt; 0000000010101010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 0000000001010101&quot;
+## [1] &quot;Working on: 4&quot;
+## [1] &quot;Recoding: 0010 -&gt; 0000000010101010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 0000000001010101&quot;
+## [1] &quot;Working on: 5&quot;
+## [1] &quot;Recoding: 0010 -&gt; 0000000010101010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 0000000001010101&quot;
+## [1] &quot;Working on: 6&quot;
+## [1] &quot;Recoding: 0010 -&gt; 0000000010101010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 0000000001010101&quot;
+## [1] &quot;Working on: 7&quot;
+## [1] &quot;Recoding: 0010 -&gt; 0000000010101010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 0000000001010101&quot;
+## [1] &quot;Working on: 8&quot;
+## [1] &quot;Recoding: 0010 -&gt; 0000000010101010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 0000000001010101&quot;
+## [1] &quot;Working on: 9&quot;
+## [1] &quot;Recoding: 0010 -&gt; 0000000010101010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 0000000001010101&quot;
+## [1] &quot;Working on: 10&quot;
+## [1] &quot;Recoding: 0010 -&gt; 0000000010101010&quot;
+## [1] &quot;Recoding: 0001 -&gt; 0000000001010101&quot;</code></pre>
+</div>
+</div>
+<div id="compare-ln-estimates" class="section level2 hasAnchor" number="5.4">
+<h2><span class="header-section-number">5.4</span> Compare Ln estimates<a href="equal-rate-hidden-expansion-ehe.html#compare-ln-estimates" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The likelihoods are the same, the errors are due to numerical integration.</p>
+<div class="sourceCode" id="cb349"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb349-1"><a href="equal-rate-hidden-expansion-ehe.html#cb349-1" tabindex="-1"></a>cid4 <span class="ot">&lt;-</span> CID4.pars <span class="sc">%&gt;%</span> unlist</span>
+<span id="cb349-2"><a href="equal-rate-hidden-expansion-ehe.html#cb349-2" tabindex="-1"></a><span class="fu">print</span>(cid4)</span></code></pre></div>
+<pre><code>##  [1] -584.5449 -519.5364 -490.6876 -505.0053 -562.0536 -481.1865 -539.0145 -546.3710 -508.4142 -477.1595</code></pre>
+<div class="sourceCode" id="cb351"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb351-1"><a href="equal-rate-hidden-expansion-ehe.html#cb351-1" tabindex="-1"></a>ehe8 <span class="ot">&lt;-</span> EHE8_C.pars <span class="sc">%&gt;%</span> unlist</span>
+<span id="cb351-2"><a href="equal-rate-hidden-expansion-ehe.html#cb351-2" tabindex="-1"></a><span class="fu">print</span>(ehe8)</span></code></pre></div>
+<pre><code>##  [1] -584.5449 -519.5364 -490.6876 -505.0053 -562.0536 -481.1865 -539.0145 -546.3711 -508.4142 -477.1595</code></pre>
+<div class="sourceCode" id="cb353"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb353-1"><a href="equal-rate-hidden-expansion-ehe.html#cb353-1" tabindex="-1"></a><span class="fu">print</span>(cid4<span class="sc">-</span>ehe8)</span></code></pre></div>
+<pre><code>##  [1] 2.922985e-06 2.760492e-06 3.440786e-06 3.040528e-06 2.149453e-06 3.493703e-06 2.752414e-06 2.570285e-06 2.996501e-06 3.601493e-06</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="congruence-between-independent-and-dependent-sses.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="semi-congruent-behavior.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

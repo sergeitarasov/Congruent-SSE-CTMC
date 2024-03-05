@@ -1,0 +1,672 @@
+---
+#title: "Congruence under varying Sampling Fraction"
+author: "Sergei Tarasov"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+params:
+  output_dir: "/output"
+---
+
+# Congruence under varying Sampling Fraction
+
+Hrein, we show that congruence holds under varying sampling fraction using the previous. This simulation is very close to the CID example from the section "Congruence between independent and dependent SSEs", except that we use different sampling fraction.
+
+
+| Model    | np | pars                           | Cong. with CID4 | Trait & Div.     | Speciation Rates              |
+|----------|----|--------------------------------|---------------------|------------------|--------------------------------|
+| CID4     | 4  | 2d 1q 1mu                      | --                  | independent      | decoupled (d)                 |
+| CID8     | 4  | 2d 1q 1mu                      | yes                 | independent      | decoupled (d)                 |
+| COR8-C   | 4  | 2d 1q 1mu                      | yes                 | correlated       | decoupled (d)                 |
+| CLA8-C   | 4  | 2c 1q 1mu                      | yes                 | correlated       | coupled (c)                   |
+| COR8-NC  | 4  | 2d 1q 1mu                      | no                  | correlated*      | decoupled (d)                 |
+| CLA8-NC  | 4  | 2c 1q 1mu                      | no                  | correlated       | coupled* (c)                  |
+
+*indicates non-lumpable transition or speciation rates. See also, Fig. referenced and Table S1.
+
+
+```{r,  include=FALSE}
+library(DT)
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(here)
+knitr::opts_knit$set(root.dir = here::here(), cache = TRUE)
+```
+
+```{r message=FALSE}
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ installations and dependencies  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+source('R/utils/dependencies.R')
+source('R/hiclasse/HiClaSSE-R.R') # pure R implementation of HiCLaSSE
+source('R/hiclasse/HiClaSSE_cpp.R') # fast implementation
+
+
+```
+
+## Read in data
+
+```{r}
+NSIM = 10
+phy <- readRDS(file='R/data/phy_CID4.RDS')
+```
+
+
+## Setup Sampling Fraction
+
+```{r}
+s1 <- 0.6
+s2 <- 0.3
+
+sam.fr4 = list(
+  c(1-s1, 1-s2, 1-s1, 1-s2,   s1, 0, s1, 0),
+  c(1-s1, 1-s2, 1-s1, 1-s2,   0, s2, 0, s2)
+)
+
+sam.fr8 = list(
+  c(1-s1, 1-s2, 1-s1, 1-s2, 1-s1, 1-s2, 1-s1, 1-s2,   s1,0,s1,0,s1,0,s1,0),
+  c(1-s1, 1-s2, 1-s1, 1-s2, 1-s1, 1-s2, 1-s1, 1-s2,   0,s2,0,s2,0,s2,0,s2)
+)
+```
+
+
+
+## Setting-up Q matrices for inference
+
+### CID4
+
+```{r}
+# trait
+Q_t <- initQ(c(0,1), c(.1, .1))
+
+# diversification regime
+Q_r2 <- initQ(c('A','B'), c(.1,.1))
+
+
+# speciation rates for tracking the order
+La4 <- diag(c(-0.1,-0.05),2)
+La4 = La4 %x% diag(1,2)
+# order according to regimes
+Q_cid4.r <- amaSMM(Q_r2, Q_t)
+
+# order according to trait
+v=c(1,3, 2,4)
+Q_cid4.t <- Q_cid4.r[v,v]
+
+print(Q_cid4.r)
+print(La4)
+print(Q_cid4.t)
+print(La4[v,v])
+
+```
+
+
+### CID8 (congruent to CID4)
+
+```{r}
+# diversification regime
+#Q_r4 <- initQ(c('a','b', 'c', 'd'), c(.01,.01))
+
+Q_r4 <-amaSMM(Q_t, Q_t) 
+colnames(Q_r4) <- rownames(Q_r4) <- c('a','b', 'c', 'd')
+
+# speciation rates for tracking the order
+La8 <- diag(c(-0.1,-0.05),2)
+La8 = La8 %x% diag(1,4)
+
+# order according to regimes
+Q_cid8.r <- amaSMM(Q_r4, Q_t) 
+
+# order according to trait
+v=c(1,3,5,7, 2,4,6,8)
+Q_cid8.t <- Q_cid8.r[v,v]
+
+print(Q_cid8.r)
+print(La8)
+print(Q_cid8.t)
+print(La8[v,v])
+
+```
+
+### COR8-C (correlated evolution, congruent to CID4)
+
+```{r}
+# like CID8 but with correlation
+Q_cor8_C.t <- Q_cid8.t
+
+bl <- matrix(c(0,.1,.1,0),2,2)
+Q_cor8_C.t[1:2,5:6] <- bl
+Q_cor8_C.t[3:4,7:8] <- bl
+Q_cor8_C.t[5:6,1:2] <- bl
+Q_cor8_C.t[7:8,3:4] <- bl
+
+v=c(1,5, 2,6, 3,7, 4,8)
+Q_cor8_C.r <- Q_cor8_C.t[v,v]
+
+print(Q_cor8_C.r)
+#print(La8)
+print(Q_cor8_C.t)
+#print(La8[v,v])
+
+```
+
+### COR8-NC (Non-correlated evolution, congruent to CID4)
+
+```{r}
+# like CID8 but not congruent
+Q_cor8_NC.t <- Q_cid8.t
+
+bl <- matrix(c(0,0,.1,0),2,2)
+Q_cor8_NC.t[1:2,5:6] <- bl
+Q_cor8_NC.t[3:4,7:8] <- bl
+Q_cor8_NC.t[5:6,1:2] <- bl
+Q_cor8_NC.t[7:8,3:4] <- bl
+
+v=c(1,5, 2,6, 3,7, 4,8)
+Q_cor8_NC.r <- Q_cor8_NC.t[v,v]
+
+print(Q_cor8_NC.r)
+#print(La8)
+print(Q_cor8_NC.t)
+#print(La8[v,v])
+
+```
+
+
+## Irreducible model
+
+### CID4 (4 pars)
+
+```{r}
+
+
+Args <- list(
+  Nstates = 4L,
+  y = sam.fr4)
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(4)
+#args$arrays
+#args$pars
+#length(args$pars)
+reoder_lambdas(args$arrays, c(1,3, 2,4))
+
+pars.hc <- rep(0, length(args$pars))
+names(pars.hc) <- args$pars
+pars.hc['lam000'] <- 0.1
+pars.hc['lam111'] <- 0.1
+pars.hc['lam222'] <- 0.05
+pars.hc['lam333'] <- 0.05
+pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <-0.1
+qs <- extract_off_diagonal(Q_cid4.r)
+qsl=length(qs)
+pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+
+
+
+zero.constr <- formulas_zero_pars(pars.hc)
+f.qs <- assign_classes_pairwise(Q_cid4.r, args$arrays$Q)
+f.mu <- c(mu1 ~ mu0, mu2 ~ mu0, mu3 ~ mu0)
+f.lams <- c(lam111 ~ lam000, lam333 ~ lam222)
+f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
+
+```
+
+Run inference
+
+```{r message=FALSE}
+
+CID4 <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- c(1/4, 1/4, 1/4, 1/4)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,   strict=TRUE, control=list(backend = "gslode"), newArgs)
+  lik.const <- constrain(lik.c, formulae = f.list)
+  arg.const <- argnames(lik.const)
+  starting.point <- pars.hc[arg.const]
+  CID4[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
+}
+```
+
+Some helper functions to assess the inference parameters.
+
+```{r}
+get_item(CID4, 'lnLik')
+
+```
+
+## Inferences using parameters from CID4
+
+### CID8 (4 pars)
+
+```{r}
+
+
+Args <- list(
+  Nstates = 8L,
+  y = sam.fr8)
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(8)
+#args$arrays
+#reoder_lambdas(args$arrays, c(1,3,5,7, 2,4,6,8))
+```
+
+Run inference
+
+```{r message=FALSE}
+
+
+CID8.pars <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  #-----------
+  est <- get_item(CID4[i], 'par')
+  pars.hc <- rep(0, length(args$pars))
+  names(pars.hc) <- args$pars
+  pars.hc['lam000'] <- est['lam000']
+  pars.hc['lam111'] <- est['lam000']
+  pars.hc['lam222'] <- est['lam000']
+  pars.hc['lam333'] <- est['lam000']
+  pars.hc['lam444'] <- est['lam222']
+  pars.hc['lam555'] <- est['lam222']
+  pars.hc['lam666'] <- est['lam222']
+  pars.hc['lam777'] <- est['lam222']
+  pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <- est['mu0']
+  qs <- extract_off_diagonal(Q_cid8.r)
+  qsl=length(qs)
+  qs[qs==0.1] <- est['q01']
+  qs[qs==0.01] <- est['q02']/2
+  pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+  
+  #pars.hc
+  #pars_to_arrays(pars.hc, 8)
+  #------
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- rep(1/8, 8)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  CID8.pars[[i]] <- lik.c(pars.hc, intermediates=T, root=ROOT.GIVEN, root.p=root, condition.surv=T)
+  
+}
+
+```
+
+Compare Ln
+
+```{r}
+get_item(CID4, 'lnLik')
+CID8.pars %>% unlist
+
+```
+
+### COR8-C (4 pars)
+
+```{r}
+
+
+Args <- list(
+  Nstates = 8L,
+  y = sam.fr8)
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(8)
+#args
+
+```
+
+Run inference
+
+```{r message=FALSE}
+
+
+COR8_C.pars <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  #-----------
+  est <- get_item(CID4[i], 'par')
+  pars.hc <- rep(0, length(args$pars))
+  names(pars.hc) <- args$pars
+  pars.hc['lam000'] <- est['lam000']
+  pars.hc['lam111'] <- est['lam000']
+  pars.hc['lam222'] <- est['lam000']
+  pars.hc['lam333'] <- est['lam000']
+  pars.hc['lam444'] <- est['lam222']
+  pars.hc['lam555'] <- est['lam222']
+  pars.hc['lam666'] <- est['lam222']
+  pars.hc['lam777'] <- est['lam222']
+  pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <- est['mu0']
+  qs <- extract_off_diagonal(Q_cor8_C.r)
+  qsl=length(qs)
+  qs[qs==0.1] <- est['q01']
+  qs[qs==0.01] <- est['q02']/2
+  pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+  
+  # pars.hc
+  # pars_to_arrays(pars.hc, 8)
+  #v=c(1,3,5,7, 2,4,6,8)
+  #pars_to_arrays(pars.hc, 8)$Q[v,v]
+  
+  #------
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- rep(1/8, 8)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  COR8_C.pars[[i]] <- lik.c(pars.hc, root=ROOT.GIVEN, root.p=root, condition.surv=T, intermediates=F)
+  
+}
+
+```
+
+Compare Ln
+
+```{r}
+get_item(CID4, 'lnLik')
+COR8_C.pars %>% unlist
+
+```
+
+### COR8-NC (4 pars)
+
+```{r}
+
+
+Args <- list(
+  Nstates = 8L,
+  y = sam.fr8)
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(8)
+#args
+
+```
+
+Run inference
+
+```{r message=FALSE}
+
+
+COR8_NC.pars <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  #-----------
+  est <- get_item(CID4[i], 'par')
+  pars.hc <- rep(0, length(args$pars))
+  names(pars.hc) <- args$pars
+  pars.hc['lam000'] <- est['lam000']
+  pars.hc['lam111'] <- est['lam000']
+  pars.hc['lam222'] <- est['lam000']
+  pars.hc['lam333'] <- est['lam000']
+  pars.hc['lam444'] <- est['lam222']
+  pars.hc['lam555'] <- est['lam222']
+  pars.hc['lam666'] <- est['lam222']
+  pars.hc['lam777'] <- est['lam222']
+  pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <- est['mu0']
+  qs <- extract_off_diagonal(Q_cor8_NC.r)
+  qsl=length(qs)
+  qs[qs==0.1] <- est['q01']
+  qs[qs==0.01] <- est['q02']/2
+  pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+  
+  # pars.hc
+  # pars_to_arrays(pars.hc, 8)
+  # v=c(1,3,5,7, 2,4,6,8)
+  # pars_to_arrays(pars.hc, 8)$Q[v,v]
+  
+  #------
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- rep(1/8, 8)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  COR8_NC.pars[[i]] <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
+  
+}
+
+```
+
+Some helper function to assess the inference parameters
+
+```{r}
+get_item(CID4, 'lnLik')
+COR8_NC.pars %>% unlist
+
+```
+
+### CLA8-C (4 pars)
+
+```{r}
+
+
+Args <- list(
+  Nstates = 8L,
+  y = sam.fr8)
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(8)
+#args$arrays
+# reoder_lambdas(args$arrays, c(1,3,5,7, 2,4,6,8))
+```
+
+Run inference
+
+```{r message=FALSE}
+
+
+CLA8_C.pars <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  #-----------
+  est <- get_item(CID4[i], 'par')
+  pars.hc <- rep(0, length(args$pars))
+  names(pars.hc) <- args$pars
+  # pars.hc['lam000'] <- est['lam000']
+  # pars.hc['lam111'] <- est['lam000']
+  # pars.hc['lam222'] <- est['lam000']
+  # pars.hc['lam333'] <- est['lam000']
+  # pars.hc['lam444'] <- est['lam222']
+  # pars.hc['lam555'] <- est['lam222']
+  # pars.hc['lam666'] <- est['lam222']
+  # pars.hc['lam777'] <- est['lam222']
+  pars.hc['lam022'] <- est['lam000']
+  pars.hc['lam133'] <- est['lam000']
+  pars.hc['lam202'] <- est['lam000']
+  pars.hc['lam311'] <- est['lam000']
+  pars.hc['lam466'] <- est['lam222']
+  pars.hc['lam577'] <- est['lam222']
+  pars.hc['lam646'] <- est['lam222']
+  pars.hc['lam757'] <- est['lam222']
+  pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <- est['mu0']
+  qs <- extract_off_diagonal(Q_cor8_C.r)
+  qsl=length(qs)
+  qs[qs==0.1] <- est['q01']
+  qs[qs==0.01] <- est['q02']/2
+  pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+  
+  # pars.hc
+  # pars_to_arrays(pars.hc, 8)
+  # v=c(1,3,5,7, 2,4,6,8)
+  # pars_to_arrays(pars.hc, 8)$Q[v,v]
+  
+  #------
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- rep(1/8, 8)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  CLA8_C.pars[[i]] <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
+  
+}
+
+```
+
+Some helper function to assess the inference parameters
+
+```{r}
+get_item(CID4, 'lnLik')
+CLA8_C.pars %>% unlist
+
+```
+
+### CLA8-NC (4 pars)
+
+```{r}
+
+
+Args <- list(
+  Nstates = 8L,
+  y = sam.fr8)
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(8)
+#args$arrays
+#v=c(1,3,5,7, 2,4,6,8)
+#reoder_lambdas(args$arrays, c(1,3,5,7, 2,4,6,8))
+```
+
+Run inference
+
+```{r message=FALSE}
+
+
+CLA8_NC.pars <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  #-----------
+  est <- get_item(CID4[i], 'par')
+  pars.hc <- rep(0, length(args$pars))
+  names(pars.hc) <- args$pars
+  # lam004, lam116, lam422 violate lumpability
+  pars.hc['lam004'] <- est['lam000']
+  pars.hc['lam116'] <- est['lam000']
+  pars.hc['lam202'] <- est['lam000']
+  pars.hc['lam311'] <- est['lam000']
+  pars.hc['lam422'] <- est['lam222']
+  pars.hc['lam577'] <- est['lam222']
+  pars.hc['lam646'] <- est['lam222']
+  pars.hc['lam757'] <- est['lam222']
+  pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <- est['mu0']
+  qs <- extract_off_diagonal(Q_cor8_C.r)
+  qsl=length(qs)
+  qs[qs==0.1] <- est['q01']
+  qs[qs==0.01] <- est['q02']/2
+  pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+  
+  # pars.hc
+  # pars_to_arrays(pars.hc, 8)
+  # v=c(1,3,5,7, 2,4,6,8)
+  # pars_to_arrays(pars.hc, 8)$Q[v,v]
+  
+  #------
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- rep(1/8, 8)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  CLA8_NC.pars[[i]] <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
+  
+}
+
+```
+
+Some helper function to assess the inference parameters
+
+```{r}
+get_item(CID4, 'lnLik')
+CLA8_NC.pars %>% unlist
+
+```
+
+
+## Results 
+
+### Inferences using parameters from CID4
+
+#### Likelihood table
+
+```{r}
+
+
+cid4 = get_item(CID4, 'lnLik')
+
+cor.pars <- tibble(
+"N" = c(1:NSIM),
+"cid4" = cid4,
+"CID8.pars"= CID8.pars %>% unlist,
+"COR8-C.pars"= COR8_C.pars %>% unlist,
+"CLA8-C.pars" = CLA8_C.pars %>% unlist,
+"COR8-NC.pars" = COR8_NC.pars %>% unlist,
+"CLA8-NC.pars" = CLA8_NC.pars %>% unlist,
+)
+
+kable(cor.pars, "html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+
+#### Mean absolute error
+
+```{r}
+
+dcor.pars <- tibble(
+"cid4" = cid4,
+"CID8.pars"= CID8.pars %>% unlist,
+"COR8-C.pars"= COR8_C.pars %>% unlist,
+"CLA8-C.pars" = CLA8_C.pars %>% unlist,
+"COR8-NC.pars" = COR8_NC.pars %>% unlist,
+"CLA8-NC.pars" = CLA8_NC.pars %>% unlist,
+)
+cid4t <- cid4
+dcor.pars <- dcor.pars %>%
+  mutate_all(~ abs(cid4t - .) )
+
+column_means <- dcor.pars %>%
+  summarise_all(~ mean(.))
+
+# Data
+delta_values <- tibble(
+  Delta = names(column_means),
+  Value = column_means %>% slice(1) %>% unlist()
+)
+
+kable(column_means, "html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+# Create the plot
+ggplot(delta_values, aes(x = Delta, y = Value, label = sprintf("%.2e", Value))) +
+  geom_col(fill = c("blue", "blue", "blue", "blue", "red",  "red")) +
+  geom_text(vjust = -0.5, angle = 45) +
+  labs(title = "Comparison of Ln Differences", x = "Deltas", y = "Magnitude") +
+  theme_minimal()
+
+
+```
+
+

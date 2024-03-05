@@ -1,0 +1,28 @@
+#include <R.h>
+
+void do_derivs_hiclasse2(double *pars, const double *y, double *ydot) {
+	double E0 = y[0];
+	double E1 = y[1];
+	double D0 = y[2];
+	double D1 = y[3];
+	
+	double la000 = pars[0];
+	double la001 = pars[1];
+	double la011 = pars[2];
+	double la100 = pars[3];
+	double la101 = pars[4];
+	double la111 = pars[5];
+	double mu0 = pars[6];
+	double mu1 = pars[7];
+	double q01 = pars[8];
+	double q10 = pars[9];
+	
+	ydot[0] = pow(E0,2)*la000 + pow(E1,2)*la011 + mu0 + E1*q01 - E0*(la000 + la001 - E1*la001 + la011 + mu0 + q01);
+	ydot[1] = pow(E0,2)*la100 + pow(E1,2)*la111 + mu1 + E0*(E1*la101 + q10) - E1*(la100 + la101 + la111 + mu1 + q10);
+	ydot[2] = 2*D0*E0*la000 + D1*E0*la001 + D0*E1*la001 + 2*D1*E1*la011 - D0*(la000 + la001 + la011 + mu0) - D0*q01 + D1*q01;
+	ydot[3] = D0*(2*E0*la100 + E1*la101 + q10) - D1*(la100 + la101 - E0*la101 + la111 - 2*E1*la111 + mu1 + q10);
+}
+
+void derivs_hiclasse2_gslode(int neqs, double t, double *pars, const double *y, double *dydt){
+	do_derivs_hiclasse2(pars, y, dydt);
+}

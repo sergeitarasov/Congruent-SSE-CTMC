@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>6 Semi-congruent Behavior | Report for Simulations using HiClaSSE model</title>
+  <meta name="description" content="6 Semi-congruent Behavior | Report for Simulations using HiClaSSE model" />
+  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="6 Semi-congruent Behavior | Report for Simulations using HiClaSSE model" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="6 Semi-congruent Behavior | Report for Simulations using HiClaSSE model" />
+  
+  
+  
+
+<meta name="author" content="Sergei Tarasov" />
+
+
+<meta name="date" content="2024-02-29" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="equal-rate-hidden-expansion-ehe.html"/>
+<link rel="next" href="congruence-under-varying-sampling-fraction.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Setting-up HiClaSSE</a></li>
+<li class="chapter" data-level="2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html"><i class="fa fa-check"></i><b>2</b> Validation of HiClaSSE</a>
+<ul>
+<li class="chapter" data-level="2.0.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#make-data"><i class="fa fa-check"></i><b>2.0.1</b> Make data</a></li>
+<li class="chapter" data-level="2.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#bisse-ness-and-hiclasse"><i class="fa fa-check"></i><b>2.1</b> BiSSE-ness and HiClaSSE</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#bisse-ness-likelihood"><i class="fa fa-check"></i><b>2.1.1</b> BiSSE-ness Likelihood</a></li>
+<li class="chapter" data-level="2.1.2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hiclasse2-likelihood"><i class="fa fa-check"></i><b>2.1.2</b> HiClaSSE2 Likelihood</a></li>
+<li class="chapter" data-level="2.1.3" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#compare-models"><i class="fa fa-check"></i><b>2.1.3</b> Compare models</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#bisse-and-hiclasse"><i class="fa fa-check"></i><b>2.2</b> BiSSE and HiClaSSE</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#bisse"><i class="fa fa-check"></i><b>2.2.1</b> BiSSE</a></li>
+<li class="chapter" data-level="2.2.2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hiclasse2"><i class="fa fa-check"></i><b>2.2.2</b> HiClaSSE2</a></li>
+<li class="chapter" data-level="2.2.3" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#compare-models-1"><i class="fa fa-check"></i><b>2.2.3</b> Compare models</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hisse4-and-hiclasse4"><i class="fa fa-check"></i><b>2.3</b> HiSSE4 and HiClaSSE4</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hiclasse4"><i class="fa fa-check"></i><b>2.3.1</b> HiClaSSE4</a></li>
+<li class="chapter" data-level="2.3.2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hisse4"><i class="fa fa-check"></i><b>2.3.2</b> HiSSE4</a></li>
+<li class="chapter" data-level="2.3.3" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#compare-models-2"><i class="fa fa-check"></i><b>2.3.3</b> Compare models</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#sampling-fraction-bisse-ness-and-hiclasse"><i class="fa fa-check"></i><b>2.4</b> Sampling fraction: BiSSE-ness and HiClaSSE</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#bisse-ness-likelihood-1"><i class="fa fa-check"></i><b>2.4.1</b> BiSSE-ness Likelihood</a></li>
+<li class="chapter" data-level="2.4.2" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#hiclasse2-likelihood-1"><i class="fa fa-check"></i><b>2.4.2</b> HiClaSSE2 Likelihood</a></li>
+<li class="chapter" data-level="2.4.3" data-path="validation-of-hiclasse.html"><a href="validation-of-hiclasse.html#compare-models-3"><i class="fa fa-check"></i><b>2.4.3</b> Compare models</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="misse-congruence.html"><a href="misse-congruence.html"><i class="fa fa-check"></i><b>3</b> MiSSE Congruence</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="misse-congruence.html"><a href="misse-congruence.html#set-up-q-matrix-for-inference"><i class="fa fa-check"></i><b>3.1</b> SET-UP Q matrix for inference</a></li>
+<li class="chapter" data-level="3.2" data-path="misse-congruence.html"><a href="misse-congruence.html#misse-2"><i class="fa fa-check"></i><b>3.2</b> MiSSE-2</a></li>
+<li class="chapter" data-level="3.3" data-path="misse-congruence.html"><a href="misse-congruence.html#misse-3-congruent"><i class="fa fa-check"></i><b>3.3</b> MiSSE-3 Congruent</a></li>
+<li class="chapter" data-level="3.4" data-path="misse-congruence.html"><a href="misse-congruence.html#misse-3-congruent-inferred-pars"><i class="fa fa-check"></i><b>3.4</b> MiSSE-3 Congruent, Inferred Pars</a></li>
+<li class="chapter" data-level="3.5" data-path="misse-congruence.html"><a href="misse-congruence.html#misse-3-non-congruent"><i class="fa fa-check"></i><b>3.5</b> MiSSE-3 Non-congruent</a></li>
+<li class="chapter" data-level="3.6" data-path="misse-congruence.html"><a href="misse-congruence.html#another-non-congruent-models"><i class="fa fa-check"></i><b>3.6</b> Another Non-congruent Models</a></li>
+<li class="chapter" data-level="3.7" data-path="misse-congruence.html"><a href="misse-congruence.html#zero-extinction"><i class="fa fa-check"></i><b>3.7</b> Zero Extinction</a></li>
+<li class="chapter" data-level="3.8" data-path="misse-congruence.html"><a href="misse-congruence.html#results"><i class="fa fa-check"></i><b>3.8</b> Results</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="misse-congruence.html"><a href="misse-congruence.html#likelihood-table"><i class="fa fa-check"></i><b>3.8.1</b> Likelihood table</a></li>
+<li class="chapter" data-level="3.8.2" data-path="misse-congruence.html"><a href="misse-congruence.html#mean-absolute-error"><i class="fa fa-check"></i><b>3.8.2</b> Mean absolute error</a></li>
+<li class="chapter" data-level="3.8.3" data-path="misse-congruence.html"><a href="misse-congruence.html#parameter-estimates"><i class="fa fa-check"></i><b>3.8.3</b> Parameter estimates</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html"><i class="fa fa-check"></i><b>4</b> Congruence between independent and dependent SSEs</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#read-in-data"><i class="fa fa-check"></i><b>4.1</b> Read in data</a></li>
+<li class="chapter" data-level="4.2" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#setting-up-q-matrices-for-inference"><i class="fa fa-check"></i><b>4.2</b> Setting-up Q matrices for inference</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cid4"><i class="fa fa-check"></i><b>4.2.1</b> CID4</a></li>
+<li class="chapter" data-level="4.2.2" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cid8-congruent-to-cid4"><i class="fa fa-check"></i><b>4.2.2</b> CID8 (congruent to CID4)</a></li>
+<li class="chapter" data-level="4.2.3" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-c-correlated-evolution-congruent-to-cid4"><i class="fa fa-check"></i><b>4.2.3</b> COR8-C (correlated evolution, congruent to CID4)</a></li>
+<li class="chapter" data-level="4.2.4" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-nc-non-correlated-evolution-congruent-to-cid4"><i class="fa fa-check"></i><b>4.2.4</b> COR8-NC (Non-correlated evolution, congruent to CID4)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#irreducible-model"><i class="fa fa-check"></i><b>4.3</b> Irreducible model</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cid4-4-pars"><i class="fa fa-check"></i><b>4.3.1</b> CID4 (4 pars)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#inferences-using-parameters-from-cid4"><i class="fa fa-check"></i><b>4.4</b> Inferences using parameters from CID4</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cid8-4-pars"><i class="fa fa-check"></i><b>4.4.1</b> CID8 (4 pars)</a></li>
+<li class="chapter" data-level="4.4.2" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-c-4-pars"><i class="fa fa-check"></i><b>4.4.2</b> COR8-C (4 pars)</a></li>
+<li class="chapter" data-level="4.4.3" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-nc-4-pars"><i class="fa fa-check"></i><b>4.4.3</b> COR8-NC (4 pars)</a></li>
+<li class="chapter" data-level="4.4.4" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cla8-c-4-pars"><i class="fa fa-check"></i><b>4.4.4</b> CLA8-C (4 pars)</a></li>
+<li class="chapter" data-level="4.4.5" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cla8-nc-4-pars"><i class="fa fa-check"></i><b>4.4.5</b> CLA8-NC (4 pars)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#maximum-likelihood.-all-models-have-4-pars."><i class="fa fa-check"></i><b>4.5</b> Maximum Likelihood. All models have 4 pars.</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cid8"><i class="fa fa-check"></i><b>4.5.1</b> CID8</a></li>
+<li class="chapter" data-level="4.5.2" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-c"><i class="fa fa-check"></i><b>4.5.2</b> COR8-C</a></li>
+<li class="chapter" data-level="4.5.3" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cor8-nc"><i class="fa fa-check"></i><b>4.5.3</b> COR8-NC</a></li>
+<li class="chapter" data-level="4.5.4" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cla8-c"><i class="fa fa-check"></i><b>4.5.4</b> CLA8-C</a></li>
+<li class="chapter" data-level="4.5.5" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#cla8-nc"><i class="fa fa-check"></i><b>4.5.5</b> CLA8-NC</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#results-1"><i class="fa fa-check"></i><b>4.6</b> Results</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#inferences-using-parameters-from-cid4-1"><i class="fa fa-check"></i><b>4.6.1</b> Inferences using parameters from CID4</a></li>
+<li class="chapter" data-level="4.6.2" data-path="congruence-between-independent-and-dependent-sses.html"><a href="congruence-between-independent-and-dependent-sses.html#maximum-likelihood-estimates"><i class="fa fa-check"></i><b>4.6.2</b> Maximum Likelihood estimates</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html"><i class="fa fa-check"></i><b>5</b> Equal Rate Hidden Expansion (EHE)</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#read-in-data-1"><i class="fa fa-check"></i><b>5.1</b> Read in data</a></li>
+<li class="chapter" data-level="5.2" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#setting-up-q-matrices-for-inference-1"><i class="fa fa-check"></i><b>5.2</b> Setting-up Q matrices for inference</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#cid4-1"><i class="fa fa-check"></i><b>5.2.1</b> CID4</a></li>
+<li class="chapter" data-level="5.2.2" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#cid8-congruent-to-cid4-1"><i class="fa fa-check"></i><b>5.2.2</b> CID8 (congruent to CID4)</a></li>
+<li class="chapter" data-level="5.2.3" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#ehe8-c-correlated-evolution-congruent-to-cid4"><i class="fa fa-check"></i><b>5.2.3</b> EHE8-C (correlated evolution, congruent to CID4)</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#inferences-using-parameters-from-cid4-2"><i class="fa fa-check"></i><b>5.3</b> Inferences using parameters from CID4</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#cid4-4-pars-1"><i class="fa fa-check"></i><b>5.3.1</b> CID4 (4 pars)</a></li>
+<li class="chapter" data-level="5.3.2" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#ehe8-c-2-pars"><i class="fa fa-check"></i><b>5.3.2</b> EHE8-C (2 pars)</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="equal-rate-hidden-expansion-ehe.html"><a href="equal-rate-hidden-expansion-ehe.html#compare-ln-estimates"><i class="fa fa-check"></i><b>5.4</b> Compare Ln estimates</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html"><i class="fa fa-check"></i><b>6</b> Semi-congruent Behavior</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#setting-up-q-matrices-for-inference-2"><i class="fa fa-check"></i><b>6.1</b> Setting-up Q matrices for inference</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#cid4-2"><i class="fa fa-check"></i><b>6.1.1</b> CID4</a></li>
+<li class="chapter" data-level="6.1.2" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#ehe8-c-correlated-evolution-congruent-to-cid4-1"><i class="fa fa-check"></i><b>6.1.2</b> EHE8-C (correlated evolution, congruent to CID4)</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#read-in-data-2"><i class="fa fa-check"></i><b>6.2</b> Read in data</a></li>
+<li class="chapter" data-level="6.3" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#maximum-likelihood"><i class="fa fa-check"></i><b>6.3</b> Maximum Likelihood</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#cid4-4-pars-2"><i class="fa fa-check"></i><b>6.3.1</b> CID4 (4 pars)</a></li>
+<li class="chapter" data-level="6.3.2" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#ehe8-c"><i class="fa fa-check"></i><b>6.3.2</b> EHE8-C</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="semi-congruent-behavior.html"><a href="semi-congruent-behavior.html#results-2"><i class="fa fa-check"></i><b>6.4</b> Results</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html"><i class="fa fa-check"></i><b>7</b> Congruence under varying Sampling Fraction</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#read-in-data-3"><i class="fa fa-check"></i><b>7.1</b> Read in data</a></li>
+<li class="chapter" data-level="7.2" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#setup-sampling-fraction"><i class="fa fa-check"></i><b>7.2</b> Setup Sampling Fraction</a></li>
+<li class="chapter" data-level="7.3" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#setting-up-q-matrices-for-inference-3"><i class="fa fa-check"></i><b>7.3</b> Setting-up Q matrices for inference</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cid4-3"><i class="fa fa-check"></i><b>7.3.1</b> CID4</a></li>
+<li class="chapter" data-level="7.3.2" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cid8-congruent-to-cid4-2"><i class="fa fa-check"></i><b>7.3.2</b> CID8 (congruent to CID4)</a></li>
+<li class="chapter" data-level="7.3.3" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cor8-c-correlated-evolution-congruent-to-cid4-1"><i class="fa fa-check"></i><b>7.3.3</b> COR8-C (correlated evolution, congruent to CID4)</a></li>
+<li class="chapter" data-level="7.3.4" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cor8-nc-non-correlated-evolution-congruent-to-cid4-1"><i class="fa fa-check"></i><b>7.3.4</b> COR8-NC (Non-correlated evolution, congruent to CID4)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#irreducible-model-1"><i class="fa fa-check"></i><b>7.4</b> Irreducible model</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cid4-4-pars-3"><i class="fa fa-check"></i><b>7.4.1</b> CID4 (4 pars)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#inferences-using-parameters-from-cid4-3"><i class="fa fa-check"></i><b>7.5</b> Inferences using parameters from CID4</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cid8-4-pars-1"><i class="fa fa-check"></i><b>7.5.1</b> CID8 (4 pars)</a></li>
+<li class="chapter" data-level="7.5.2" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cor8-c-4-pars-1"><i class="fa fa-check"></i><b>7.5.2</b> COR8-C (4 pars)</a></li>
+<li class="chapter" data-level="7.5.3" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cor8-nc-4-pars-1"><i class="fa fa-check"></i><b>7.5.3</b> COR8-NC (4 pars)</a></li>
+<li class="chapter" data-level="7.5.4" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cla8-c-4-pars-1"><i class="fa fa-check"></i><b>7.5.4</b> CLA8-C (4 pars)</a></li>
+<li class="chapter" data-level="7.5.5" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#cla8-nc-4-pars-1"><i class="fa fa-check"></i><b>7.5.5</b> CLA8-NC (4 pars)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#results-3"><i class="fa fa-check"></i><b>7.6</b> Results</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="congruence-under-varying-sampling-fraction.html"><a href="congruence-under-varying-sampling-fraction.html#inferences-using-parameters-from-cid4-4"><i class="fa fa-check"></i><b>7.6.1</b> Inferences using parameters from CID4</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Report for Simulations using HiClaSSE model</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="semi-congruent-behavior" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">6</span> Semi-congruent Behavior<a href="semi-congruent-behavior.html#semi-congruent-behavior" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In this example, we simulated data using the CID4 model for three different scenarios: 100, 500, and 1000 tips. Subsequently, we conduct ML inference using two models: the original CID4 and the semi-congruent EHE8-C model. The CID4 model has four parameters, while the EHE8-C model has only two.</p>
+<p>We observe that the likelihood of the CID4 model is always better than that of the EHE8-C model across all scenarios. However, due to fewer parameters, the AIC of the EHE8-C tends to be better in most trials.</p>
+<p>It’s worth noting that lumping the semi-congruent EHE8-C model produces the CID4 model. In other words, if we create an irreducible model from the EHE8-C model, we obtain the original CID4 model with its four parameters.</p>
+<div class="sourceCode" id="cb355"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb355-1"><a href="semi-congruent-behavior.html#cb355-1" tabindex="-1"></a><span class="do">##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span>
+<span id="cb355-2"><a href="semi-congruent-behavior.html#cb355-2" tabindex="-1"></a><span class="do">##  ~ installations and dependencies  ----</span></span>
+<span id="cb355-3"><a href="semi-congruent-behavior.html#cb355-3" tabindex="-1"></a><span class="do">##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span>
+<span id="cb355-4"><a href="semi-congruent-behavior.html#cb355-4" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&#39;R/utils/dependencies.R&#39;</span>)</span>
+<span id="cb355-5"><a href="semi-congruent-behavior.html#cb355-5" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&#39;R/hiclasse/HiClaSSE-R.R&#39;</span>) <span class="co"># pure R implementation of HiCLaSSE</span></span></code></pre></div>
+<pre><code>## [1] &quot;Original matrix:&quot;
+##      [,1] [,2] [,3]
+## [1,]    1    4    7
+## [2,]    2    5    8
+## [3,]    3    6    9
+## [1] &quot;Matrix with right diagonal set to zero:&quot;
+##      [,1] [,2] [,3]
+## [1,]    1    4    0
+## [2,]    2    0    8
+## [3,]    0    6    9</code></pre>
+<div class="sourceCode" id="cb357"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb357-1"><a href="semi-congruent-behavior.html#cb357-1" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&#39;R/hiclasse/HiClaSSE_cpp.R&#39;</span>) <span class="co"># fast implementation</span></span></code></pre></div>
+<pre><code>## [1] &quot;Original matrix:&quot;
+##      [,1] [,2] [,3]
+## [1,]    1    4    7
+## [2,]    2    5    8
+## [3,]    3    6    9
+## [1] &quot;Matrix with right diagonal set to zero:&quot;
+##      [,1] [,2] [,3]
+## [1,]    1    4    0
+## [2,]    2    0    8
+## [3,]    0    6    9
+## [1] TRUE
+## [1] TRUE
+## [1] TRUE
+## [1] TRUE</code></pre>
+<div id="setting-up-q-matrices-for-inference-2" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Setting-up Q matrices for inference<a href="semi-congruent-behavior.html#setting-up-q-matrices-for-inference-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="cid4-2" class="section level3 hasAnchor" number="6.1.1">
+<h3><span class="header-section-number">6.1.1</span> CID4<a href="semi-congruent-behavior.html#cid4-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb359"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb359-1"><a href="semi-congruent-behavior.html#cb359-1" tabindex="-1"></a><span class="co"># trait</span></span>
+<span id="cb359-2"><a href="semi-congruent-behavior.html#cb359-2" tabindex="-1"></a>Q_t <span class="ot">&lt;-</span> <span class="fu">initQ</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb359-3"><a href="semi-congruent-behavior.html#cb359-3" tabindex="-1"></a><span class="co"># diversification regime</span></span>
+<span id="cb359-4"><a href="semi-congruent-behavior.html#cb359-4" tabindex="-1"></a>Q_r2 <span class="ot">&lt;-</span> <span class="fu">initQ</span>(<span class="fu">c</span>(<span class="st">&#39;A&#39;</span>,<span class="st">&#39;B&#39;</span>), <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb359-5"><a href="semi-congruent-behavior.html#cb359-5" tabindex="-1"></a><span class="co"># speciation rates for tracking the order</span></span>
+<span id="cb359-6"><a href="semi-congruent-behavior.html#cb359-6" tabindex="-1"></a>La4 <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>,<span class="sc">-</span><span class="dv">1</span>),<span class="dv">2</span>)</span>
+<span id="cb359-7"><a href="semi-congruent-behavior.html#cb359-7" tabindex="-1"></a>La4 <span class="ot">=</span> La4 <span class="sc">%x%</span> <span class="fu">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb359-8"><a href="semi-congruent-behavior.html#cb359-8" tabindex="-1"></a><span class="co"># order according to regimes</span></span>
+<span id="cb359-9"><a href="semi-congruent-behavior.html#cb359-9" tabindex="-1"></a>Q_cid4.r <span class="ot">&lt;-</span> <span class="fu">amaSMM</span>(Q_r2, Q_t)</span>
+<span id="cb359-10"><a href="semi-congruent-behavior.html#cb359-10" tabindex="-1"></a></span>
+<span id="cb359-11"><a href="semi-congruent-behavior.html#cb359-11" tabindex="-1"></a><span class="co"># order according to trait</span></span>
+<span id="cb359-12"><a href="semi-congruent-behavior.html#cb359-12" tabindex="-1"></a>v<span class="ot">=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>, <span class="dv">2</span>,<span class="dv">4</span>)</span>
+<span id="cb359-13"><a href="semi-congruent-behavior.html#cb359-13" tabindex="-1"></a>Q_cid4.t <span class="ot">&lt;-</span> Q_cid4.r[v,v]</span>
+<span id="cb359-14"><a href="semi-congruent-behavior.html#cb359-14" tabindex="-1"></a></span>
+<span id="cb359-15"><a href="semi-congruent-behavior.html#cb359-15" tabindex="-1"></a><span class="fu">print</span>(Q_cid4.r)</span></code></pre></div>
+<pre><code>##    A0 A1 B0 B1
+## A0 -4  2  2  0
+## A1  2 -4  0  2
+## B0  2  0 -4  2
+## B1  0  2  2 -4</code></pre>
+<div class="sourceCode" id="cb361"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb361-1"><a href="semi-congruent-behavior.html#cb361-1" tabindex="-1"></a><span class="fu">print</span>(La4)</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]   -3    0    0    0
+## [2,]    0   -3    0    0
+## [3,]    0    0   -1    0
+## [4,]    0    0    0   -1</code></pre>
+<div class="sourceCode" id="cb363"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb363-1"><a href="semi-congruent-behavior.html#cb363-1" tabindex="-1"></a><span class="fu">print</span>(Q_cid4.t)</span></code></pre></div>
+<pre><code>##    A0 B0 A1 B1
+## A0 -4  2  2  0
+## B0  2 -4  0  2
+## A1  2  0 -4  2
+## B1  0  2  2 -4</code></pre>
+<div class="sourceCode" id="cb365"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb365-1"><a href="semi-congruent-behavior.html#cb365-1" tabindex="-1"></a><span class="fu">print</span>(La4[v,v])</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]   -3    0    0    0
+## [2,]    0   -1    0    0
+## [3,]    0    0   -3    0
+## [4,]    0    0    0   -1</code></pre>
+</div>
+<div id="ehe8-c-correlated-evolution-congruent-to-cid4-1" class="section level3 hasAnchor" number="6.1.2">
+<h3><span class="header-section-number">6.1.2</span> EHE8-C (correlated evolution, congruent to CID4)<a href="semi-congruent-behavior.html#ehe8-c-correlated-evolution-congruent-to-cid4-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb367"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb367-1"><a href="semi-congruent-behavior.html#cb367-1" tabindex="-1"></a><span class="co"># Create the matrix as a data frame</span></span>
+<span id="cb367-2"><a href="semi-congruent-behavior.html#cb367-2" tabindex="-1"></a>Q_ehe8_C.t <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb367-3"><a href="semi-congruent-behavior.html#cb367-3" tabindex="-1"></a>  <span class="at">a0 =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb367-4"><a href="semi-congruent-behavior.html#cb367-4" tabindex="-1"></a>  <span class="at">b0 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="sc">-</span><span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb367-5"><a href="semi-congruent-behavior.html#cb367-5" tabindex="-1"></a>  <span class="at">c0 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb367-6"><a href="semi-congruent-behavior.html#cb367-6" tabindex="-1"></a>  <span class="at">d0 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb367-7"><a href="semi-congruent-behavior.html#cb367-7" tabindex="-1"></a>  <span class="at">a1 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb367-8"><a href="semi-congruent-behavior.html#cb367-8" tabindex="-1"></a>  <span class="at">b1 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb367-9"><a href="semi-congruent-behavior.html#cb367-9" tabindex="-1"></a>  <span class="at">c1 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">4</span>, <span class="dv">0</span>),</span>
+<span id="cb367-10"><a href="semi-congruent-behavior.html#cb367-10" tabindex="-1"></a>  <span class="at">d1 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">4</span>)</span>
+<span id="cb367-11"><a href="semi-congruent-behavior.html#cb367-11" tabindex="-1"></a>)</span>
+<span id="cb367-12"><a href="semi-congruent-behavior.html#cb367-12" tabindex="-1"></a></span>
+<span id="cb367-13"><a href="semi-congruent-behavior.html#cb367-13" tabindex="-1"></a><span class="co"># Set row names and column names</span></span>
+<span id="cb367-14"><a href="semi-congruent-behavior.html#cb367-14" tabindex="-1"></a><span class="fu">rownames</span>(Q_ehe8_C.t) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Q_ehe8_C.t)</span>
+<span id="cb367-15"><a href="semi-congruent-behavior.html#cb367-15" tabindex="-1"></a>Q_ehe8_C.t <span class="ot">&lt;-</span><span class="fu">as.matrix</span>(Q_ehe8_C.t)</span>
+<span id="cb367-16"><a href="semi-congruent-behavior.html#cb367-16" tabindex="-1"></a></span>
+<span id="cb367-17"><a href="semi-congruent-behavior.html#cb367-17" tabindex="-1"></a></span>
+<span id="cb367-18"><a href="semi-congruent-behavior.html#cb367-18" tabindex="-1"></a>v<span class="ot">=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>, <span class="dv">2</span>,<span class="dv">6</span>, <span class="dv">3</span>,<span class="dv">7</span>, <span class="dv">4</span>,<span class="dv">8</span>)</span>
+<span id="cb367-19"><a href="semi-congruent-behavior.html#cb367-19" tabindex="-1"></a>Q_ehe8_C.r <span class="ot">&lt;-</span> Q_ehe8_C.t[v,v]</span>
+<span id="cb367-20"><a href="semi-congruent-behavior.html#cb367-20" tabindex="-1"></a></span>
+<span id="cb367-21"><a href="semi-congruent-behavior.html#cb367-21" tabindex="-1"></a><span class="fu">print</span>(Q_ehe8_C.r)</span></code></pre></div>
+<pre><code>##    a0 a1 b0 b1 c0 c1 d0 d1
+## a0 -4  1  0  1  1  0  1  0
+## a1  1 -4  1  0  0  1  0  1
+## b0  0  1 -4  1  1  0  1  0
+## b1  1  0  1 -4  0  1  0  1
+## c0  1  0  1  0 -4  1  0  1
+## c1  0  1  0  1  1 -4  1  0
+## d0  1  0  1  0  0  1 -4  1
+## d1  0  1  0  1  1  0  1 -4</code></pre>
+<div class="sourceCode" id="cb369"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb369-1"><a href="semi-congruent-behavior.html#cb369-1" tabindex="-1"></a><span class="co">#print(La8)</span></span>
+<span id="cb369-2"><a href="semi-congruent-behavior.html#cb369-2" tabindex="-1"></a><span class="fu">print</span>(Q_ehe8_C.t)</span></code></pre></div>
+<pre><code>##    a0 b0 c0 d0 a1 b1 c1 d1
+## a0 -4  0  1  1  1  1  0  0
+## b0  0 -4  1  1  1  1  0  0
+## c0  1  1 -4  0  0  0  1  1
+## d0  1  1  0 -4  0  0  1  1
+## a1  1  1  0  0 -4  0  1  1
+## b1  1  1  0  0  0 -4  1  1
+## c1  0  0  1  1  1  1 -4  0
+## d1  0  0  1  1  1  1  0 -4</code></pre>
+<div class="sourceCode" id="cb371"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb371-1"><a href="semi-congruent-behavior.html#cb371-1" tabindex="-1"></a><span class="co">#print(La8[v,v])</span></span></code></pre></div>
+</div>
+</div>
+<div id="read-in-data-2" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Read in data<a href="semi-congruent-behavior.html#read-in-data-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb372"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb372-1"><a href="semi-congruent-behavior.html#cb372-1" tabindex="-1"></a>NSIM<span class="ot">=</span><span class="dv">100</span></span>
+<span id="cb372-2"><a href="semi-congruent-behavior.html#cb372-2" tabindex="-1"></a>files_base <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;phy_CID4-100tips-100tr&#39;</span>, <span class="st">&#39;phy_CID4-500tips-100tr&#39;</span>, <span class="st">&#39;phy_CID4-1000tips-100tr&#39;</span>)</span></code></pre></div>
+</div>
+<div id="maximum-likelihood" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Maximum Likelihood<a href="semi-congruent-behavior.html#maximum-likelihood" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="cid4-4-pars-2" class="section level3 hasAnchor" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> CID4 (4 pars)<a href="semi-congruent-behavior.html#cid4-4-pars-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb373"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb373-1"><a href="semi-congruent-behavior.html#cb373-1" tabindex="-1"></a>Args <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb373-2"><a href="semi-congruent-behavior.html#cb373-2" tabindex="-1"></a>  <span class="at">Nstates =</span> 4L,</span>
+<span id="cb373-3"><a href="semi-congruent-behavior.html#cb373-3" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">list</span>(</span>
+<span id="cb373-4"><a href="semi-congruent-behavior.html#cb373-4" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>, <span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb373-5"><a href="semi-congruent-behavior.html#cb373-5" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>, <span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb373-6"><a href="semi-congruent-behavior.html#cb373-6" tabindex="-1"></a>  ))</span>
+<span id="cb373-7"><a href="semi-congruent-behavior.html#cb373-7" tabindex="-1"></a></span>
+<span id="cb373-8"><a href="semi-congruent-behavior.html#cb373-8" tabindex="-1"></a>newArgs <span class="ot">&lt;-</span> <span class="fu">makeArgs</span>(Args)</span>
+<span id="cb373-9"><a href="semi-congruent-behavior.html#cb373-9" tabindex="-1"></a><span class="co">#printArgsGlobal()</span></span>
+<span id="cb373-10"><a href="semi-congruent-behavior.html#cb373-10" tabindex="-1"></a>args <span class="ot">&lt;-</span> <span class="fu">argnames_HiClaSSE</span>(<span class="dv">4</span>)</span>
+<span id="cb373-11"><a href="semi-congruent-behavior.html#cb373-11" tabindex="-1"></a><span class="co">#args$arrays</span></span>
+<span id="cb373-12"><a href="semi-congruent-behavior.html#cb373-12" tabindex="-1"></a><span class="co">#args$pars</span></span>
+<span id="cb373-13"><a href="semi-congruent-behavior.html#cb373-13" tabindex="-1"></a><span class="co">#length(args$pars)</span></span>
+<span id="cb373-14"><a href="semi-congruent-behavior.html#cb373-14" tabindex="-1"></a></span>
+<span id="cb373-15"><a href="semi-congruent-behavior.html#cb373-15" tabindex="-1"></a>pars.hc <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(args<span class="sc">$</span>pars))</span>
+<span id="cb373-16"><a href="semi-congruent-behavior.html#cb373-16" tabindex="-1"></a><span class="fu">names</span>(pars.hc) <span class="ot">&lt;-</span> args<span class="sc">$</span>pars</span>
+<span id="cb373-17"><a href="semi-congruent-behavior.html#cb373-17" tabindex="-1"></a>pars.hc[<span class="st">&#39;lam000&#39;</span>] <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb373-18"><a href="semi-congruent-behavior.html#cb373-18" tabindex="-1"></a>pars.hc[<span class="st">&#39;lam111&#39;</span>] <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb373-19"><a href="semi-congruent-behavior.html#cb373-19" tabindex="-1"></a>pars.hc[<span class="st">&#39;lam222&#39;</span>] <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb373-20"><a href="semi-congruent-behavior.html#cb373-20" tabindex="-1"></a>pars.hc[<span class="st">&#39;lam333&#39;</span>] <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb373-21"><a href="semi-congruent-behavior.html#cb373-21" tabindex="-1"></a>pars.hc[<span class="st">&#39;mu0&#39;</span>] <span class="ot">&lt;-</span>pars.hc[<span class="st">&#39;mu1&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu2&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu3&#39;</span>] <span class="ot">&lt;-</span><span class="fl">0.1</span></span>
+<span id="cb373-22"><a href="semi-congruent-behavior.html#cb373-22" tabindex="-1"></a>qs <span class="ot">&lt;-</span> <span class="fu">extract_off_diagonal</span>(Q_cid4.r)</span>
+<span id="cb373-23"><a href="semi-congruent-behavior.html#cb373-23" tabindex="-1"></a>qsl<span class="ot">=</span><span class="fu">length</span>(qs)</span>
+<span id="cb373-24"><a href="semi-congruent-behavior.html#cb373-24" tabindex="-1"></a>pars.hc[<span class="fu">c</span>(<span class="fu">length</span>(pars.hc)<span class="sc">-</span>qsl<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span><span class="fu">length</span>(pars.hc)] <span class="ot">&lt;-</span> qs</span>
+<span id="cb373-25"><a href="semi-congruent-behavior.html#cb373-25" tabindex="-1"></a></span>
+<span id="cb373-26"><a href="semi-congruent-behavior.html#cb373-26" tabindex="-1"></a><span class="co">#pars.hc</span></span>
+<span id="cb373-27"><a href="semi-congruent-behavior.html#cb373-27" tabindex="-1"></a><span class="co">#pars_to_arrays(pars.hc,4)</span></span>
+<span id="cb373-28"><a href="semi-congruent-behavior.html#cb373-28" tabindex="-1"></a><span class="co">#args</span></span>
+<span id="cb373-29"><a href="semi-congruent-behavior.html#cb373-29" tabindex="-1"></a></span>
+<span id="cb373-30"><a href="semi-congruent-behavior.html#cb373-30" tabindex="-1"></a>zero.constr <span class="ot">&lt;-</span> <span class="fu">formulas_zero_pars</span>(pars.hc)</span>
+<span id="cb373-31"><a href="semi-congruent-behavior.html#cb373-31" tabindex="-1"></a>f.qs <span class="ot">&lt;-</span> <span class="fu">assign_classes_pairwise</span>(Q_cid4.r, args<span class="sc">$</span>arrays<span class="sc">$</span>Q)</span>
+<span id="cb373-32"><a href="semi-congruent-behavior.html#cb373-32" tabindex="-1"></a>f.mu <span class="ot">&lt;-</span> <span class="fu">c</span>(mu1 <span class="sc">~</span> mu0, mu2 <span class="sc">~</span> mu0, mu3 <span class="sc">~</span> mu0)</span>
+<span id="cb373-33"><a href="semi-congruent-behavior.html#cb373-33" tabindex="-1"></a>f.lams <span class="ot">&lt;-</span> <span class="fu">c</span>(lam111 <span class="sc">~</span> lam000, lam333 <span class="sc">~</span> lam222)</span>
+<span id="cb373-34"><a href="semi-congruent-behavior.html#cb373-34" tabindex="-1"></a>f.list<span class="ot">&lt;-</span> <span class="fu">c</span>(zero.constr,  f.qs, f.mu, f.lams)</span></code></pre></div>
+<p>Run inference</p>
+<div class="sourceCode" id="cb374"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb374-1"><a href="semi-congruent-behavior.html#cb374-1" tabindex="-1"></a><span class="co">#base=&quot;phy_CID4-100tips-100tr&quot;</span></span>
+<span id="cb374-2"><a href="semi-congruent-behavior.html#cb374-2" tabindex="-1"></a><span class="cf">for</span> (base <span class="cf">in</span> files_base[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]){</span>
+<span id="cb374-3"><a href="semi-congruent-behavior.html#cb374-3" tabindex="-1"></a>  file<span class="ot">=</span><span class="fu">file.path</span>(<span class="st">&quot;R/data&quot;</span>, <span class="fu">paste0</span>(base, <span class="st">&#39;.RDS&#39;</span>))</span>
+<span id="cb374-4"><a href="semi-congruent-behavior.html#cb374-4" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&#39;Reading file: &#39;</span>,file))</span>
+<span id="cb374-5"><a href="semi-congruent-behavior.html#cb374-5" tabindex="-1"></a>  phy <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file=</span>file)</span>
+<span id="cb374-6"><a href="semi-congruent-behavior.html#cb374-6" tabindex="-1"></a></span>
+<span id="cb374-7"><a href="semi-congruent-behavior.html#cb374-7" tabindex="-1"></a>  CID4 <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb374-8"><a href="semi-congruent-behavior.html#cb374-8" tabindex="-1"></a>  <span class="co">#i=1</span></span>
+<span id="cb374-9"><a href="semi-congruent-behavior.html#cb374-9" tabindex="-1"></a>  <span class="co">#which(is.na(phy))</span></span>
+<span id="cb374-10"><a href="semi-congruent-behavior.html#cb374-10" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>NSIM){</span>
+<span id="cb374-11"><a href="semi-congruent-behavior.html#cb374-11" tabindex="-1"></a>    </span>
+<span id="cb374-12"><a href="semi-congruent-behavior.html#cb374-12" tabindex="-1"></a>    <span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&#39;Working on: &#39;</span>, i))</span>
+<span id="cb374-13"><a href="semi-congruent-behavior.html#cb374-13" tabindex="-1"></a>    tree <span class="ot">&lt;-</span> phy[[i]]</span>
+<span id="cb374-14"><a href="semi-congruent-behavior.html#cb374-14" tabindex="-1"></a>    states<span class="ot">&lt;-</span> tree<span class="sc">$</span>tip.state</span>
+<span id="cb374-15"><a href="semi-congruent-behavior.html#cb374-15" tabindex="-1"></a>    states<span class="ot">&lt;-</span> <span class="fu">mapvalues</span>(states, <span class="at">from =</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span>, <span class="st">&quot;1&quot;</span>, <span class="st">&quot;2&quot;</span>, <span class="st">&quot;3&quot;</span>), <span class="at">to=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>) )</span>
+<span id="cb374-16"><a href="semi-congruent-behavior.html#cb374-16" tabindex="-1"></a>    root <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span>)</span>
+<span id="cb374-17"><a href="semi-congruent-behavior.html#cb374-17" tabindex="-1"></a>    </span>
+<span id="cb374-18"><a href="semi-congruent-behavior.html#cb374-18" tabindex="-1"></a>    lik.c <span class="ot">&lt;-</span> <span class="fu">make.HiClasse_cpp</span>(tree, states,  <span class="at">sampling.f=</span><span class="cn">NULL</span>,  <span class="at">strict=</span><span class="cn">TRUE</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">backend =</span> <span class="st">&quot;gslode&quot;</span>), newArgs)</span>
+<span id="cb374-19"><a href="semi-congruent-behavior.html#cb374-19" tabindex="-1"></a>    lik.const <span class="ot">&lt;-</span> <span class="fu">constrain</span>(lik.c, <span class="at">formulae =</span> f.list)</span>
+<span id="cb374-20"><a href="semi-congruent-behavior.html#cb374-20" tabindex="-1"></a>    arg.const <span class="ot">&lt;-</span> <span class="fu">argnames</span>(lik.const)</span>
+<span id="cb374-21"><a href="semi-congruent-behavior.html#cb374-21" tabindex="-1"></a>    starting.point <span class="ot">&lt;-</span> pars.hc[arg.const]</span>
+<span id="cb374-22"><a href="semi-congruent-behavior.html#cb374-22" tabindex="-1"></a>    CID4[[i]] <span class="ot">&lt;-</span> <span class="fu">find.mle</span>(lik.const, starting.point, <span class="at">method=</span><span class="st">&quot;subplex&quot;</span>, <span class="at">keep.func=</span>F, <span class="at">root=</span>ROOT.GIVEN, <span class="at">root.p=</span>root, <span class="at">condition.surv=</span><span class="cn">TRUE</span>)</span>
+<span id="cb374-23"><a href="semi-congruent-behavior.html#cb374-23" tabindex="-1"></a>    <span class="co">#CID4[[1]]$lnLik</span></span>
+<span id="cb374-24"><a href="semi-congruent-behavior.html#cb374-24" tabindex="-1"></a>    </span>
+<span id="cb374-25"><a href="semi-congruent-behavior.html#cb374-25" tabindex="-1"></a>  }</span>
+<span id="cb374-26"><a href="semi-congruent-behavior.html#cb374-26" tabindex="-1"></a>  file_out<span class="ot">=</span><span class="fu">paste0</span>(<span class="st">&#39;R/data/lik-CID4-&#39;</span>, base, <span class="st">&#39;.RDS&#39;</span>)</span>
+<span id="cb374-27"><a href="semi-congruent-behavior.html#cb374-27" tabindex="-1"></a>  <span class="fu">saveRDS</span>(CID4, <span class="at">file=</span> file_out)</span>
+<span id="cb374-28"><a href="semi-congruent-behavior.html#cb374-28" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="ehe8-c" class="section level3 hasAnchor" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> EHE8-C<a href="semi-congruent-behavior.html#ehe8-c" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb375"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb375-1"><a href="semi-congruent-behavior.html#cb375-1" tabindex="-1"></a>lam1<span class="ot">=</span><span class="fl">0.3</span></span>
+<span id="cb375-2"><a href="semi-congruent-behavior.html#cb375-2" tabindex="-1"></a>lam2<span class="ot">=</span><span class="fl">0.1</span></span>
+<span id="cb375-3"><a href="semi-congruent-behavior.html#cb375-3" tabindex="-1"></a>q<span class="ot">=</span><span class="fl">0.2</span></span>
+<span id="cb375-4"><a href="semi-congruent-behavior.html#cb375-4" tabindex="-1"></a>mu<span class="ot">=</span><span class="fl">0.01</span></span>
+<span id="cb375-5"><a href="semi-congruent-behavior.html#cb375-5" tabindex="-1"></a></span>
+<span id="cb375-6"><a href="semi-congruent-behavior.html#cb375-6" tabindex="-1"></a>Args <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb375-7"><a href="semi-congruent-behavior.html#cb375-7" tabindex="-1"></a>  <span class="at">Nstates =</span> 8L,</span>
+<span id="cb375-8"><a href="semi-congruent-behavior.html#cb375-8" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">list</span>(</span>
+<span id="cb375-9"><a href="semi-congruent-behavior.html#cb375-9" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>, <span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb375-10"><a href="semi-congruent-behavior.html#cb375-10" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>, <span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb375-11"><a href="semi-congruent-behavior.html#cb375-11" tabindex="-1"></a>  ))</span>
+<span id="cb375-12"><a href="semi-congruent-behavior.html#cb375-12" tabindex="-1"></a></span>
+<span id="cb375-13"><a href="semi-congruent-behavior.html#cb375-13" tabindex="-1"></a>newArgs <span class="ot">&lt;-</span> <span class="fu">makeArgs</span>(Args)</span>
+<span id="cb375-14"><a href="semi-congruent-behavior.html#cb375-14" tabindex="-1"></a><span class="co">#printArgsGlobal()</span></span>
+<span id="cb375-15"><a href="semi-congruent-behavior.html#cb375-15" tabindex="-1"></a>args <span class="ot">&lt;-</span> <span class="fu">argnames_HiClaSSE</span>(<span class="dv">8</span>)</span>
+<span id="cb375-16"><a href="semi-congruent-behavior.html#cb375-16" tabindex="-1"></a><span class="co">#args$arrays</span></span>
+<span id="cb375-17"><a href="semi-congruent-behavior.html#cb375-17" tabindex="-1"></a><span class="co">#args$pars</span></span>
+<span id="cb375-18"><a href="semi-congruent-behavior.html#cb375-18" tabindex="-1"></a><span class="co">#length(args$pars)</span></span>
+<span id="cb375-19"><a href="semi-congruent-behavior.html#cb375-19" tabindex="-1"></a></span>
+<span id="cb375-20"><a href="semi-congruent-behavior.html#cb375-20" tabindex="-1"></a>pars.hc <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(args<span class="sc">$</span>pars))</span>
+<span id="cb375-21"><a href="semi-congruent-behavior.html#cb375-21" tabindex="-1"></a><span class="fu">names</span>(pars.hc) <span class="ot">&lt;-</span> args<span class="sc">$</span>pars</span>
+<span id="cb375-22"><a href="semi-congruent-behavior.html#cb375-22" tabindex="-1"></a>pars.hc[<span class="st">&#39;lam000&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam002&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam022&#39;</span>] <span class="ot">&lt;-</span> lam1<span class="sc">/</span><span class="dv">3</span></span>
+<span id="cb375-23"><a href="semi-congruent-behavior.html#cb375-23" tabindex="-1"></a>pars.hc[<span class="st">&#39;lam200&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam202&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam222&#39;</span>] <span class="ot">&lt;-</span> lam1<span class="sc">/</span><span class="dv">3</span></span>
+<span id="cb375-24"><a href="semi-congruent-behavior.html#cb375-24" tabindex="-1"></a></span>
+<span id="cb375-25"><a href="semi-congruent-behavior.html#cb375-25" tabindex="-1"></a>pars.hc[<span class="st">&#39;lam111&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam113&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam133&#39;</span>] <span class="ot">&lt;-</span> lam1<span class="sc">/</span><span class="dv">3</span></span>
+<span id="cb375-26"><a href="semi-congruent-behavior.html#cb375-26" tabindex="-1"></a>pars.hc[<span class="st">&#39;lam311&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam313&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;lam333&#39;</span>] <span class="ot">&lt;-</span> lam1<span class="sc">/</span><span class="dv">3</span></span>
+<span id="cb375-27"><a href="semi-congruent-behavior.html#cb375-27" tabindex="-1"></a></span>
+<span id="cb375-28"><a href="semi-congruent-behavior.html#cb375-28" tabindex="-1"></a>pars.hc[<span class="st">&#39;lam444&#39;</span>] <span class="ot">&lt;-</span> lam2</span>
+<span id="cb375-29"><a href="semi-congruent-behavior.html#cb375-29" tabindex="-1"></a>pars.hc[<span class="st">&#39;lam555&#39;</span>] <span class="ot">&lt;-</span> lam2</span>
+<span id="cb375-30"><a href="semi-congruent-behavior.html#cb375-30" tabindex="-1"></a>pars.hc[<span class="st">&#39;lam666&#39;</span>] <span class="ot">&lt;-</span> lam2</span>
+<span id="cb375-31"><a href="semi-congruent-behavior.html#cb375-31" tabindex="-1"></a>pars.hc[<span class="st">&#39;lam777&#39;</span>] <span class="ot">&lt;-</span> lam2</span>
+<span id="cb375-32"><a href="semi-congruent-behavior.html#cb375-32" tabindex="-1"></a>pars.hc[<span class="st">&#39;mu0&#39;</span>] <span class="ot">&lt;-</span>pars.hc[<span class="st">&#39;mu1&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu2&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu3&#39;</span>] <span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu4&#39;</span>]<span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu5&#39;</span>]<span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu6&#39;</span>]<span class="ot">&lt;-</span> pars.hc[<span class="st">&#39;mu7&#39;</span>] <span class="ot">&lt;-</span>mu</span>
+<span id="cb375-33"><a href="semi-congruent-behavior.html#cb375-33" tabindex="-1"></a>qs <span class="ot">&lt;-</span> <span class="fu">extract_off_diagonal</span>(Q_ehe8_C.r<span class="sc">/</span><span class="dv">10</span>)</span>
+<span id="cb375-34"><a href="semi-congruent-behavior.html#cb375-34" tabindex="-1"></a>qsl<span class="ot">=</span><span class="fu">length</span>(qs)</span>
+<span id="cb375-35"><a href="semi-congruent-behavior.html#cb375-35" tabindex="-1"></a>pars.hc[<span class="fu">c</span>(<span class="fu">length</span>(pars.hc)<span class="sc">-</span>qsl<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span><span class="fu">length</span>(pars.hc)] <span class="ot">&lt;-</span> qs</span>
+<span id="cb375-36"><a href="semi-congruent-behavior.html#cb375-36" tabindex="-1"></a></span>
+<span id="cb375-37"><a href="semi-congruent-behavior.html#cb375-37" tabindex="-1"></a><span class="co">#pars.hc</span></span>
+<span id="cb375-38"><a href="semi-congruent-behavior.html#cb375-38" tabindex="-1"></a><span class="co">#pars_to_arrays(pars.hc,8)</span></span>
+<span id="cb375-39"><a href="semi-congruent-behavior.html#cb375-39" tabindex="-1"></a><span class="co">#args</span></span>
+<span id="cb375-40"><a href="semi-congruent-behavior.html#cb375-40" tabindex="-1"></a></span>
+<span id="cb375-41"><a href="semi-congruent-behavior.html#cb375-41" tabindex="-1"></a>zero.constr <span class="ot">&lt;-</span> <span class="fu">formulas_zero_pars</span>(pars.hc)</span>
+<span id="cb375-42"><a href="semi-congruent-behavior.html#cb375-42" tabindex="-1"></a>f.qs <span class="ot">&lt;-</span> <span class="fu">assign_classes_pairwise</span>(Q_ehe8_C.r<span class="sc">/</span><span class="dv">10</span>, args<span class="sc">$</span>arrays<span class="sc">$</span>Q)</span>
+<span id="cb375-43"><a href="semi-congruent-behavior.html#cb375-43" tabindex="-1"></a>f.mu <span class="ot">&lt;-</span> <span class="fu">c</span>(mu1 <span class="sc">~</span> mu0, mu2 <span class="sc">~</span> mu0, mu3 <span class="sc">~</span> mu0, mu4 <span class="sc">~</span> mu0, mu5 <span class="sc">~</span> mu0, mu6 <span class="sc">~</span> mu0, mu7 <span class="sc">~</span> mu0)</span>
+<span id="cb375-44"><a href="semi-congruent-behavior.html#cb375-44" tabindex="-1"></a>f.lams <span class="ot">&lt;-</span> <span class="fu">c</span>(lam002 <span class="sc">~</span> q01, lam022 <span class="sc">~</span> q01,</span>
+<span id="cb375-45"><a href="semi-congruent-behavior.html#cb375-45" tabindex="-1"></a>            lam200 <span class="sc">~</span> q01, lam202 <span class="sc">~</span> q01, lam222 <span class="sc">~</span> q01,</span>
+<span id="cb375-46"><a href="semi-congruent-behavior.html#cb375-46" tabindex="-1"></a>            lam111 <span class="sc">~</span> q01, lam113 <span class="sc">~</span> q01, lam133 <span class="sc">~</span> q01, </span>
+<span id="cb375-47"><a href="semi-congruent-behavior.html#cb375-47" tabindex="-1"></a>            lam311 <span class="sc">~</span> q01, lam313 <span class="sc">~</span> q01, lam333 <span class="sc">~</span> q01,</span>
+<span id="cb375-48"><a href="semi-congruent-behavior.html#cb375-48" tabindex="-1"></a>            lam444 <span class="sc">~</span> q01, lam555 <span class="sc">~</span> q01, lam666 <span class="sc">~</span> q01, lam777 <span class="sc">~</span> q01,</span>
+<span id="cb375-49"><a href="semi-congruent-behavior.html#cb375-49" tabindex="-1"></a>            lam000 <span class="sc">~</span> q01</span>
+<span id="cb375-50"><a href="semi-congruent-behavior.html#cb375-50" tabindex="-1"></a>            )</span>
+<span id="cb375-51"><a href="semi-congruent-behavior.html#cb375-51" tabindex="-1"></a>f.list<span class="ot">&lt;-</span> <span class="fu">c</span>(zero.constr,  f.qs, f.mu, f.lams)</span></code></pre></div>
+<p>Run inference</p>
+<div class="sourceCode" id="cb376"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb376-1"><a href="semi-congruent-behavior.html#cb376-1" tabindex="-1"></a><span class="cf">for</span> (base <span class="cf">in</span> files_base){</span>
+<span id="cb376-2"><a href="semi-congruent-behavior.html#cb376-2" tabindex="-1"></a>  file<span class="ot">=</span><span class="fu">file.path</span>(<span class="st">&quot;R/data&quot;</span>, <span class="fu">paste0</span>(base, <span class="st">&#39;.RDS&#39;</span>))</span>
+<span id="cb376-3"><a href="semi-congruent-behavior.html#cb376-3" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&#39;Reading file: &#39;</span>,file))</span>
+<span id="cb376-4"><a href="semi-congruent-behavior.html#cb376-4" tabindex="-1"></a>  phy <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file=</span>file)</span>
+<span id="cb376-5"><a href="semi-congruent-behavior.html#cb376-5" tabindex="-1"></a></span>
+<span id="cb376-6"><a href="semi-congruent-behavior.html#cb376-6" tabindex="-1"></a>  EHE8_C <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb376-7"><a href="semi-congruent-behavior.html#cb376-7" tabindex="-1"></a>  i<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb376-8"><a href="semi-congruent-behavior.html#cb376-8" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>NSIM){</span>
+<span id="cb376-9"><a href="semi-congruent-behavior.html#cb376-9" tabindex="-1"></a>    </span>
+<span id="cb376-10"><a href="semi-congruent-behavior.html#cb376-10" tabindex="-1"></a>    <span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&#39;Working on: &#39;</span>, i))</span>
+<span id="cb376-11"><a href="semi-congruent-behavior.html#cb376-11" tabindex="-1"></a>    tree <span class="ot">&lt;-</span> phy[[i]]</span>
+<span id="cb376-12"><a href="semi-congruent-behavior.html#cb376-12" tabindex="-1"></a>    states<span class="ot">&lt;-</span> tree<span class="sc">$</span>tip.state</span>
+<span id="cb376-13"><a href="semi-congruent-behavior.html#cb376-13" tabindex="-1"></a>    states<span class="ot">&lt;-</span> <span class="fu">mapvalues</span>(states, <span class="at">from =</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span>, <span class="st">&quot;1&quot;</span>, <span class="st">&quot;2&quot;</span>, <span class="st">&quot;3&quot;</span>), <span class="at">to=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>) )</span>
+<span id="cb376-14"><a href="semi-congruent-behavior.html#cb376-14" tabindex="-1"></a>    root <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">8</span>, <span class="dv">8</span>)</span>
+<span id="cb376-15"><a href="semi-congruent-behavior.html#cb376-15" tabindex="-1"></a>    </span>
+<span id="cb376-16"><a href="semi-congruent-behavior.html#cb376-16" tabindex="-1"></a>    lik.c <span class="ot">&lt;-</span> <span class="fu">make.HiClasse_cpp</span>(tree, states,  <span class="at">sampling.f=</span><span class="cn">NULL</span>,  <span class="at">strict=</span><span class="cn">TRUE</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">backend =</span> <span class="st">&quot;gslode&quot;</span>), newArgs)</span>
+<span id="cb376-17"><a href="semi-congruent-behavior.html#cb376-17" tabindex="-1"></a>    lik.const <span class="ot">&lt;-</span> <span class="fu">constrain</span>(lik.c, <span class="at">formulae =</span> f.list)</span>
+<span id="cb376-18"><a href="semi-congruent-behavior.html#cb376-18" tabindex="-1"></a>    arg.const <span class="ot">&lt;-</span> <span class="fu">argnames</span>(lik.const)</span>
+<span id="cb376-19"><a href="semi-congruent-behavior.html#cb376-19" tabindex="-1"></a>    starting.point <span class="ot">&lt;-</span> pars.hc[arg.const]</span>
+<span id="cb376-20"><a href="semi-congruent-behavior.html#cb376-20" tabindex="-1"></a>    EHE8_C[[i]] <span class="ot">&lt;-</span> <span class="fu">find.mle</span>(lik.const, starting.point, <span class="at">method=</span><span class="st">&quot;subplex&quot;</span>, <span class="at">keep.func=</span>F, <span class="at">root=</span>ROOT.GIVEN, <span class="at">root.p=</span>root, <span class="at">condition.surv=</span><span class="cn">TRUE</span>)</span>
+<span id="cb376-21"><a href="semi-congruent-behavior.html#cb376-21" tabindex="-1"></a>    <span class="co">#EHE8_C[[1]]$lnLik</span></span>
+<span id="cb376-22"><a href="semi-congruent-behavior.html#cb376-22" tabindex="-1"></a>    </span>
+<span id="cb376-23"><a href="semi-congruent-behavior.html#cb376-23" tabindex="-1"></a>  }</span>
+<span id="cb376-24"><a href="semi-congruent-behavior.html#cb376-24" tabindex="-1"></a>  </span>
+<span id="cb376-25"><a href="semi-congruent-behavior.html#cb376-25" tabindex="-1"></a>  file_out<span class="ot">=</span><span class="fu">paste0</span>(<span class="st">&#39;R/data/lik-EHE8_C-&#39;</span>, base, <span class="st">&#39;.RDS&#39;</span>)</span>
+<span id="cb376-26"><a href="semi-congruent-behavior.html#cb376-26" tabindex="-1"></a>  <span class="fu">saveRDS</span>(EHE8_C, <span class="at">file=</span> file_out)</span>
+<span id="cb376-27"><a href="semi-congruent-behavior.html#cb376-27" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+</div>
+<div id="results-2" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> Results<a href="semi-congruent-behavior.html#results-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb377"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb377-1"><a href="semi-congruent-behavior.html#cb377-1" tabindex="-1"></a>cid <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb377-2"><a href="semi-congruent-behavior.html#cb377-2" tabindex="-1"></a><span class="at">t100=</span><span class="fu">get_item</span>(<span class="fu">readRDS</span>(<span class="at">file=</span><span class="st">&#39;R/data/lik-CID4-phy_CID4-100tips-100tr.RDS&#39;</span>), <span class="st">&#39;lnLik&#39;</span>) <span class="sc">%&gt;%</span> <span class="fu">get_aic</span>(., <span class="dv">4</span>),</span>
+<span id="cb377-3"><a href="semi-congruent-behavior.html#cb377-3" tabindex="-1"></a><span class="at">t500=</span><span class="fu">get_item</span>(<span class="fu">readRDS</span>(<span class="at">file=</span><span class="st">&#39;R/data/lik-CID4-phy_CID4-500tips-100tr.RDS&#39;</span>), <span class="st">&#39;lnLik&#39;</span>) <span class="sc">%&gt;%</span> <span class="fu">get_aic</span>(., <span class="dv">4</span>),</span>
+<span id="cb377-4"><a href="semi-congruent-behavior.html#cb377-4" tabindex="-1"></a><span class="at">t1000=</span><span class="fu">get_item</span>(<span class="fu">readRDS</span>(<span class="at">file=</span><span class="st">&#39;R/data/lik-CID4-phy_CID4-1000tips-100tr.RDS&#39;</span>), <span class="st">&#39;lnLik&#39;</span>) <span class="sc">%&gt;%</span> <span class="fu">get_aic</span>(., <span class="dv">4</span>)</span>
+<span id="cb377-5"><a href="semi-congruent-behavior.html#cb377-5" tabindex="-1"></a>)</span>
+<span id="cb377-6"><a href="semi-congruent-behavior.html#cb377-6" tabindex="-1"></a></span>
+<span id="cb377-7"><a href="semi-congruent-behavior.html#cb377-7" tabindex="-1"></a>ehe <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb377-8"><a href="semi-congruent-behavior.html#cb377-8" tabindex="-1"></a><span class="at">t100=</span><span class="fu">get_item</span>(<span class="fu">readRDS</span>(<span class="at">file=</span><span class="st">&#39;R/data/lik-EHE8_C-phy_CID4-100tips-100tr.RDS&#39;</span>), <span class="st">&#39;lnLik&#39;</span>) <span class="sc">%&gt;%</span> <span class="fu">get_aic</span>(., <span class="dv">2</span>),</span>
+<span id="cb377-9"><a href="semi-congruent-behavior.html#cb377-9" tabindex="-1"></a><span class="at">t500=</span><span class="fu">get_item</span>(<span class="fu">readRDS</span>(<span class="at">file=</span><span class="st">&#39;R/data/lik-EHE8_C-phy_CID4-500tips-100tr.RDS&#39;</span>), <span class="st">&#39;lnLik&#39;</span>) <span class="sc">%&gt;%</span> <span class="fu">get_aic</span>(., <span class="dv">2</span>),</span>
+<span id="cb377-10"><a href="semi-congruent-behavior.html#cb377-10" tabindex="-1"></a><span class="at">t1000=</span><span class="fu">get_item</span>(<span class="fu">readRDS</span>(<span class="at">file=</span><span class="st">&#39;R/data/lik-EHE8_C-phy_CID4-1000tips-100tr.RDS&#39;</span>), <span class="st">&#39;lnLik&#39;</span>) <span class="sc">%&gt;%</span> <span class="fu">get_aic</span>(., <span class="dv">2</span>)</span>
+<span id="cb377-11"><a href="semi-congruent-behavior.html#cb377-11" tabindex="-1"></a>)</span>
+<span id="cb377-12"><a href="semi-congruent-behavior.html#cb377-12" tabindex="-1"></a></span>
+<span id="cb377-13"><a href="semi-congruent-behavior.html#cb377-13" tabindex="-1"></a></span>
+<span id="cb377-14"><a href="semi-congruent-behavior.html#cb377-14" tabindex="-1"></a>cid.lik <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb377-15"><a href="semi-congruent-behavior.html#cb377-15" tabindex="-1"></a><span class="at">t100=</span><span class="fu">get_item</span>(<span class="fu">readRDS</span>(<span class="at">file=</span><span class="st">&#39;R/data/lik-CID4-phy_CID4-100tips-100tr.RDS&#39;</span>), <span class="st">&#39;lnLik&#39;</span>),</span>
+<span id="cb377-16"><a href="semi-congruent-behavior.html#cb377-16" tabindex="-1"></a><span class="at">t500=</span><span class="fu">get_item</span>(<span class="fu">readRDS</span>(<span class="at">file=</span><span class="st">&#39;R/data/lik-CID4-phy_CID4-500tips-100tr.RDS&#39;</span>), <span class="st">&#39;lnLik&#39;</span>) ,</span>
+<span id="cb377-17"><a href="semi-congruent-behavior.html#cb377-17" tabindex="-1"></a><span class="at">t1000=</span><span class="fu">get_item</span>(<span class="fu">readRDS</span>(<span class="at">file=</span><span class="st">&#39;R/data/lik-CID4-phy_CID4-1000tips-100tr.RDS&#39;</span>), <span class="st">&#39;lnLik&#39;</span>)</span>
+<span id="cb377-18"><a href="semi-congruent-behavior.html#cb377-18" tabindex="-1"></a>)</span>
+<span id="cb377-19"><a href="semi-congruent-behavior.html#cb377-19" tabindex="-1"></a></span>
+<span id="cb377-20"><a href="semi-congruent-behavior.html#cb377-20" tabindex="-1"></a>ehe.lik <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb377-21"><a href="semi-congruent-behavior.html#cb377-21" tabindex="-1"></a><span class="at">t100=</span><span class="fu">get_item</span>(<span class="fu">readRDS</span>(<span class="at">file=</span><span class="st">&#39;R/data/lik-EHE8_C-phy_CID4-100tips-100tr.RDS&#39;</span>), <span class="st">&#39;lnLik&#39;</span>),</span>
+<span id="cb377-22"><a href="semi-congruent-behavior.html#cb377-22" tabindex="-1"></a><span class="at">t500=</span><span class="fu">get_item</span>(<span class="fu">readRDS</span>(<span class="at">file=</span><span class="st">&#39;R/data/lik-EHE8_C-phy_CID4-500tips-100tr.RDS&#39;</span>), <span class="st">&#39;lnLik&#39;</span>),</span>
+<span id="cb377-23"><a href="semi-congruent-behavior.html#cb377-23" tabindex="-1"></a><span class="at">t1000=</span><span class="fu">get_item</span>(<span class="fu">readRDS</span>(<span class="at">file=</span><span class="st">&#39;R/data/lik-EHE8_C-phy_CID4-1000tips-100tr.RDS&#39;</span>), <span class="st">&#39;lnLik&#39;</span>)</span>
+<span id="cb377-24"><a href="semi-congruent-behavior.html#cb377-24" tabindex="-1"></a>)</span></code></pre></div>
+<p>MLE of CID is constantly better than MLE of the semi-congruent EHE8-C.</p>
+<div class="sourceCode" id="cb378"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb378-1"><a href="semi-congruent-behavior.html#cb378-1" tabindex="-1"></a>del.lik <span class="ot">&lt;-</span> cid.lik<span class="sc">-</span>ehe.lik</span>
+<span id="cb378-2"><a href="semi-congruent-behavior.html#cb378-2" tabindex="-1"></a></span>
+<span id="cb378-3"><a href="semi-congruent-behavior.html#cb378-3" tabindex="-1"></a><span class="co"># The positive values indicate that CID&#39;s MLE is better</span></span>
+<span id="cb378-4"><a href="semi-congruent-behavior.html#cb378-4" tabindex="-1"></a><span class="co"># There are only positive values</span></span>
+<span id="cb378-5"><a href="semi-congruent-behavior.html#cb378-5" tabindex="-1"></a><span class="fu">apply</span>(del.lik, <span class="dv">2</span>, min)</span></code></pre></div>
+<pre><code>##        t100        t500       t1000 
+## 0.004118721 0.013512631 0.003768857</code></pre>
+<p>However, in most trials EHE8-C has better AIC.</p>
+<div class="sourceCode" id="cb380"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb380-1"><a href="semi-congruent-behavior.html#cb380-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb380-2"><a href="semi-congruent-behavior.html#cb380-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb380-3"><a href="semi-congruent-behavior.html#cb380-3" tabindex="-1"></a><span class="fu">library</span>(tidyr)  <span class="co"># Load tidyr package</span></span>
+<span id="cb380-4"><a href="semi-congruent-behavior.html#cb380-4" tabindex="-1"></a></span>
+<span id="cb380-5"><a href="semi-congruent-behavior.html#cb380-5" tabindex="-1"></a>del <span class="ot">&lt;-</span> cid<span class="sc">-</span>ehe</span>
+<span id="cb380-6"><a href="semi-congruent-behavior.html#cb380-6" tabindex="-1"></a></span>
+<span id="cb380-7"><a href="semi-congruent-behavior.html#cb380-7" tabindex="-1"></a></span>
+<span id="cb380-8"><a href="semi-congruent-behavior.html#cb380-8" tabindex="-1"></a><span class="co"># Calculate ECDF for each column</span></span>
+<span id="cb380-9"><a href="semi-congruent-behavior.html#cb380-9" tabindex="-1"></a>ecdf_del <span class="ot">&lt;-</span> del <span class="sc">%&gt;%</span></span>
+<span id="cb380-10"><a href="semi-congruent-behavior.html#cb380-10" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb380-11"><a href="semi-congruent-behavior.html#cb380-11" tabindex="-1"></a>    <span class="at">t100_ecdf =</span> <span class="fu">ecdf</span>(t100),</span>
+<span id="cb380-12"><a href="semi-congruent-behavior.html#cb380-12" tabindex="-1"></a>    <span class="at">t500_ecdf =</span> <span class="fu">ecdf</span>(t500),</span>
+<span id="cb380-13"><a href="semi-congruent-behavior.html#cb380-13" tabindex="-1"></a>    <span class="at">t1000_ecdf =</span> <span class="fu">ecdf</span>(t1000)</span>
+<span id="cb380-14"><a href="semi-congruent-behavior.html#cb380-14" tabindex="-1"></a>  )</span>
+<span id="cb380-15"><a href="semi-congruent-behavior.html#cb380-15" tabindex="-1"></a></span>
+<span id="cb380-16"><a href="semi-congruent-behavior.html#cb380-16" tabindex="-1"></a></span>
+<span id="cb380-17"><a href="semi-congruent-behavior.html#cb380-17" tabindex="-1"></a></span>
+<span id="cb380-18"><a href="semi-congruent-behavior.html#cb380-18" tabindex="-1"></a><span class="co"># Create a data frame for plotting</span></span>
+<span id="cb380-19"><a href="semi-congruent-behavior.html#cb380-19" tabindex="-1"></a>ecdf_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb380-20"><a href="semi-congruent-behavior.html#cb380-20" tabindex="-1"></a>  <span class="at">Value =</span> <span class="fu">c</span>(del<span class="sc">$</span>t100, del<span class="sc">$</span>t500, del<span class="sc">$</span>t1000),</span>
+<span id="cb380-21"><a href="semi-congruent-behavior.html#cb380-21" tabindex="-1"></a>  <span class="at">Group =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;100 tips&quot;</span>, <span class="st">&quot;500 tips&quot;</span>, <span class="st">&quot;1000 tips&quot;</span>), <span class="at">each =</span> <span class="fu">nrow</span>(del))</span>
+<span id="cb380-22"><a href="semi-congruent-behavior.html#cb380-22" tabindex="-1"></a>)</span></code></pre></div>
+<p>Proportion of trials with dAIC&gt;2.</p>
+<div class="sourceCode" id="cb381"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb381-1"><a href="semi-congruent-behavior.html#cb381-1" tabindex="-1"></a><span class="dv">1</span><span class="sc">-</span>ecdf_del<span class="sc">$</span><span class="fu">t100_ecdf</span>(<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.56</code></pre>
+<div class="sourceCode" id="cb383"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb383-1"><a href="semi-congruent-behavior.html#cb383-1" tabindex="-1"></a><span class="dv">1</span><span class="sc">-</span>ecdf_del<span class="sc">$</span><span class="fu">t500_ecdf</span>(<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.64</code></pre>
+<div class="sourceCode" id="cb385"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb385-1"><a href="semi-congruent-behavior.html#cb385-1" tabindex="-1"></a><span class="dv">1</span><span class="sc">-</span>ecdf_del<span class="sc">$</span><span class="fu">t1000_ecdf</span>(<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.55</code></pre>
+<div class="sourceCode" id="cb387"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb387-1"><a href="semi-congruent-behavior.html#cb387-1" tabindex="-1"></a><span class="co">#hist(ecdf_data$Value)</span></span></code></pre></div>
+<p>Plot</p>
+<div class="sourceCode" id="cb388"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb388-1"><a href="semi-congruent-behavior.html#cb388-1" tabindex="-1"></a><span class="co"># Plot the ECDFs for each group</span></span>
+<span id="cb388-2"><a href="semi-congruent-behavior.html#cb388-2" tabindex="-1"></a>cdf_plot <span class="ot">&lt;-</span><span class="fu">ggplot</span>(ecdf_data, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">color =</span> Group)) <span class="sc">+</span></span>
+<span id="cb388-3"><a href="semi-congruent-behavior.html#cb388-3" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>(<span class="at">geom =</span> <span class="st">&quot;step&quot;</span>) <span class="sc">+</span></span>
+<span id="cb388-4"><a href="semi-congruent-behavior.html#cb388-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Delta<span class="sc">~</span>AIC), <span class="at">y =</span> <span class="st">&quot;CDF&quot;</span>) <span class="sc">+</span></span>
+<span id="cb388-5"><a href="semi-congruent-behavior.html#cb388-5" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb388-6"><a href="semi-congruent-behavior.html#cb388-6" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
+<span id="cb388-7"><a href="semi-congruent-behavior.html#cb388-7" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">4</span>),</span>
+<span id="cb388-8"><a href="semi-congruent-behavior.html#cb388-8" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">4</span>, <span class="at">by =</span> <span class="dv">1</span>)</span>
+<span id="cb388-9"><a href="semi-congruent-behavior.html#cb388-9" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb388-10"><a href="semi-congruent-behavior.html#cb388-10" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb388-11"><a href="semi-congruent-behavior.html#cb388-11" tabindex="-1"></a>    <span class="at">panel.grid.minor.x =</span> <span class="fu">element_blank</span>(),  <span class="co"># Remove minor grid lines on the x-axis</span></span>
+<span id="cb388-12"><a href="semi-congruent-behavior.html#cb388-12" tabindex="-1"></a>    <span class="at">panel.grid.minor.y =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb388-13"><a href="semi-congruent-behavior.html#cb388-13" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb388-14"><a href="semi-congruent-behavior.html#cb388-14" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="cn">NULL</span>)) <span class="sc">+</span></span>
+<span id="cb388-15"><a href="semi-congruent-behavior.html#cb388-15" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="dv">2</span>, <span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>,  <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">size=</span>.<span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb388-16"><a href="semi-congruent-behavior.html#cb388-16" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb388-17"><a href="semi-congruent-behavior.html#cb388-17" tabindex="-1"></a>    <span class="co">#plot.background = element_rect(fill = &quot;white&quot;),</span></span>
+<span id="cb388-18"><a href="semi-congruent-behavior.html#cb388-18" tabindex="-1"></a>    <span class="co">#panel.background = element_rect(fill = &quot;white&quot;),</span></span>
+<span id="cb388-19"><a href="semi-congruent-behavior.html#cb388-19" tabindex="-1"></a>    <span class="at">legend.box.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">&quot;white&quot;</span>),</span>
+<span id="cb388-20"><a href="semi-congruent-behavior.html#cb388-20" tabindex="-1"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb388-21"><a href="semi-congruent-behavior.html#cb388-21" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.60</span>)</span>
+<span id="cb388-22"><a href="semi-congruent-behavior.html#cb388-22" tabindex="-1"></a>  )</span>
+<span id="cb388-23"><a href="semi-congruent-behavior.html#cb388-23" tabindex="-1"></a></span>
+<span id="cb388-24"><a href="semi-congruent-behavior.html#cb388-24" tabindex="-1"></a>cdf_plot</span></code></pre></div>
+<pre><code>## Warning: Removed 2 rows containing non-finite values (`stat_ecdf()`).</code></pre>
+<p><img src="_main_files/figure-html/unnamed-chunk-107-1.png" width="672" /></p>
+<div class="sourceCode" id="cb390"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb390-1"><a href="semi-congruent-behavior.html#cb390-1" tabindex="-1"></a><span class="co"># Save the plot with a specific width in centimeters</span></span>
+<span id="cb390-2"><a href="semi-congruent-behavior.html#cb390-2" tabindex="-1"></a><span class="co">#ggsave(&quot;Figs/cdf.eps&quot;, plot = cdf_plot , width = 8.7, height = 5, units = &quot;cm&quot;)</span></span>
+<span id="cb390-3"><a href="semi-congruent-behavior.html#cb390-3" tabindex="-1"></a><span class="co">#ggsave(&quot;Figs/cdf.png&quot;, plot = cdf_plot , width = 8.7, height = 5, units = &quot;cm&quot;)</span></span></code></pre></div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="equal-rate-hidden-expansion-ehe.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="congruence-under-varying-sampling-fraction.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

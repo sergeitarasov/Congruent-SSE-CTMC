@@ -1,0 +1,287 @@
+---
+#title: "EHE"
+author: "Sergei Tarasov"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+params:
+  output_dir: "/output"
+cache: TRUE
+---
+
+# Equal Rate Hidden Expansion (EHE)
+
+HE can be extended to a point when all permissible rates are equal, except extinctions. We refer to this transformation as Equal Rate Hidden Expansion (EHE).
+
+The EHE model can be created for any SSE, if we know parameter values of that SSE. In this example, we calculate likelihood for CID4 with known parameters and construct congruent EHE8-C model. We show that the likelihoods are identical up to numerical integration error.
+
+```{r, include=FALSE}
+library(DT)
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(here)
+knitr::opts_knit$set(root.dir = here::here(), cache = TRUE)
+```
+
+```{r message=FALSE}
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ installations and dependencies  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+source('R/utils/dependencies.R')
+source('R/hiclasse/HiClaSSE-R.R') # pure R implementation of HiCLaSSE
+source('R/hiclasse/HiClaSSE_cpp.R') # fast implementation
+
+
+```
+
+## Read in data
+
+```{r}
+NSIM = 10
+phy <- readRDS(file='R/data/phy_CID4.RDS')
+```
+
+## Setting-up Q matrices for inference
+
+### CID4
+
+```{r}
+# trait
+Q_t <- initQ(c(0,1), c(2, 2))
+# diversification regime
+Q_r2 <- initQ(c('A','B'), c(2,2))
+# speciation rates for tracking the order
+La4 <- diag(c(-3,-1),2)
+La4 = La4 %x% diag(1,2)
+# order according to regimes
+Q_cid4.r <- amaSMM(Q_r2, Q_t)
+
+# order according to trait
+v=c(1,3, 2,4)
+Q_cid4.t <- Q_cid4.r[v,v]
+
+print(Q_cid4.r)
+print(La4)
+print(Q_cid4.t)
+print(La4[v,v])
+
+
+```
+
+### CID8 (congruent to CID4)
+
+```{r}
+# diversification regime
+# Q_r4 <- initQ(c('a','b', 'c', 'd'), c(2,2))
+Q_r4 <- amaSMM(Q_r2, Q_r2)
+colnames(Q_r4) <- rownames(Q_r4) <- c('a','b', 'c', 'd')
+
+# speciation rates for tracking the order
+La8 <- diag(c(-3,-1),2)
+La8 = La8 %x% diag(1,4)
+
+# order according to regimes
+Q_cid8.r <- amaSMM(Q_r4, Q_t) 
+
+# order according to trait
+v=c(1,3,5,7, 2,4,6,8)
+Q_cid8.t <- Q_cid8.r[v,v]
+
+print(Q_cid8.r)
+print(La8)
+print(Q_cid8.t)
+print(La8[v,v])
+
+```
+
+### EHE8-C (correlated evolution, congruent to CID4)
+
+```{r}
+
+# Create the matrix as a data frame
+Q_ehe8_C.t <- data.frame(
+  a0 = c(-4, 0, 1, 1, 1, 1, 0, 0),
+  b0 = c(0, -4, 1, 1, 1, 1, 0, 0),
+  c0 = c(1, 1, -4, 0, 0, 0, 1, 1),
+  d0 = c(1, 1, 0, -4, 0, 0, 1, 1),
+  a1 = c(1, 1, 0, 0, -4, 0, 1, 1),
+  b1 = c(1, 1, 0, 0, 0, -4, 1, 1),
+  c1 = c(0, 0, 1, 1, 1, 1, -4, 0),
+  d1 = c(0, 0, 1, 1, 1, 1, 0, -4)
+)
+
+# Set row names and column names
+rownames(Q_ehe8_C.t) <- colnames(Q_ehe8_C.t)
+Q_ehe8_C.t <-as.matrix(Q_ehe8_C.t)
+
+v=c(1,5, 2,6, 3,7, 4,8)
+Q_ehe8_C.r <- Q_ehe8_C.t[v,v]
+
+print(Q_ehe8_C.r)
+#print(La8)
+print(Q_ehe8_C.t)
+print(La8[v,v])
+
+```
+
+
+## Inferences using parameters from CID4
+
+### CID4 (4 pars)
+
+
+We assume that we know the parameter estimated for CID4
+```{r}
+lam1=0.3
+lam2=0.1
+q=0.2
+mu=0.01
+```
+
+
+
+
+Calculating likelihood
+
+```{r message=FALSE}
+
+Args <- list(
+  Nstates = 4L,
+  y = list(
+    c(0,0,0,0, 1,0,1,0),
+    c(0,0,0,0, 0,1,0,1)
+  ))
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(4)
+
+CID4.pars <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  #-----------
+  pars.hc <- rep(0, length(args$pars))
+  names(pars.hc) <- args$pars
+  pars.hc['lam000'] <- lam1
+  pars.hc['lam111'] <- lam1
+  pars.hc['lam222'] <- lam2
+  pars.hc['lam333'] <- lam2
+  pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3']  <- mu
+  qs <- extract_off_diagonal(Q_cid4.r/10)
+  qsl=length(qs)
+  #qs[qs==1] <- est['q01']/2
+  pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+  
+  #pars.hc
+  #pars_to_arrays(pars.hc, 4)
+  #------
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- rep(1/4, 4)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  CID4.pars[[i]] <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
+  
+}
+
+```
+
+This is CID4 model.
+
+```{r}
+pars_to_arrays(pars.hc, 4) %>% reoder_lambdas(., c(1,3, 2,4))
+```
+
+
+### EHE8-C (2 pars)
+
+Now we create EHE8-C by decomposing our known parameter estimates into just two parameters: (1.) speciation and transitions rates equal to 0.1; and extinction equal to 0.01.
+
+
+```{r}
+
+
+Args <- list(
+  Nstates = 8L,
+  y = list(
+    c(0,0,0,0,0,0,0,0, 1,0,1,0,1,0,1,0),
+    c(0,0,0,0,0,0,0,0, 0,1,0,1,0,1,0,1)
+  ))
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(8)
+#args$arrays
+#reoder_lambdas(args$arrays, c(1,3,5,7, 2,4,6,8))
+```
+
+Calculating Ln
+
+```{r message=FALSE}
+
+lam1=0.3
+lam2=0.1
+q=0.2
+mu=0.01
+
+EHE8_C.pars <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  #-----------
+  pars.hc <- rep(0, length(args$pars))
+  names(pars.hc) <- args$pars
+  # pars.hc['lam000'] <- lam1
+  # pars.hc['lam111'] <- lam1
+  # pars.hc['lam222'] <- lam1
+  # pars.hc['lam333'] <- lam1
+  pars.hc['lam000'] <- pars.hc['lam002'] <- pars.hc['lam022'] <- lam1/3
+  pars.hc['lam200'] <- pars.hc['lam202'] <- pars.hc['lam222'] <- lam1/3
+  pars.hc['lam111'] <- pars.hc['lam113'] <- pars.hc['lam133'] <- lam1/3
+  pars.hc['lam311'] <- pars.hc['lam313'] <- pars.hc['lam333'] <- lam1/3
+  pars.hc['lam444'] <- lam2
+  pars.hc['lam555'] <- lam2
+  pars.hc['lam666'] <- lam2
+  pars.hc['lam777'] <- lam2
+  pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <- mu
+  qs <- extract_off_diagonal(Q_ehe8_C.r/10)
+  qsl=length(qs)
+  pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+  
+  #pars.hc
+  pars_to_arrays(pars.hc, 8)
+  reoder_lambdas(pars_to_arrays(pars.hc, 8), c(1,3,5,7, 2,4,6,8))
+  #------
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- rep(1/8, 8)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  EHE8_C.pars[[i]] <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
+  
+}
+
+```
+
+## Compare Ln estimates
+
+The likelihoods are the same, the errors are due to numerical integration.
+
+```{r}
+cid4 <- CID4.pars %>% unlist
+print(cid4)
+ehe8 <- EHE8_C.pars %>% unlist
+print(ehe8)
+print(cid4-ehe8)
+
+```
+
+
+

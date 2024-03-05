@@ -1,0 +1,525 @@
+---
+#title: "Misse"
+author: "Sergei Tarasov"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+params:
+  output_dir: "/output"
+---
+
+# MiSSE Congruence
+
+This example, drawn from Eq. 2 in the main text, demonstrates that the MiSSE2 model with two states (M1) is congruent with MiSSE3 (M2), but is not congruent with MiSSE3 (M3) that violates lumpability.
+
+```{r, include=FALSE}
+library(DT)
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(here)
+knitr::opts_knit$set(root.dir = here::here(), cache = TRUE)
+```
+
+```{r message=FALSE}
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ installations and dependencies  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# source dependencies and install them if they are not
+source('R/utils/dependencies.R')
+#source('R-models/my-ClaSSE.R') # pure R implementation of HiCLaSSE
+source('R/hiclasse/HiClaSSE-R.R') # pure R implementation of HiCLaSSE
+source('R/hiclasse/HiClaSSE_cpp.R') # fast implementation
+
+
+```
+
+Read in data:
+
+```{r}
+NSIM = 10
+phy <- readRDS(file='R/data/phy_CID4.RDS')
+```
+
+
+## SET-UP Q matrix for inference
+
+```{r}
+Q3 <- make_Qcol(4, c(0.01, 0.01, 0.01, 0))
+Q3[1,3] <- Q3[2,1] <- Q3[3,2] <- 0
+Q3[4,] <- Q3[4,] <- rep(0, 4)
+v=c(1,3,2)
+Q3[v,v]
+diag(Q3) <- NA
+Q3
+```
+
+
+
+## MiSSE-2 
+
+```{r}
+
+# this is character coding at tips. It sets MiSSE model
+Args <- list(
+  Nstates = 2L,
+  y = list(
+    c(0,0, 1,1),
+    c(0,0, 1,1)
+  ))
+
+newArgs <- makeArgs(Args)
+printArgsGlobal()
+args <- argnames_HiClaSSE(2)
+#args
+args$pars
+#length(args$pars)
+
+#Q3
+
+pars.hc <- rep(0, length(args$pars))
+names(pars.hc) <- args$pars
+pars.hc['lam000'] <- 0.05
+pars.hc['lam111'] <- 0.02
+pars.hc['mu0'] <-pars.hc['mu1'] <-0.1
+pars.hc['q01'] <- Q3[1,2]
+pars.hc['q10'] <- Q3[3,1]
+
+pars.hc
+pars_to_arrays(pars.hc, 2)
+
+```
+
+```{r}
+args$arrays
+```
+
+
+
+Run inference
+
+```{r message=FALSE}
+
+Misse2 <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- rep(1/2, 2)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  lik.const <- constrain(lik.c, lam001~0, lam011~0, lam100~0, lam101~0, mu0 ~ mu1, q01 ~ q10)
+  arg.const <- argnames(lik.const)
+  starting.point <- pars.hc[arg.const]
+  Misse2[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
+}
+
+```
+
+
+Some helper function to assess the inference parameters
+```{r}
+get_item(Misse2, 'lnLik')
+pars_to_arrays(Misse2[[1]]$par.full, 2)
+```
+
+
+## MiSSE-3     Congruent  
+```{r}
+
+Args <- list(
+  Nstates = 3L,
+  y = list(
+    c(0,0,0, 1,1,1),
+    c(0,0,0, 1,1,1)
+  ))
+
+newArgs <- makeArgs(Args)
+printArgsGlobal()
+args <- argnames_HiClaSSE(3)
+args
+args$pars
+length(args$pars)
+
+Q30 <- Q3
+Q30 <- Q30[-4,-4]
+Q30[2,3] <- 0.01
+Q30[2,1] <- 0.01
+diag(Q30) <- 0
+Q30
+
+pars.hc <- rep(0, length(args$pars))
+names(pars.hc) <- args$pars
+pars.hc['lam000'] <- 0.05
+pars.hc['lam111'] <- 0.02
+pars.hc['lam222'] <- 0.02
+pars.hc['mu0'] <-pars.hc['mu1'] <-pars.hc['mu2'] <-0.1
+qs <- extract_off_diagonal(Q30)
+pars.hc[22:27] <- qs
+
+pars.hc
+pars_to_arrays(pars.hc, 3)
+
+zero.constr <- formulas_zero_pars(pars.hc)
+f.qs <- c(q12 ~ q20, q10 ~ q20, q01 ~ q20)
+f.mu <- c(mu1 ~ mu0, mu2 ~ mu0)
+f.lams <- c(lam222 ~  lam111)
+f.list<- c(zero.constr,  f.lams, f.mu, f.qs)
+
+
+```
+
+ Run inference
+ 
+```{r message=FALSE}
+
+Misse3C <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- c(1/2, 1/4, 1/4)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  lik.const <- constrain(lik.c, formulae = f.list)
+  arg.const <- argnames(lik.const)
+  starting.point <- pars.hc[arg.const]
+  Misse3C[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
+}
+```
+
+
+Some helper function to assess the inference parameters
+```{r}
+get_item(Misse3C, 'lnLik')
+#get_item(Misse2, 'lnLik')
+pars_to_arrays(Misse3C[[1]]$par.full, 3)
+```
+
+
+## MiSSE-3 Congruent, Inferred Pars  
+
+Mapping of parameters between congruent models is deterministic. Here, we derive the parameters directly from MiSSE2 model.
+
+```{r message=FALSE}
+Misse3C_pars <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  #---
+  mi2_est <- get_item(Misse2[i], 'par')
+  pars.hc <- rep(0, length(args$pars))
+  names(pars.hc) <- args$pars
+  pars.hc['lam000'] <- mi2_est['lam000']
+  pars.hc['lam111'] <- mi2_est['lam111']
+  pars.hc['lam222'] <- mi2_est['lam111']
+  pars.hc['mu0'] <-pars.hc['mu1'] <-pars.hc['mu2'] <- mi2_est['mu1']
+  qs <- extract_off_diagonal(Q30)
+  pars.hc[22:27] <- c(mi2_est['q10'], 0, mi2_est['q10'], mi2_est['q10'], mi2_est['q10'], 0)
+  #pars.hc
+  #pars_to_arrays(pars.hc, 3)
+  #---
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- c(1/2, 1/4, 1/4)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  Misse3C_pars[[i]] <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
+  
+}
+
+```
+
+
+
+## MiSSE-3     Non-congruent    
+
+```{r}
+
+Args <- list(
+  Nstates = 3L,
+  y = list(
+    c(0,0,0, 1,1,1),
+    c(0,0,0, 1,1,1)
+  ))
+
+newArgs <- makeArgs(Args)
+printArgsGlobal()
+args <- argnames_HiClaSSE(3)
+args
+args$pars
+length(args$pars)
+
+Q30 <- Q3
+Q30 <- Q30[-4,-4]
+Q30[2,3] <- 0.01
+diag(Q30) <- 0
+Q30
+
+pars.hc <- rep(0, length(args$pars))
+names(pars.hc) <- args$pars
+pars.hc['lam000'] <- 0.05
+pars.hc['lam111'] <- 0.02
+pars.hc['lam222'] <- 0.02
+pars.hc['mu0'] <-pars.hc['mu1'] <-pars.hc['mu2'] <-0.1
+qs <- extract_off_diagonal(Q30)
+pars.hc[22:27] <- qs
+
+pars.hc
+pars_to_arrays(pars.hc, 3)
+
+zero.constr <- formulas_zero_pars(pars.hc)
+f.qs <- c(q12 ~ q20, q01 ~ q20)
+f.mu <- c(mu1 ~ mu0, mu2 ~ mu0)
+f.lams <- c(lam222 ~  lam111)
+f.list<- c(zero.constr,  f.lams, f.mu, f.qs)
+
+```
+
+Inference
+
+```{r message=FALSE}
+
+Misse3 <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- c(1/2, 1/4, 1/4)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  #res <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
+  lik.const <- constrain(lik.c, formulae = f.list)
+  arg.const <- argnames(lik.const)
+  starting.point <- pars.hc[arg.const]
+  Misse3[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
+}
+
+```
+
+
+
+## Another Non-congruent Models
+
+
+If lumpability does not hold, then shuffling parameters within partition subsets results in different models. Below, M4 is identical to MiSSE4-NonCongruent, and M5 represents another distinct model where 'lam112' is set to 0.2.
+
+```{r message=FALSE}
+Qnc <- c(0.05, 0, 0.05, 0.05, 0, 0)
+M4 <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  #---
+  #mi2_est <- get_item(Misse2[i], 'par')
+  pars.hc <- rep(0, length(args$pars))
+  names(pars.hc) <- args$pars
+  pars.hc['lam000'] <- 0.1
+  pars.hc['lam111'] <- 0.2
+  pars.hc['lam222'] <- 0.2
+  pars.hc['mu0'] <-pars.hc['mu1'] <-pars.hc['mu2'] <- 0.001
+  #qs <- extract_off_diagonal(Q30)
+  pars.hc[22:27] <- Qnc
+  #pars.hc
+  #pars_to_arrays(pars.hc, 3)
+  #---
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- c(1/2, 1/4, 1/4)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  M4[[i]] <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
+  
+}
+
+M5 <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  #---
+  #mi2_est <- get_item(Misse2[i], 'par')
+  pars.hc <- rep(0, length(args$pars))
+  names(pars.hc) <- args$pars
+  pars.hc['lam000'] <- 0.1
+  pars.hc['lam112'] <- 0.2
+  pars.hc['lam222'] <- 0.2
+  pars.hc['mu0'] <-pars.hc['mu1'] <-pars.hc['mu2'] <- 0.001
+  #qs <- extract_off_diagonal(Q30)
+  pars.hc[22:27] <- Qnc
+  #pars.hc
+  #pars_to_arrays(pars.hc, 3)
+  #---
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- c(1/2, 1/4, 1/4)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  M5[[i]] <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
+  
+}
+
+
+unlist(M4)
+unlist(M5)
+
+```
+
+## Zero Extinction
+
+```{r message=FALSE}
+
+Args <- list(
+  Nstates = 3L,
+  y = list(
+    c(0,0,0, 1,0,0),
+    c(0,0,0, 0,1,1)
+  ))
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(3)
+#args
+#args$pars
+length(args$pars)
+
+Qnc <- c(0.05, 0, 0.05, 0.05, 0.05, 0)
+M4 <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  #---
+  #mi2_est <- get_item(Misse2[i], 'par')
+  pars.hc <- rep(0, length(args$pars))
+  names(pars.hc) <- args$pars
+  pars.hc['lam000'] <- 0.1
+  pars.hc['lam111'] <- 0.2
+  pars.hc['lam222'] <- 0.2
+  pars.hc['mu0'] <-pars.hc['mu1'] <-pars.hc['mu2'] <- 0
+  #qs <- extract_off_diagonal(Q30)
+  pars.hc[22:27] <- Qnc
+  #pars.hc
+  #pars_to_arrays(pars.hc, 3)
+  #---
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- c(1/2, 1/4, 1/4)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  M4[[i]] <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
+  
+}
+
+M5 <- list()
+i=1
+for (i in 1:NSIM){
+  print(paste0('Working on: ', i))
+  #---
+  #mi2_est <- get_item(Misse2[i], 'par')
+  pars.hc <- rep(0, length(args$pars))
+  names(pars.hc) <- args$pars
+  pars.hc['lam000'] <- 0.1
+  pars.hc['lam100'] <- 0.2
+  pars.hc['lam222'] <- 0.2
+  pars.hc['mu0'] <-pars.hc['mu1'] <-pars.hc['mu2'] <- 0
+  #qs <- extract_off_diagonal(Q30)
+  pars.hc[22:27] <- Qnc
+  #pars.hc
+  #pars_to_arrays(pars.hc, 3)
+  #---
+  tree <- phy[[i]]
+  states<- tree$tip.state
+  states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+  root <- c(1/2, 1/4, 1/4)
+  
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  M5[[i]] <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
+  
+}
+
+
+unlist(M4)
+unlist(M5)
+
+```
+
+## Results 
+
+### Likelihood table
+
+The likelihood scores of the used models.
+
+```{r}
+
+
+mi2 = get_item(Misse2, 'lnLik')
+mi3c = get_item(Misse3C, 'lnLik')
+mi3c_pars = unlist(Misse3C_pars)
+mi3 = get_item(Misse3, 'lnLik')
+
+misse <- tibble(
+"N" = c(1:10),
+"MiSSE2" = mi2,
+"congruent MiSSE3 (MiSSE2)"=mi3c,
+"congruent MiSSE3 (pars of MiSSE2)"= mi3c_pars,
+"Non-congruent MiSSE3" = mi3)
+
+kable(misse, "html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+### Mean absolute error
+
+
+The table and plot below demonstrate that the likelihoods of  MiSSE2 and MiSSE3-Congruent are the same; the differences arise solely from numerical integration. In constrast, the differences between MiSSE2 and MiSSE3-NonCongruent are substantial, indicating they are distinct models. 
+
+```{r}
+d1 =abs(mi2-mi3c) %>% mean()
+d2 =abs(mi2-mi3c_pars) %>% mean()
+d3 = abs(mi2-mi3) %>% mean()
+
+# Data
+delta_values <- tibble(
+  Delta = c("mi2-mi3_Cong", "mi2-mi3_Cong_pars", "mi2-mi3_nonCongruent"),
+  Value = c(d1, d2, d3)
+)
+
+kable(delta_values, "html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+# Create the plot
+ggplot(delta_values, aes(x = Delta, y = Value, label = sprintf("%.2e", Value))) +
+  geom_col(fill = c("blue", "green", "red")) +
+  geom_text(vjust = -0.5, angle = 45) +
+  labs(title = "Comparison of Ln Differences", x = "Deltas", y = "Magnitude") +
+  theme_minimal()
+
+
+
+```
+
+### Parameter estimates 
+
+```{r}
+
+get_item(Misse2[1], 'par')
+get_item(Misse3C[1], 'par')
+get_item(Misse3[1], 'par')
+
+pars_to_arrays(Misse2[[1]]$par.full, 2)
+pars_to_arrays(Misse3C[[1]]$par.full, 3)
+pars_to_arrays(Misse3[[1]]$par.full, 3)
+```
+
