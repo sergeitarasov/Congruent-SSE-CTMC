@@ -12,5 +12,5 @@
 
 
  <p align="left">
-  <img src="https://github.com/sergeitarasov/Congruent-SSE-CTMC/Fig_Class.png" width="600" title="hover text">
+  <img src="https://github.com/sergeitarasov/Congruent-SSE-CTMC/blob/main/Fig_class.png" width="600" title="hover text">
 </p>  
