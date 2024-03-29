@@ -1,7 +1,7 @@
 # Congruent SSEs
  The reports and R scripts for demonstrating model congruence in state-dependent diversification models (SSEs).
 
-**Preprint:**
+## Preprint:
 
 Tarasov, S. and Uyeda, J., 2024. Ubiquitous nonidentifiability of state-dependent diversification models (SSEs) is not problematic for phylogenetics. *bioRxiv*, [doi: https://doi.org/10.1101/2022.07.04.498736](https://www.biorxiv.org/content/10.1101/2022.07.04.498736v2)
 
