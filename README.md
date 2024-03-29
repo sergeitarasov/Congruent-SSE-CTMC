@@ -6,8 +6,18 @@
 ## Quick start guide
 
 
- * `Report.zip` is the main file to see the report for all simulation performed by the study. This file is the zipped version of the `Report` folder. You need to download it, unzip it and click on index.html to browse through the reports.
- * `Rmd` contains the code to reprodice the reports and simulation.
+- `Report.zip` is the main file to see the reports for all simulation performed by the study. This file is the zipped version of the `Report` folder. You need to download it, unzip it and click on index.html to browse through the reports. It contains the following sections:
+  - Setting-up HiClaSSE
+  - Validation of HiClaSSE
+  - MiSSE Congruence
+  - Congruence between independent and dependent SSEs
+  - Equal Rate Hidden Expansion (EHE)
+  - Semi-congruent Behavior
+  - Congruence under varying Sampling Fraction
+- `Rmd` contains the code to reprodice the reports and simulation.
+- `R` contains necessary R functions.
+  - `/R/hiclasse/src/` includes C code for HiClaSSE ODEs.
+- `Mathematica` includes Mathematica Notebook that creates symbolic ODEs for HiClaSSE and can be used to generate C code.
 
 
 
