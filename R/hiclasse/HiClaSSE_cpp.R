@@ -102,8 +102,10 @@ rootfunc.HiClasse_cpp <- function (res, pars, condition.surv, root, root.p, inte
   if (root == ROOT.ALL)
     loglik <- log(d.root) + sum(lq)
   else loglik <- log(sum(root.p * d.root)) + sum(lq)
+  #print(intermediates)
   if (intermediates) {
     res$root.p <- root.p
+    #print(res$root.p)
     attr(loglik, "intermediates") <- res
     attr(loglik, "vals") <- vals
   }
@@ -148,7 +150,7 @@ make.HiClasse_cpp <- function (tree, states, sampling.f = NULL, strict = TRUE, c
   #rootfunc <- diversitree:::rootfunc.musse
   rootfunc <- rootfunc.HiClasse_cpp
   ll <- function(pars, condition.surv = TRUE, root = ROOT.OBS,
-                 root.p = NULL, intermediates = FALSE) {
+                 root.p = NULL, intermediates = FALSE) { ## !!! intermediates = FALSE
     #check.pars.geosse(pars)
     diversitree:::check.pars.nonnegative(pars, cache$info$np)
     ans <- all_branches(pars, intermediates)

@@ -28,6 +28,7 @@
   'rphenoscape',
   'rphenoscate',
   'Rcpp',
+  'partitions',
   'RcppArmadillo'
 )
 

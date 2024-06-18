@@ -344,6 +344,15 @@ convert2ratesHisse <- function(lam, mu){
   list(turnover=turnover, eps=eps)
 }
 
+convertHisse2Bisse <- function(turnover, eps) {
+  # Calculate lambda
+  lam <- turnover / (1 + eps)
+    # Calculate mu
+  mu <- eps * lam
+  list(lam = lam, mu = mu)
+}
+#hi <- convert2ratesHisse(c(1,3), c(2,4))
+#convertHisse2Bisse(hi$turnover, hi$eps)
 
 # Function to set right diagonal elements to zero
 set_right_diagonal_zero <- function(mat) {
@@ -691,3 +700,29 @@ geom_split_violin <- function (mapping = NULL, data = NULL, stat = "ydensity", p
   layer(data = data, mapping = mapping, stat = stat, geom = GeomSplitViolin, position = position, show.legend = show.legend, inherit.aes = inherit.aes, params = list(trim = trim, scale = scale, draw_quantiles = draw_quantiles, na.rm = na.rm, ...))
 }
 
+# make various parametrizations of Q with 4 states
+ger_partitionsNK <- function(N, K_expression='<=2'){
+  parts=partitions::setparts(N)
+  n.parts=apply(parts, 2, function(x) length(unique(x)))
+  #index=which(n.parts<=2)
+  str=paste('which(n.parts', K_expression, ')')
+  index <- eval(parse(text=str[1]))
+  parts[,index]
+}
+make_Q4paramatrizations <- function(parts){
+  Q1=initQ(c(0,1), c(1, 1))
+  Q2 <- initQ(c('A','B'), c(1,1))
+  tmp=amaSMM(Q2,Q1)
+  #parts=setparts(8)
+  index=which(tmp==1)
+  
+  Qout <- list()
+  for (i in 1:ncol(parts)){
+    Qnew <- tmp
+    Qnew[index] <- parts[,i]
+    Qout[[i]] <- Qnew
+  }
+  Qout
+}
+#set2 <- ger_partitionsNK(N=8, K_expression='==2')
+#make_Q4paramatrizations(set2)
