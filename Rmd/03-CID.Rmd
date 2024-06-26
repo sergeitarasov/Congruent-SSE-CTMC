@@ -109,53 +109,60 @@ print(La8[v,v])
 
 ```
 
+
+
 ### COR8-C (correlated evolution, congruent to CID4)
 
 ```{r}
 # like CID8 but with correlation
 Q_cor8_C.t <- Q_cid8.t
 
-bl <- matrix(c(0,.1,.1,0),2,2)
-Q_cor8_C.t[1:2,5:6] <- bl
-Q_cor8_C.t[3:4,7:8] <- bl
-Q_cor8_C.t[5:6,1:2] <- bl
-Q_cor8_C.t[7:8,3:4] <- bl
+
+Q_cor8_C.t['b0', 'd0'] <- 0
+Q_cor8_C.t['b0', 'c0'] <- 0.1
 
 v=c(1,5, 2,6, 3,7, 4,8)
 Q_cor8_C.r <- Q_cor8_C.t[v,v]
 
-print(Q_cor8_C.r)
+print(Q_cor8_C.r*10)
 #print(La8)
-print(Q_cor8_C.t)
+print(Q_cor8_C.t*10)
 #print(La8[v,v])
+
+# Plot the graph
+g <- create_graph_from_matrix(Q_cor8_C.t)
+unidirectional_edges <- is_unidirectional(g)
+plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
 
 ```
 
-### COR8-NC (Non-correlated evolution, congruent to CID4)
+### COR8-NC (Correlated evolution, noncongruent to CID4)
 
 ```{r}
-# like CID8 but not congruent
+# not congruent
 Q_cor8_NC.t <- Q_cid8.t
 
-bl <- matrix(c(0,0,.1,0),2,2)
-Q_cor8_NC.t[1:2,5:6] <- bl
-Q_cor8_NC.t[3:4,7:8] <- bl
-Q_cor8_NC.t[5:6,1:2] <- bl
-Q_cor8_NC.t[7:8,3:4] <- bl
+Q_cor8_NC.t['b0', 'd0'] <- 0
+Q_cor8_NC.t['b0', 'c0'] <- 0
 
 v=c(1,5, 2,6, 3,7, 4,8)
 Q_cor8_NC.r <- Q_cor8_NC.t[v,v]
 
-print(Q_cor8_NC.r)
+print(Q_cor8_NC.r*10)
 #print(La8)
-print(Q_cor8_NC.t)
+print(Q_cor8_NC.t*10)
 #print(La8[v,v])
+
+# Plot the graph
+g <- create_graph_from_matrix(Q_cor8_NC.t)
+unidirectional_edges <- is_unidirectional(g)
+plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
 
 ```
 
-## Irreducible model
 
-### CID4 (4 pars)
+
+## Irreducible model: CID4 (4 pars)
 
 ```{r}
 
@@ -231,7 +238,7 @@ get_item(CID4[1], 'par')
 
 ### CID8 (4 pars)
 
-```{r}
+```{r, message=FALSE}
 
 
 Args <- list(
@@ -244,7 +251,7 @@ Args <- list(
 newArgs <- makeArgs(Args)
 #printArgsGlobal()
 args <- argnames_HiClaSSE(8)
-args$arrays
+#args$arrays
 #reoder_lambdas(args$arrays, c(1,3,5,7, 2,4,6,8))
 ```
 
@@ -296,8 +303,7 @@ Compare Ln
 ```{r}
 get_item(CID4, 'lnLik')
 CID8.pars %>% unlist
-
-pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+# pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
 ### COR8-C (4 pars)
@@ -371,7 +377,7 @@ Compare Ln
 get_item(CID4, 'lnLik')
 COR8_C.pars %>% unlist
 
-pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+#pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
 ### COR8-NC (4 pars)
@@ -445,7 +451,7 @@ Some helper function to assess the inference parameters
 get_item(CID4, 'lnLik')
 COR8_NC.pars %>% unlist
 
-pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+#pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
 ### CLA8-C (4 pars)
@@ -464,8 +470,35 @@ newArgs <- makeArgs(Args)
 #printArgsGlobal()
 args <- argnames_HiClaSSE(8)
 #args$arrays
-# reoder_lambdas(args$arrays, c(1,3,5,7, 2,4,6,8))
+#reoder_lambdas(args$arrays, c(1,3,5,7, 2,4,6,8))
+
+
+
 ```
+
+
+Checking the model
+```{r}
+# a0 a1 b0 b1 c0 c1 d0 d1
+ar=names2array(args$arrays, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))
+ar.re=reoder_lambdas(ar, c(1,3,5,7, 2,4,6,8))
+ar.re$lam.tensor
+
+# rates that will be used to setup model
+element <- c(
+'lam022',
+'lam133',
+'lam202',
+'lam311',
+'lam466',
+'lam577',
+'lam646',
+'lam757'
+)
+
+find_elements(ar.re$lam.tensor, element)
+```
+
 
 Run inference
 
@@ -480,14 +513,6 @@ for (i in 1:NSIM){
   est <- get_item(CID4[i], 'par')
   pars.hc <- rep(0, length(args$pars))
   names(pars.hc) <- args$pars
-  # pars.hc['lam000'] <- est['lam000']
-  # pars.hc['lam111'] <- est['lam000']
-  # pars.hc['lam222'] <- est['lam000']
-  # pars.hc['lam333'] <- est['lam000']
-  # pars.hc['lam444'] <- est['lam222']
-  # pars.hc['lam555'] <- est['lam222']
-  # pars.hc['lam666'] <- est['lam222']
-  # pars.hc['lam777'] <- est['lam222']
   pars.hc['lam022'] <- est['lam000']
   pars.hc['lam133'] <- est['lam000']
   pars.hc['lam202'] <- est['lam000']
@@ -526,7 +551,7 @@ Some helper function to assess the inference parameters
 ```{r}
 get_item(CID4, 'lnLik')
 CLA8_C.pars %>% unlist
-pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+#pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
 ### CLA8-NC (4 pars)
@@ -547,6 +572,28 @@ args <- argnames_HiClaSSE(8)
 #args$arrays
 #v=c(1,3,5,7, 2,4,6,8)
 #reoder_lambdas(args$arrays, c(1,3,5,7, 2,4,6,8))
+```
+
+Checking the model
+```{r}
+# a0 a1 b0 b1 c0 c1 d0 d1
+ar=names2array(args$arrays, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))
+ar.re=reoder_lambdas(ar, c(1,3,5,7, 2,4,6,8))
+#ar.re$lam.tensor
+
+# rates that will be used to setup model
+element <- c(
+'lam004',
+'lam116',
+'lam202',
+'lam311',
+'lam422',
+'lam577',
+'lam646',
+'lam757'
+)
+
+find_elements(ar.re$lam.tensor, element)
 ```
 
 Run inference
@@ -601,7 +648,7 @@ Some helper function to assess the inference parameters
 ```{r}
 get_item(CID4, 'lnLik')
 CLA8_NC.pars %>% unlist
-pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+#pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
 ## Maximum Likelihood. All models have 4 pars.
@@ -654,6 +701,8 @@ f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
 
 ```
 
+
+
 Run inference
 
 ```{r}
@@ -685,11 +734,11 @@ Assessing the inferred parameters
 get_item(CID4, 'lnLik')
 get_item(CID8, 'lnLik')
 
-get_item(CID8[1], 'par')
-get_item(CID4[1], 'par')
+# get_item(CID8[1], 'par')
+# get_item(CID4[1], 'par')
 
 #pars_to_arrays(CID8[[1]]$par.full, 8)
-pars_to_arrays(CID8[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+#pars_to_arrays(CID8[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
 
@@ -771,12 +820,12 @@ Assessing the inferred parameters
 
 ```{r}
 get_item(CID4, 'lnLik')
-get_item(CID8, 'lnLik')
+#get_item(CID8, 'lnLik')
 get_item(COR8_C, 'lnLik')
 
 get_item(COR8_C[1], 'par')
 
-pars_to_arrays(COR8_C[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+#pars_to_arrays(COR8_C[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 
 ```
 
@@ -854,12 +903,12 @@ Assessing the inferred parameters
 
 ```{r}
 get_item(CID4, 'lnLik')
-get_item(CID8, 'lnLik')
+#get_item(CID8, 'lnLik')
 get_item(COR8_NC, 'lnLik')
 
 get_item(CID8[1], 'par')
 
-pars_to_arrays(COR8_NC[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+#pars_to_arrays(COR8_NC[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
 
@@ -886,14 +935,6 @@ args <- argnames_HiClaSSE(8)
 
 pars.hc <- rep(0, length(args$pars))
 names(pars.hc) <- args$pars
-# pars.hc['lam000'] <- 0.1
-# pars.hc['lam111'] <- 0.1
-# pars.hc['lam222'] <- 0.1
-# pars.hc['lam333'] <- 0.1
-# pars.hc['lam444'] <- 0.05
-# pars.hc['lam555'] <- 0.05
-# pars.hc['lam666'] <- 0.05
-# pars.hc['lam777'] <- 0.05
 pars.hc['lam022'] <- 0.1
 pars.hc['lam133'] <- 0.1
 pars.hc['lam202'] <- 0.1
@@ -919,6 +960,28 @@ f.lams <- c(lam133 ~ lam022, lam202 ~ lam022, lam311 ~ lam022,
 f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
 
 ```
+
+Checking the model setup
+```{r}
+# a0 a1 b0 b1 c0 c1 d0 d1
+ar=names2array(args$arrays, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))
+ar.re=reoder_lambdas(ar, c(1,3,5,7, 2,4,6,8))
+#ar.re$lam.tensor
+
+element <- c(
+'lam022',
+'lam133',
+'lam202',
+'lam311',
+'lam466',
+'lam577',
+'lam646',
+'lam757'
+)
+find_elements(ar.re$lam.tensor, element)
+
+```
+
 
 Run inference
 
@@ -949,9 +1012,9 @@ Assessing the inferred parameters
 get_item(CID4, 'lnLik')
 get_item(CLA8_C, 'lnLik')
 
-get_item(CID8[1], 'par')
+get_item(CLA8_C[1], 'par')
 
-pars_to_arrays(CLA8_C[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+#pars_to_arrays(CLA8_C[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
 
@@ -978,14 +1041,6 @@ args <- argnames_HiClaSSE(8)
 
 pars.hc <- rep(0, length(args$pars))
 names(pars.hc) <- args$pars
-# pars.hc['lam000'] <- 0.1
-# pars.hc['lam111'] <- 0.1
-# pars.hc['lam222'] <- 0.1
-# pars.hc['lam333'] <- 0.1
-# pars.hc['lam444'] <- 0.05
-# pars.hc['lam555'] <- 0.05
-# pars.hc['lam666'] <- 0.05
-# pars.hc['lam777'] <- 0.05
 # lam004, lam116, lam422 violate lumpability
 pars.hc['lam004'] <- 0.1
 pars.hc['lam116'] <- 0.1
@@ -1012,6 +1067,27 @@ f.lams <- c(lam116 ~ lam004, lam202 ~ lam004, lam311 ~ lam004,
 f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
 
 ```
+
+
+```{r}
+# a0 a1 b0 b1 c0 c1 d0 d1
+ar=names2array(args$arrays, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))
+ar.re=reoder_lambdas(ar, c(1,3,5,7, 2,4,6,8))
+#ar.re$lam.tensor
+
+element <- c(
+'lam004',
+'lam116',
+'lam202',
+'lam311',
+'lam422',
+'lam577',
+'lam646',
+'lam757'
+)
+find_elements(ar.re$lam.tensor, element)
+```
+
 
 Run inference
 
@@ -1043,12 +1119,11 @@ Assessing the inferred parameters
 
 ```{r}
 get_item(CID4, 'lnLik')
-get_item(COR8_NC, 'lnLik')
+#get_item(COR8_NC, 'lnLik')
 get_item(CLA8_NC, 'lnLik')
+get_item(CLA8_NC[1], 'par')
 
-get_item(CID8[1], 'par')
-
-pars_to_arrays(CLA8_C[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+#pars_to_arrays(CLA8_C[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
 
@@ -1185,3 +1260,52 @@ ggplot(delta_values, aes(x = Delta, y = Value, label = sprintf("%.2e", Value))) 
 ```
 
 
+## Lambda tensor Kronecker
+
+```{r}
+Args <- list(
+  Nstates = 2L,
+  y = list(
+    c(0,0, 1,1),
+    c(0,0, 1,1)
+  ))
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(2)
+args$arrays
+
+#lam=args$arrays$lam.tensor[[1]]
+lam=matrix(c(2,3,0,4),2,2,byrow = T)
+M=matrix(c(1,0,0,0),2,2,byrow = T)
+M1=matrix(c(0,0,0,1),2,2,byrow = T)
+amaSMM(lam, M)
+kronecker(lam, M)
+kronecker(lam, M1)
+
+args2 <- argnames_HiClaSSE(4)
+args2$arrays
+args2$arrays$lam.tensor[[2]]
+
+# $lam.tensor[[1]]
+#      [,1]     [,2]     [,3]     [,4]    
+# [1,] "lam000" "lamxxx" "lam002" "lamxxx"
+# [2,] "0"      "lamxxx" "lamxxx" "lamxxx"
+# [3,] "0"      "0"      "lam022" "lamxxx"
+# [4,] "0"      "0"      "0"      "lamxxx"
+
+# Define the arrays
+array1 <- list(
+  matrix(c(1, 2, 0, 3), nrow = 2, byrow = TRUE),
+  matrix(c(4, 5, 0, 6), nrow = 2, byrow = TRUE)
+)
+
+array2 <- list(
+  matrix(c(1, 0,0,0), nrow = 2, byrow = TRUE),
+  matrix(c(0,0,0, 1), nrow = 2, byrow = TRUE)
+)
+
+
+kronecker_3d(array1, array2)
+
+```

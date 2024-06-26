@@ -29,6 +29,7 @@
   'rphenoscate',
   'Rcpp',
   'partitions',
+  'igraph',
   'RcppArmadillo'
 )
 

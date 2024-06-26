@@ -98,6 +98,11 @@ print(Q_ehe8_C.r)
 print(Q_ehe8_C.t)
 #print(La8[v,v])
 
+# Plot the graph
+g <- create_graph_from_matrix(Q_ehe8_C.r)
+unidirectional_edges <- is_unidirectional(g)
+plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+
 ```
 ## Read in data
 

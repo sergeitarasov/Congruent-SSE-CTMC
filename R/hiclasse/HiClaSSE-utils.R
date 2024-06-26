@@ -726,3 +726,101 @@ make_Q4paramatrizations <- function(parts){
 }
 #set2 <- ger_partitionsNK(N=8, K_expression='==2')
 #make_Q4paramatrizations(set2)
+
+
+
+
+# Define the function to create a graph from the rate matrix
+create_graph_from_matrix <- function(rate_matrix) {
+  # Convert the rate matrix to a dataframe to easily handle row/column names
+  rate_df <- as.data.frame(rate_matrix)
+  
+  # Get the row and column names
+  nodes <- rownames(rate_df)
+  
+  # Create an empty graph
+  g <- graph.empty(directed = TRUE)
+  
+  # Add nodes to the graph
+  g <- add_vertices(g, nv = length(nodes), name = nodes)
+  
+  # Add edges to the graph (excluding main diagonal)
+  for (i in seq_along(nodes)) {
+    for (j in seq_along(nodes)) {
+      if (i != j && rate_df[i, j] != 0) {
+        g <- add_edges(g, c(nodes[i], nodes[j]), weight = rate_df[i, j])
+      }
+    }
+  }
+  
+  return(g)
+}
+
+# Identify unidirectional edges
+is_unidirectional <- function(g) {
+  edges <- E(g)
+  unidirectional <- logical(length(edges))
+  
+  for (edge in seq_along(edges)) {
+    from <- ends(g, edge)[1]
+    to <- ends(g, edge)[2]
+    # Check if there is an edge in the opposite direction
+    if (!are.connected(g, to, from)) {
+      unidirectional[edge] <- TRUE
+    }
+  }
+  
+  return(unidirectional)
+}
+
+# g <- create_graph_from_matrix(Q_cid8.t)
+# plot(g, vertex.label = V(g)$name, vertex.size = 30)
+# g <- create_graph_from_matrix(Qc)
+# unidirectional_edges <- is_unidirectional(g)
+# plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+
+# kronecker product for lambda tensor
+kronecker_3d <- function(array1, array2) {
+  result <- list()
+  # Compute the Kronecker product for each combination of 2D matrices
+  for (i in seq_along(array1)) {
+    for (j in seq_along(array2)) {
+      result[[length(result) + 1]] <- kronecker(array1[[i]], array2[[j]])
+    }
+  }
+  return(result)
+}
+
+
+
+
+# Define the function
+find_element <- function(list_of_matrices, element) {
+  for (sublist_name in names(list_of_matrices)) {
+    mat <- list_of_matrices[[sublist_name]]
+    for (i in seq_len(nrow(mat))) {
+      for (j in seq_len(ncol(mat))) {
+        if (mat[i, j] == element) {
+          return(c(sublist_name, rownames(mat)[i], colnames(mat)[j]))
+        }
+      }
+    }
+  }
+  return(NULL)
+}
+
+#list_of_matrices=ar.re$lam.tensor
+find_elements <- function(list_of_matrices, element) {
+  res=matrix(NA, length(element), 4)
+  #i=1
+  for (i in 1:length(element)){
+    el=element[i]
+    nom=find_element(list_of_matrices, el)
+    res[i,1] <- el
+    res[i, 2:4] <- nom
+  }
+  return(res)
+}
+
+# element <- c("lam000", "lam001")
+# find_elements(ar.re$lam.tensor, element)

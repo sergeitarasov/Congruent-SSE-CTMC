@@ -102,6 +102,10 @@ print(La8)
 print(Q_cid8.t)
 print(La8[v,v])
 
+# Plot the graph
+g <- create_graph_from_matrix(Q_cid8.t)
+unidirectional_edges <- is_unidirectional(g)
+plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
 ```
 
 ### COR8-C (correlated evolution, congruent to CID4)
@@ -110,48 +114,85 @@ print(La8[v,v])
 # like CID8 but with correlation
 Q_cor8_C.t <- Q_cid8.t
 
-bl <- matrix(c(0,.1,.1,0),2,2)
-Q_cor8_C.t[1:2,5:6] <- bl
-Q_cor8_C.t[3:4,7:8] <- bl
-Q_cor8_C.t[5:6,1:2] <- bl
-Q_cor8_C.t[7:8,3:4] <- bl
+
+Q_cor8_C.t['b0', 'd0'] <- 0
+Q_cor8_C.t['b0', 'c0'] <- 0.1
 
 v=c(1,5, 2,6, 3,7, 4,8)
 Q_cor8_C.r <- Q_cor8_C.t[v,v]
 
-print(Q_cor8_C.r)
+print(Q_cor8_C.r*10)
 #print(La8)
-print(Q_cor8_C.t)
+print(Q_cor8_C.t*10)
 #print(La8[v,v])
+
+# Plot the graph
+g <- create_graph_from_matrix(Q_cor8_C.t)
+unidirectional_edges <- is_unidirectional(g)
+plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
 
 ```
 
 ### COR8-NC (Non-correlated evolution, congruent to CID4)
 
 ```{r}
-# like CID8 but not congruent
+# not congruent
 Q_cor8_NC.t <- Q_cid8.t
 
-bl <- matrix(c(0,0,.1,0),2,2)
-Q_cor8_NC.t[1:2,5:6] <- bl
-Q_cor8_NC.t[3:4,7:8] <- bl
-Q_cor8_NC.t[5:6,1:2] <- bl
-Q_cor8_NC.t[7:8,3:4] <- bl
+Q_cor8_NC.t['b0', 'd0'] <- 0
+Q_cor8_NC.t['b0', 'c0'] <- 0
 
 v=c(1,5, 2,6, 3,7, 4,8)
 Q_cor8_NC.r <- Q_cor8_NC.t[v,v]
 
-print(Q_cor8_NC.r)
+print(Q_cor8_NC.r*10)
 #print(La8)
-print(Q_cor8_NC.t)
+print(Q_cor8_NC.t*10)
+#print(La8[v,v])
+
+# Plot the graph
+g <- create_graph_from_matrix(Q_cor8_NC.t)
+unidirectional_edges <- is_unidirectional(g)
+plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+
+```
+
+```{r}
+
+# Create the matrix as a data frame
+Q_sem8.t <- data.frame(
+  a0 = c(-4, 0, 1, 1, 1, 1, 0, 0),
+  b0 = c(0, -4, 1, 1, 1, 1, 0, 0),
+  c0 = c(1, 1, -4, 0, 0, 0, 1, 1),
+  d0 = c(1, 1, 0, -4, 0, 0, 1, 1),
+  a1 = c(1, 1, 0, 0, -4, 0, 1, 1),
+  b1 = c(1, 1, 0, 0, 0, -4, 1, 1),
+  c1 = c(0, 0, 1, 1, 1, 1, -4, 0),
+  d1 = c(0, 0, 1, 1, 1, 1, 0, -4)
+)
+
+# Set row names and column names
+rownames(Q_sem8.t) <- colnames(Q_sem8.t)
+Q_sem8.t <-as.matrix(Q_sem8.t)
+
+
+v=c(1,5, 2,6, 3,7, 4,8)
+Q_sem8.r <- Q_sem8.t[v,v]
+
+print(Q_sem8.r)
+#print(La8)
+print(Q_sem8.t)
 #print(La8[v,v])
 
 ```
 
 
+
 ## Reproducing results from Emberts & Wiens (2020) using HiSSE
 
 All the data and code used in Emberts & Wiens (2020) are available on Dryad (https://doi.org/10.5061/dryad.fqz612js3).
+
+The original study reports AIC = 1987.2 that is close to current estimate (AIC = 1986.766).
 
 ```{r}
 
@@ -174,7 +215,6 @@ print(CID2.p$loglik)
 
 print(CID2.p$AIC)
 # 1986.766
-# The original study reports AIC = 1987.2 that is close to current estimate.
 ```
 
 
@@ -228,7 +268,7 @@ f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
 
 ```
 
-Run inference
+Run inference. Same Ln as HiSSE
 
 ```{r message=FALSE}
 
@@ -268,6 +308,10 @@ CID4.given <- find.mle(lik.const, starting.point, intermediates=F,  method="subp
 CID4.given$lnLik
 #  -988.22
 
+# parametres
+CID4.given$par
+
+
 # root vector for congruent models
 root8.cong <- c(
   CID4.root[1]/2,
@@ -282,6 +326,93 @@ root8.cong <- c(
 
 ```
 
+### another staritng point - does not matter
+```{r}
+# another starting point
+# starting.point[['lam000']] <-0.3231599281
+# starting.point[['mu0']] <- 1.4947999228
+# starting.point[['mu4']] <-0.0287763212
+# starting.point[4] <- 0.0003463041
+
+starting.point[['lam000']] <-0.3231599281*3
+starting.point[['lam222']] <-0.3231599281
+starting.point[['mu0']] <-1.4947999228
+starting.point[['mu2']] <-0.0287763212
+starting.point[['q01']] <- 0.0003463041
+
+CID4.given2 <- find.mle(lik.const, starting.point, intermediates=F,  method="subplex", keep.func=F, root=ROOT.GIVEN,
+                 root.p=CID4.root,
+                 condition.surv=TRUE)
+CID4.given2$lnLik
+
+```
+
+
+### CID4 equal speciatoin
+
+```{r message=FALSE}
+
+s1 <- 0.075
+s2 <- 0.075
+
+sam.fr4 = list(
+  c(1-s1, 1-s2, 1-s1, 1-s2,   s1, 0, s1, 0),
+  c(1-s1, 1-s2, 1-s1, 1-s2,   0, s2, 0, s2)
+)
+
+Args <- list(
+  Nstates = 4L,
+  y = sam.fr4)
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(4)
+args$arrays
+#args$pars
+#length(args$pars)
+#reoder_lambdas(args$arrays, c(1,3, 2,4))
+
+pars.hc <- rep(0, length(args$pars))
+names(pars.hc) <- args$pars
+pars.hc['lam000'] <- 0.1
+pars.hc['lam111'] <- 0.1
+pars.hc['lam222'] <- 0.1
+pars.hc['lam333'] <- 0.1
+pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <-0.1
+qs <- extract_off_diagonal(Q_cid4.r)
+qsl=length(qs)
+pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+
+#pars.hc
+#pars_to_arrays(pars.hc,4)
+#args
+
+zero.constr <- formulas_zero_pars(pars.hc)
+f.qs <- assign_classes_pairwise(Q_cid4.r, args$arrays$Q)
+f.mu <- c(mu1 ~ mu0, mu3 ~ mu2)
+f.lams <- c(lam111 ~ lam000, lam333 ~ lam000, lam222 ~ lam000)
+f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
+
+lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+lik.const <- constrain(lik.c, formulae = f.list)
+arg.const <- argnames(lik.const)
+starting.point <- pars.hc[arg.const]
+
+starting.point[['lam000']] <-0.288701
+#starting.point[['lam222']] <-0.1292103
+starting.point[['mu0']] <-0.2639205
+starting.point[['mu2']] <-0.01172136
+starting.point[['q01']] <- 0.001190693
+
+CID4_eq <- find.mle(lik.const, starting.point, intermediates=F,  method="subplex", keep.func=F, root=ROOT.GIVEN,
+                 root.p=CID4.root, condition.surv=TRUE)
+
+CID4_eq$lnLik
+# -990.7032
+CID4_eq$par
+#      lam000         mu0         mu2         q01 
+# 0.148783401 0.040406362 0.122487364 0.001146811 
+```
 
 ### CID8
 
@@ -409,7 +540,7 @@ starting.point[['lam000']] <-0.288701
 starting.point[['lam444']] <-0.1292103
 starting.point[['mu0']] <-0.2639205
 starting.point[['mu4']] <-0.01172136
-starting.point[['q02']] <- 0.001190693
+starting.point[['q01']] <- 0.001190693
 
 
 #pars_to_arrays(COR8_C$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
@@ -472,7 +603,7 @@ starting.point[['lam000']] <-0.288701
 starting.point[['lam444']] <-0.1292103
 starting.point[['mu0']] <-0.2639205
 starting.point[['mu4']] <-0.01172136
-starting.point[['q02']] <- 0.001190693
+starting.point[['q01']] <- 0.001190693
 
 
 #COR8_NC <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.OBS, condition.surv=TRUE)
@@ -482,7 +613,7 @@ COR8_NC  <- find.mle(lik.const, starting.point, intermediates=F,  method="subple
                  root.p=root8.cong,
                  condition.surv=TRUE)
 COR8_NC$lnLik
-# -988.764
+# -988.7989
 
 ```
 
@@ -492,14 +623,7 @@ COR8_NC$lnLik
 
 pars.hc <- rep(0, length(args$pars))
 names(pars.hc) <- args$pars
-# pars.hc['lam000'] <- 0.1
-# pars.hc['lam111'] <- 0.1
-# pars.hc['lam222'] <- 0.1
-# pars.hc['lam333'] <- 0.1
-# pars.hc['lam444'] <- 0.05
-# pars.hc['lam555'] <- 0.05
-# pars.hc['lam666'] <- 0.05
-# pars.hc['lam777'] <- 0.05
+
 pars.hc['lam022'] <- 0.1
 pars.hc['lam133'] <- 0.1
 pars.hc['lam202'] <- 0.1
@@ -527,6 +651,28 @@ f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
 
 ```
 
+
+Checking the model setup
+```{r}
+# a0 a1 b0 b1 c0 c1 d0 d1
+ar=names2array(args$arrays, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))
+ar.re=reoder_lambdas(ar, c(1,3,5,7, 2,4,6,8))
+#ar.re$lam.tensor
+
+element <- c(
+'lam022',
+'lam133',
+'lam202',
+'lam311',
+'lam466',
+'lam577',
+'lam646',
+'lam757'
+)
+find_elements(ar.re$lam.tensor, element)
+
+```
+
 Run inference
 
 ```{r}
@@ -541,7 +687,7 @@ starting.point[['lam022']] <-0.288701
 starting.point[['lam466']] <-0.1292103
 starting.point[['mu0']] <-0.2639205
 starting.point[['mu4']] <-0.01172136
-starting.point[['q02']] <- 0.001190693
+starting.point[['q01']] <- 0.001190693
 
 
 # CLA8_C <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.OBS, condition.surv=TRUE)
@@ -551,7 +697,7 @@ CLA8_C  <- find.mle(lik.const, starting.point, intermediates=F,  method="subplex
                  root.p=root8.cong,
                  condition.surv=TRUE)
 CLA8_C$lnLik
-
+# -988.22
 ```
 
 ### CLA8-NC
@@ -560,14 +706,6 @@ CLA8_C$lnLik
 
 pars.hc <- rep(0, length(args$pars))
 names(pars.hc) <- args$pars
-# pars.hc['lam000'] <- 0.1
-# pars.hc['lam111'] <- 0.1
-# pars.hc['lam222'] <- 0.1
-# pars.hc['lam333'] <- 0.1
-# pars.hc['lam444'] <- 0.05
-# pars.hc['lam555'] <- 0.05
-# pars.hc['lam666'] <- 0.05
-# pars.hc['lam777'] <- 0.05
 # lam004, lam116, lam422 violate lumpability
 pars.hc['lam004'] <- 0.1
 pars.hc['lam116'] <- 0.1
@@ -595,6 +733,25 @@ f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
 
 ```
 
+```{r}
+# a0 a1 b0 b1 c0 c1 d0 d1
+ar=names2array(args$arrays, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))
+ar.re=reoder_lambdas(ar, c(1,3,5,7, 2,4,6,8))
+#ar.re$lam.tensor
+
+element <- c(
+'lam004',
+'lam116',
+'lam202',
+'lam311',
+'lam422',
+'lam577',
+'lam646',
+'lam757'
+)
+find_elements(ar.re$lam.tensor, element)
+```
+
 Run inference
 
 ```{r}
@@ -608,17 +765,17 @@ starting.point[['lam004']] <-0.288701
 starting.point[['lam422']] <-0.1292103
 starting.point[['mu0']] <-0.2639205
 starting.point[['mu4']] <-0.01172136
-starting.point[['q02']] <- 0.001190693
+starting.point[['q01']] <- 0.001190693
 
 # CLA8_NC <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.OBS, condition.surv=TRUE)
 CLA8_NC <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root8.cong, condition.surv=TRUE)
 CLA8_NC$lnLik
-# -992.1777
+# -992.2101
 
 ```
 
 
-### EHE, Semi-congruent
+### EHE
 
 EHE models can have thousands of states. For the empirical example, the number of hidden states is 24. HiClaSSE may not handle so many states at the moment. Additionally, setting up such models is tedious due to excessively many transitions. Thus, we use a trick: we derive an EHE model but instead substitute it with CID4 with rate multipliers for the base rate. Such an approach is equivalent due to the true EHE model and yields identical likelihood.
 
@@ -726,8 +883,686 @@ EHE$lnLik
 # -988.285
 ```
 
+### Semi-congreunt
 
 
+```{r}
+
+s1 <- 0.075
+s2 <- 0.075
+
+sam.fr8 = list(
+  c(1-s1, 1-s2, 1-s1, 1-s2,  1-s1, 1-s2, 1-s1, 1-s2,   s1, 0, s1, 0,  s1, 0, s1, 0),
+  c(1-s1, 1-s2, 1-s1, 1-s2,  1-s1, 1-s2, 1-s1, 1-s2,   0, s2, 0, s2,  0, s2, 0, s2)
+)
+
+Args <- list(
+  Nstates = 8L,
+  y = sam.fr8
+)
+
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(8)
+#args$arrays
+#args$pars
+#length(args$pars)
+
+pars.hc <- rep(0, length(args$pars))
+names(pars.hc) <- args$pars
+
+# pars.hc['lam000'] <- 0.1
+# pars.hc['lam111'] <- 0.1
+# pars.hc['lam222'] <- 0.1
+# pars.hc['lam333'] <- 0.1
+# pars.hc['lam444'] <- 0.05
+# pars.hc['lam555'] <- 0.05
+# pars.hc['lam666'] <- 0.05
+# pars.hc['lam777'] <- 0.05
+
+pars.hc['lam000'] <- pars.hc['lam002'] <- pars.hc['lam022'] <- 0.1/2
+pars.hc['lam200'] <- pars.hc['lam202'] <- pars.hc['lam222'] <- 0.1/2
+pars.hc['lam111'] <- pars.hc['lam113'] <- pars.hc['lam133'] <- 0.1/2
+pars.hc['lam311'] <- pars.hc['lam313'] <- pars.hc['lam333'] <- 0.1/2
+#pars.hc['lam444'] <- 0.05
+pars.hc['lam466'] <- 0.05
+pars.hc['lam555'] <- 0.05
+#pars.hc['lam666'] <- 0.05
+pars.hc['lam604'] <- 0.05
+pars.hc['lam777'] <- 0.05
+
+f.lams <- c(  lam002 ~ lam000, lam022 ~ lam000,
+              lam200 ~ lam000, lam202 ~ lam000, lam222 ~ lam000,
+              lam111 ~ lam000, lam113 ~ lam000, lam133 ~ lam000,
+              lam311 ~ lam000, lam313 ~ lam000, lam333 ~ lam000,
+              #lam666 ~ lam000,
+              lam604 ~ lam000,
+              lam777 ~ lam000,
+              #lam444 ~ lam000,
+              lam466 ~ lam000,
+              lam555 ~ lam000
+)
+
+pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <-0.1
+qs <- extract_off_diagonal(Q_cid8.r)
+qsl=length(qs)
+#unique(qs)
+pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+
+#pars.hc
+#pars_to_arrays(pars.hc,8)
+#args
+
+# zero.constr <- formulas_zero_pars(pars.hc)
+# f.qs <- assign_classes_pairwise(Q_cid8.r, args$arrays$Q)
+# f.mu <- c(mu1 ~ mu0, mu2 ~ mu0, mu3 ~ mu0,  mu5 ~ mu4, mu6 ~ mu4, mu7 ~ mu4)
+# f.lams <- c(lam111 ~ lam000, lam222 ~ lam000, lam333 ~ lam000,   
+#             lam555 ~ lam444, lam666 ~ lam444, lam777 ~ lam444)
+# f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
+
+
+```
+
+```{r}
+# a0 a1 b0 b1 c0 c1 d0 d1
+ar=names2array(args$arrays, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))
+ar.re=reoder_lambdas(ar, c(1,3,5,7, 2,4,6,8))
+ar.re$lam.tensor
+
+element <- c(
+'lam604', 
+'lam777', 
+'lam466', 
+'lam555'
+)
+find_elements(ar.re$lam.tensor, element)
+```
+
+
+#### run
+
+```{r, eval=FALSE}
+# Define blocks
+blocks <- list(
+  matrix(c(1, 1, 1, 0), 2, byrow = TRUE),
+  matrix(c(1, 1, 0, 0), 2, byrow = TRUE),
+  matrix(c(1, 0, 0, 0), 2, byrow = TRUE)
+  #matrix(c(0, 0, 0, 0), 2, byrow = TRUE)
+)
+
+# Define index
+index <- list(
+  matrix(c(1:2, 3:4,  1:2, 5:6,  1:2, 7:8), 3, 4, byrow = TRUE),
+  matrix(c(3:4, 1:2,  3:4, 7:8,  3:4, 5:6), 3, 4, byrow = TRUE),
+  matrix(c(5:6, 1:2,  5:6, 7:8,  5:6, 3:4), 3, 4, byrow = TRUE),
+  matrix(c(7:8, 3:4,  7:8, 5:6,  7:8, 1:2), 3, 4, byrow = TRUE)
+)
+
+# #---
+# lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+# lik.const <- constrain(lik.c, formulae = f.list)
+# arg.const <- argnames(lik.const)
+# starting.point <- pars.hc[arg.const]
+# 
+# starting.point[['lam000']] <-0.288701
+# starting.point[['lam444']] <-0.1292103
+# starting.point[['mu0']] <-0.2639205
+# starting.point[['mu4']] <-0.01172136
+# starting.point[['q01']] <- 0.001190693
+# 
+# CID8 <- find.mle(lik.const, starting.point, intermediates=F,  method="subplex", keep.func=F, root=ROOT.GIVEN,
+#                  root.p=root8.cong,
+#                  condition.surv=TRUE)
+# CID8$lnLik
+# #------
+
+# results
+best_Qs <- list()
+best_results <- list()
+
+# Initialize result list
+# Q_ehe8_C.r
+Qtmp <- Q_sem8.t
+result <- list()
+
+# Iterate over index
+i=1
+for (i in seq_along(index)) {
+  index.mat <- index[[i]]
+  
+  # Iterate over Q rows
+  # j=3
+  for (j in 1:nrow(index.mat)) {
+    cells <- index.mat[j, ]
+    # Update Qnew with block
+    Qnew <- Qtmp
+    # Iterate over precooked blocks
+    # bi=2
+    for (bi in 1:3) {
+      #print(paste('Working on tree: ',  SIM))
+      print(paste('matrix: ',  i, j, bi))
+      
+      # Make new Qnew
+      Qnew[cells[1:2], cells[3:4]] <- blocks[[bi]]
+      
+      # Make pars for inference
+      v=c(1,5,2,6, 3,7,4,8)
+      Qnew.r <- Qnew[v,v]
+      qs <- extract_off_diagonal(Qnew.r/10)
+      qsl=length(qs)
+      pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+      zero.constr <- formulas_zero_pars(pars.hc)
+      f.qs <- assign_classes_pairwise(Qnew.r/10, args$arrays$Q)
+      
+      f.mu <- c(mu1 ~ mu0, mu2 ~ mu0, mu3 ~ mu0,  mu5 ~ mu4, mu6 ~ mu4, mu7 ~ mu4)
+      
+      f.lams <- c(  lam002 ~ lam000, lam022 ~ lam000,
+                    lam200 ~ lam000, lam202 ~ lam000, lam222 ~ lam000,
+                    lam111 ~ lam000, lam113 ~ lam000, lam133 ~ lam000,
+                    lam311 ~ lam000, lam313 ~ lam000, lam333 ~ lam000,
+                    lam555 ~ lam000, lam777 ~ lam000,
+                    #lam666 ~ lam000, 
+                    #lam444 ~ lam000,
+                    lam466 ~ lam000,
+                    lam604 ~ lam000
+        )
+      #
+      # f.lams <- c(  lam002 ~ q01, lam022 ~ q01,
+      #               lam200 ~ q01, lam202 ~ q01, lam222 ~ q01,
+      #               lam111 ~ q01, lam113 ~ q01, lam133 ~ q01,
+      #               lam311 ~ q01, lam313 ~ q01, lam333 ~ q01,
+      #               lam555 ~ q01, lam666 ~ q01, lam777 ~ q01,
+      #               lam444 ~ q01,
+      #               lam000 ~ q01
+      # )
+      
+      f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
+      
+      # Perform ML inference
+      lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+      lik.const <- constrain(lik.c, formulae = f.list)
+      arg.const <- argnames(lik.const)
+      #CID4.given$par
+      starting.point <- pars.hc[arg.const]
+      
+      # starting.point[['lam000']] <-4.890879e-02
+      # starting.point[['mu0']] <- 3.656202e-02
+      # starting.point[['mu4']] <-5.875093e-05
+      # starting.point[4] <- 0.0005864678
+      
+      starting.point[['lam000']] <-0.3231599281
+      starting.point[['mu0']] <- 1.4947999228
+      starting.point[['mu4']] <-0.0287763212
+      starting.point[4] <- 0.0003463041 
+      
+      mle <- find.mle(lik.const, starting.point, intermediates=F,  method="subplex", keep.func=F, root=ROOT.GIVEN,
+                       root.p=root8.cong,
+                       condition.surv=TRUE)
+      # mle$lnLik
+      # mle$par
+      # # Perform ML inference
+      # lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+      # lik.const <- constrain(lik.c, formulae = f.list)
+      # arg.const <- argnames(lik.const)
+      # starting.point <- pars.hc[arg.const]
+      # mle <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
+      
+      # Store result
+      b_ind <- (j - 1) * 3 + bi
+      result[[b_ind]] <- mle
+      result[[b_ind]]$sim_index <- c(j, bi)
+      print(result[[b_ind]]$lnLik)
+    }
+  }
+  # Select best and update Qtmp
+  ln <- get_item(result, 'lnLik')
+  #ln
+  maxln <- which.max(ln)
+  
+  best <- result[[maxln]]
+  sim_index <- best$sim_index
+  cells <- index.mat[sim_index[1], ]
+  Qtmp[cells[1:2], cells[3:4]] <- blocks[[sim_index[2]]]
+}
+  #best_results[[SIM]] <- best
+  #best_Qs[[SIM]] <- Qtmp
+
+
+
+
+```
+
+
+
+```{r}
+# -987.5412
+#  -984.2027
+Qtmp
+best
+Qtmp
+get_aic(best$lnLik, 5)
+get_aic(best$lnLik, 4)
+get_aic(-988.22, 5)
+get_aic(-988.3734, 4)
+
+get_aic(best$lnLik, 4) - get_aic(-988.22, 5)
+get_aic(best$lnLik, 5) - get_aic(-988.22, 5)
+```
+#### Best SEM model
+
+
+```{r}
+
+s1 <- 0.075
+s2 <- 0.075
+
+sam.fr8 = list(
+  c(1-s1, 1-s2, 1-s1, 1-s2,  1-s1, 1-s2, 1-s1, 1-s2,   s1, 0, s1, 0,  s1, 0, s1, 0),
+  c(1-s1, 1-s2, 1-s1, 1-s2,  1-s1, 1-s2, 1-s1, 1-s2,   0, s2, 0, s2,  0, s2, 0, s2)
+)
+
+Args <- list(
+  Nstates = 8L,
+  y = sam.fr8
+)
+
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(8)
+#args$arrays
+#args$pars
+#length(args$pars)
+
+pars.hc <- rep(0, length(args$pars))
+names(pars.hc) <- args$pars
+
+pars.hc['lam000'] <- pars.hc['lam002'] <- pars.hc['lam022'] <- 0.1/2
+pars.hc['lam200'] <- pars.hc['lam202'] <- pars.hc['lam222'] <- 0.1/2
+pars.hc['lam111'] <- pars.hc['lam113'] <- pars.hc['lam133'] <- 0.1/2
+pars.hc['lam311'] <- pars.hc['lam313'] <- pars.hc['lam333'] <- 0.1/2
+#pars.hc['lam444'] <- 0.05
+pars.hc['lam466'] <- 0.05
+pars.hc['lam555'] <- 0.05
+#pars.hc['lam666'] <- 0.05
+pars.hc['lam604'] <- 0.05
+pars.hc['lam777'] <- 0.05
+
+pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <-0.1
+
+#Q_sem_best.t - Qtmp
+
+Q_sem_best.t <- matrix(c(
+  -4,  0,  1,  1,  1,  1,  0,  0,
+   0, -4,  1,  1,  1,  1,  0,  0,
+   1,  1, -4,  0,  0,  0,  1,  1,
+   1,  1,  0, -4,  0,  0,  1,  1,
+   1,  1,  0,  0, -4,  0,  1,  1,
+   1,  1,  0,  0,  0, -4,  1,  1,
+   0,  0,  1,  1,  1,  1, -4,  0,
+   0,  0,  1,  1,  1,  1,  0, -4),
+  nrow = 8, byrow = TRUE,
+  dimnames = list(c("a0", "b0", "c0", "d0", "a1", "b1", "c1", "d1"), c("a0", "b0", "c0", "d0", "a1", "b1", "c1", "d1"))
+)
+
+v=c(1,5,2,6, 3,7,4,8)
+Q_sem_best.r <-  Q_sem_best.t[v,v]
+
+qs <- extract_off_diagonal(Q_sem_best.r)
+qsl=length(qs)
+#unique(qs)
+pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+
+#pars.hc
+#pars_to_arrays(pars.hc,8)
+#args
+
+zero.constr <- formulas_zero_pars(pars.hc)
+f.qs <- assign_classes_pairwise(Q_sem_best.r, args$arrays$Q)
+
+f.mu <- c(mu1 ~ mu0, mu2 ~ mu0, mu3 ~ mu0,  mu5 ~ mu4, mu6 ~ mu4, mu7 ~ mu4)
+
+f.lams <- c(  lam002 ~ lam000, lam022 ~ lam000,
+              lam200 ~ lam000, lam202 ~ lam000, lam222 ~ lam000,
+              lam111 ~ lam000, lam113 ~ lam000, lam133 ~ lam000,
+              lam311 ~ lam000, lam313 ~ lam000, lam333 ~ lam000,
+              #lam666 ~ lam000,
+              lam604 ~ lam000,
+              lam777 ~ lam000,
+              #lam444 ~ lam000,
+              lam466 ~ lam000,
+              lam555 ~ lam000
+)
+
+f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
+
+
+```
+
+Run inference
+
+```{r}
+
+lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+lik.const <- constrain(lik.c, formulae = f.list)
+arg.const <- argnames(lik.const)
+starting.point <- pars.hc[arg.const]
+
+starting.point[['lam000']] <-0.3231599281
+starting.point[['mu0']] <- 1.4947999228
+starting.point[['mu4']] <-0.0287763212
+starting.point[4] <- 0.0003463041 
+
+SEM8 <- find.mle(lik.const, starting.point, intermediates=F,  method="subplex", keep.func=F, root=ROOT.GIVEN,
+                 root.p=root8.cong,
+                 condition.surv=TRUE)
+SEM8$lnLik
+#  -984.7164
+
+```
+
+#### run Gridy
+
+```{r, eval=FALSE}
+
+f.mu <- c(mu1 ~ mu0, mu2 ~ mu0, mu3 ~ mu0,  mu5 ~ mu4, mu6 ~ mu4, mu7 ~ mu4)
+
+# f.lams <- c(  lam002 ~ lam000, lam022 ~ lam000,
+#               lam200 ~ lam000, lam202 ~ lam000, lam222 ~ lam000,
+#               lam111 ~ lam000, lam113 ~ lam000, lam133 ~ lam000,
+#               lam311 ~ lam000, lam313 ~ lam000, lam333 ~ lam000,
+#               lam555 ~ lam000, lam777 ~ lam000,
+#               #lam666 ~ lam000, 
+#               lam444 ~ lam000,
+#               lam604 ~ lam000
+#   )
+
+f.lams <- c(  lam002 ~ lam000, lam022 ~ lam000,
+              lam200 ~ lam000, lam202 ~ lam000, lam222 ~ lam000,
+              lam111 ~ lam000, lam113 ~ lam000, lam133 ~ lam000,
+              lam311 ~ lam000, lam313 ~ lam000, lam333 ~ lam000,
+              #lam666 ~ lam000,
+              lam604 ~ lam000,
+              lam777 ~ lam000,
+              #lam444 ~ lam000,
+              lam466 ~ lam000,
+              lam555 ~ lam000
+)
+
+# Define blocks
+blocks <- list(
+  matrix(c(1, 1, 1, 0), 2, byrow = TRUE),
+  matrix(c(1, 1, 0, 0), 2, byrow = TRUE),
+  matrix(c(1, 0, 0, 0), 2, byrow = TRUE)
+)
+
+# Define index
+index <- list(
+  matrix(c(1:2, 3:4,  1:2, 5:6,  1:2, 7:8), 3, 4, byrow = TRUE),
+  matrix(c(3:4, 1:2,  3:4, 7:8,  3:4, 5:6), 3, 4, byrow = TRUE),
+  matrix(c(5:6, 1:2,  5:6, 7:8,  5:6, 3:4), 3, 4, byrow = TRUE),
+  matrix(c(7:8, 3:4,  7:8, 5:6,  7:8, 1:2), 3, 4, byrow = TRUE)
+)
+
+
+# results
+#best_Qs <- list()
+#best_results <- list()
+
+# Initialize result list
+# Q_ehe8_C.r
+Qtmp <- Q_sem8.t
+result <- list()
+
+trial=1
+for (trial in 1:100){
+  print(paste('Trial: ',  trial))
+  if (trial==1){
+    Qnew <- Qtmp
+  } else {
+    #print(trial)
+    i=sample(1:4, 1)
+    index.mat <- index[[i]]
+    #
+    j=sample(1:3, 1)
+    cells <- index.mat[j, ]
+    #
+    bi <- sample(1:3, 1)
+    #print(paste('matrix: ',  cells, bi))
+    #
+    Qnew <- Qtmp
+    # Make new Qnew
+    Qnew[cells[1:2], cells[3:4]] <- blocks[[bi]]
+  }
+    
+    # Make pars for inference
+    v=c(1,5,2,6, 3,7,4,8)
+    Qnew.r <- Qnew[v,v]
+    qs <- extract_off_diagonal(Qnew.r/10)
+    qsl=length(qs)
+    pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+    zero.constr <- formulas_zero_pars(pars.hc)
+    f.qs <- assign_classes_pairwise(Qnew.r/10, args$arrays$Q)
+    f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
+    
+    # Perform ML inference
+    lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+    lik.const <- constrain(lik.c, formulae = f.list)
+    arg.const <- argnames(lik.const)
+    starting.point <- pars.hc[arg.const]
+    #
+    # starting.point[['lam000']] <-0.1422820071
+    # starting.point[['mu0']] <- 0.4075569873
+    # starting.point[['mu4']] <-0.0309279998
+    # starting.point[4] <- 0.0005864678
+    
+    starting.point[['lam000']] <-0.3231599281
+    starting.point[['mu0']] <- 1.4947999228
+    starting.point[['mu4']] <-0.0287763212
+    starting.point[4] <- 0.0003463041 
+    
+    mle <- find.mle(lik.const, starting.point, intermediates=F,  method="subplex", keep.func=F, root=ROOT.GIVEN,
+                     root.p=root8.cong,
+                     condition.surv=TRUE)
+    mle$lnLik
+    # mle$par
+    if (trial == 1){
+      base_ln <- mle$lnLik
+    } else {
+      if (mle$lnLik > base_ln){
+        base_ln <- mle$lnLik
+        Qtmp <- Qnew
+      }
+    }
+    
+    print(paste('Base ln:',  base_ln, ';', 'Current ln:', mle$lnLik))
+
+}
+
+
+
+
+```
+
+```{r}
+pp=mle$par.full[mle$par.full>0]
+pp
+length(pp)
+```
+
+
+#### run Lambdas
+
+```{r}
+
+s1 <- 0.075
+s2 <- 0.075
+
+sam.fr8 = list(
+  c(1-s1, 1-s2, 1-s1, 1-s2,  1-s1, 1-s2, 1-s1, 1-s2,   s1, 0, s1, 0,  s1, 0, s1, 0),
+  c(1-s1, 1-s2, 1-s1, 1-s2,  1-s1, 1-s2, 1-s1, 1-s2,   0, s2, 0, s2,  0, s2, 0, s2)
+)
+
+Args <- list(
+  Nstates = 8L,
+  y = sam.fr8
+)
+
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(8)
+#args$arrays
+#args$pars
+#length(args$pars)
+
+pars.hc <- rep(0, length(args$pars))
+names(pars.hc) <- args$pars
+
+# pars.hc['lam000'] <- 0.1
+# pars.hc['lam111'] <- 0.1
+# pars.hc['lam222'] <- 0.1
+# pars.hc['lam333'] <- 0.1
+# pars.hc['lam444'] <- 0.05
+# pars.hc['lam555'] <- 0.05
+# pars.hc['lam666'] <- 0.05
+# pars.hc['lam777'] <- 0.05
+
+pars.hc['lam000'] <- pars.hc['lam002'] <- pars.hc['lam022'] <- 0.1/2
+pars.hc['lam200'] <- pars.hc['lam202'] <- pars.hc['lam222'] <- 0.1/2
+pars.hc['lam111'] <- pars.hc['lam113'] <- pars.hc['lam133'] <- 0.1/2
+pars.hc['lam311'] <- pars.hc['lam313'] <- pars.hc['lam333'] <- 0.1/2
+#pars.hc['lam444'] <- 0.05
+pars.hc['lam555'] <- 0.05
+#pars.hc['lam666'] <- 0.05
+pars.hc['lam604'] <- 0.05
+pars.hc['lam777'] <- 0.05
+
+
+pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <-0.1
+qs <- extract_off_diagonal(Q_cid8.r)
+qsl=length(qs)
+#unique(qs)
+pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+
+#pars.hc
+#pars_to_arrays(pars.hc,8)
+#args
+
+# zero.constr <- formulas_zero_pars(pars.hc)
+# f.qs <- assign_classes_pairwise(Q_cid8.r, args$arrays$Q)
+# f.mu <- c(mu1 ~ mu0, mu2 ~ mu0, mu3 ~ mu0,  mu5 ~ mu4, mu6 ~ mu4, mu7 ~ mu4)
+# f.lams <- c(lam111 ~ lam000, lam222 ~ lam000, lam333 ~ lam000,   
+#             lam555 ~ lam444, lam666 ~ lam444, lam777 ~ lam444)
+# f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
+
+
+```
+
+
+```{r, eval=FALSE}
+
+f.mu <- c(mu1 ~ mu0, mu2 ~ mu0, mu3 ~ mu0,  mu5 ~ mu4, mu6 ~ mu4, mu7 ~ mu4)
+
+f.lams <- c(  lam002 ~ lam000, lam022 ~ lam000,
+              lam200 ~ lam000, lam202 ~ lam000, lam222 ~ lam000,
+              lam111 ~ lam000, lam113 ~ lam000, lam133 ~ lam000,
+              lam311 ~ lam000, lam313 ~ lam000, lam333 ~ lam000,
+              #lam666 ~ lam000,
+              lam604 ~ lam000,
+              lam777 ~ lam000,
+              #lam444 ~ lam000,
+              lam555 ~ lam000
+)
+
+
+# Initialize result list
+# Q_ehe8_C.r
+Qtmp <- Q_sem8.t
+
+lams=ar.re$lam.tensor$c0
+lams=lams[lams!='0']
+
+#lams=lams[-c(1, 2)]
+#lams[13]
+#"lam466"
+
+lik <- c()
+trial=13
+#for (trial in 13:length(lams)){
+  print(paste('Trial: ',  trial))
+  #
+  text=paste(lams[trial], "~ lam000")
+  lam_new <- as.formula(text)
+  
+  pars.hc <- rep(0, length(args$pars))
+  names(pars.hc) <- args$pars
+  pars.hc['lam000'] <- pars.hc['lam002'] <- pars.hc['lam022'] <- 0.1/2
+  pars.hc['lam200'] <- pars.hc['lam202'] <- pars.hc['lam222'] <- 0.1/2
+  pars.hc['lam111'] <- pars.hc['lam113'] <- pars.hc['lam133'] <- 0.1/2
+  pars.hc['lam311'] <- pars.hc['lam313'] <- pars.hc['lam333'] <- 0.1/2
+  #pars.hc['lam444'] <- 0.05
+  pars.hc['lam555'] <- 0.05
+  #pars.hc['lam666'] <- 0.05
+  pars.hc['lam604'] <- 0.05
+  pars.hc['lam777'] <- 0.05
+  pars.hc[lams[trial]] <- 0.05
+  #
+  pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<-        pars.hc['mu7'] <-0.1
+  
+  # Make pars for inference
+  v=c(1,5,2,6, 3,7,4,8)
+  Qnew.r <- Qtmp[v,v]
+  qs <- extract_off_diagonal(Qnew.r/10)
+  qsl=length(qs)
+  pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+  zero.constr <- formulas_zero_pars(pars.hc)
+  f.qs <- assign_classes_pairwise(Qnew.r/10, args$arrays$Q)
+  f.list<- c(zero.constr,  f.qs, f.mu, f.lams, lam_new)
+  
+  # Perform ML inference
+  lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+  lik.const <- constrain(lik.c, formulae = f.list)
+  arg.const <- argnames(lik.const)
+  starting.point <- pars.hc[arg.const]
+  #
+  starting.point[['lam000']] <-0.3231599281
+  starting.point[['mu0']] <- 1.4947999228
+  starting.point[['mu4']] <-0.0287763212
+  starting.point[4] <- 0.0003463041 
+  
+  mle <- find.mle(lik.const, starting.point, intermediates=F,  method="subplex", keep.func=F, root=ROOT.GIVEN,
+                   root.p=root8.cong,
+                   condition.surv=TRUE)
+  # mle$lnLik
+  # mle$par
+  lik <- c(lik, mle$lnLik)
+  print(paste('Current ln:', mle$lnLik))
+#}
+
+```
+
+```{r}
+max(lik)
+which.max((lik))
+# -987.7242
+# -984.718482700566
+
+#pars_to_arrays(pars.hc, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+pars_to_arrays(mle$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+pp2=mle$par.full[mle$par.full>0]
+pp2
+length(pp2)
+
+setdiff(names(pp), names(pp2))
+setdiff(names(pp2), names(pp))
+
+ar.re
+```
+
+
+## --------
 ## Extras
 
 ```{r}

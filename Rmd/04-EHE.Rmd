@@ -195,7 +195,7 @@ for (i in 1:NSIM){
 This is CID4 model.
 
 ```{r}
-pars_to_arrays(pars.hc, 4) %>% reoder_lambdas(., c(1,3, 2,4))
+#pars_to_arrays(pars.hc, 4) %>% reoder_lambdas(., c(1,3, 2,4))
 ```
 
 
@@ -219,7 +219,33 @@ newArgs <- makeArgs(Args)
 args <- argnames_HiClaSSE(8)
 #args$arrays
 #reoder_lambdas(args$arrays, c(1,3,5,7, 2,4,6,8))
+
 ```
+
+Let's check the model rates
+```{r}
+# a0 a1 b0 b1 c0 c1 d0 d1
+ar=names2array(args$arrays, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))
+ar.re=reoder_lambdas(ar, c(1,3,5,7, 2,4,6,8))
+ar.re$lam.tensor
+
+
+# rates that will be used to setup model
+element <- c("lam000", 'lam002', 'lam022', 
+             'lam200', 'lam202', 'lam222', 
+             'lam111', 'lam113', 'lam133',
+             'lam311', 'lam313', 'lam333',
+             'lam444', 'lam646', 'lam555', 'lam777'
+             )
+find_elements(ar.re$lam.tensor, element)
+```
+```{r}
+# Plot the graph
+g <- create_graph_from_matrix(Q_ehe8_C.r)
+unidirectional_edges <- is_unidirectional(g)
+plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+```
+
 
 Calculating Ln
 
@@ -247,7 +273,8 @@ for (i in 1:NSIM){
   pars.hc['lam311'] <- pars.hc['lam313'] <- pars.hc['lam333'] <- lam1/3
   pars.hc['lam444'] <- lam2
   pars.hc['lam555'] <- lam2
-  pars.hc['lam666'] <- lam2
+  #pars.hc['lam666'] <- lam2
+  pars.hc['lam646'] <- lam2 # this makes the model trait-dependent
   pars.hc['lam777'] <- lam2
   pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <- mu
   qs <- extract_off_diagonal(Q_ehe8_C.r/10)
@@ -281,6 +308,9 @@ ehe8 <- EHE8_C.pars %>% unlist
 print(ehe8)
 print(cid4-ehe8)
 
+# > print(cid4-ehe8)
+#  [1] 2.922985e-06 2.760492e-06 3.440786e-06 3.040528e-06 2.149453e-06 3.493703e-06 2.752414e-06 2.570285e-06 2.996501e-06
+# [10] 3.601493e-06
 ```
 
 
