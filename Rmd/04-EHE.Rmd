@@ -227,7 +227,7 @@ Let's check the model rates
 # a0 a1 b0 b1 c0 c1 d0 d1
 ar=names2array(args$arrays, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))
 ar.re=reoder_lambdas(ar, c(1,3,5,7, 2,4,6,8))
-ar.re$lam.tensor
+#ar.re$lam.tensor
 
 
 # rates that will be used to setup model
@@ -239,12 +239,8 @@ element <- c("lam000", 'lam002', 'lam022',
              )
 find_elements(ar.re$lam.tensor, element)
 ```
-```{r}
-# Plot the graph
-g <- create_graph_from_matrix(Q_ehe8_C.r)
-unidirectional_edges <- is_unidirectional(g)
-plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
-```
+
+
 
 
 Calculating Ln
@@ -297,9 +293,29 @@ for (i in 1:NSIM){
 
 ```
 
+
+#### EHE: show model topology
+
+```{r}
+# Plot the graph
+ar <- pars_to_arrays(pars.hc, 8)
+Qpl <- names2array(ar, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))$Q
+g <- create_graph_from_matrix(Qpl)
+unidirectional_edges <- is_unidirectional(g)
+plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+
+```
+```{r}
+ar <- pars_to_arrays(pars.hc, 8)
+ar=names2array(ar, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))
+ar.re=reoder_lambdas(ar, c(1,3,5,7, 2,4,6,8))
+ar.re
+```
+
+
 ## Compare Ln estimates
 
-The likelihoods are the same, the errors are due to numerical integration.
+The likelihoods are the same, the differences are due to numerical integration.
 
 ```{r}
 cid4 <- CID4.pars %>% unlist
