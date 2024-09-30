@@ -9,7 +9,7 @@ params:
   output_dir: "/output"
 ---
 
-# Congruence between independent and dependent SSEs
+# CID is congruent to trait-dependent SSEs
 
 
 ```{r,  include=FALSE}

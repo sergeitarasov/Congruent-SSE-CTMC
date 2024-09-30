@@ -10,7 +10,7 @@ params:
 cache: TRUE
 ---
 
-# Equal Rate Hidden Expansion (EHE)
+# EHE: Equal Rate Hidden Expansion 
 
 HE can be extended to a point when all permissible rates are equal, except extinctions. We refer to this transformation as Equal Rate Hidden Expansion (EHE).
 

@@ -9,7 +9,7 @@ params:
   output_dir: "/output"
 ---
 
-# MiSSE Congruence
+# MiSSE congruence
 
 This example, drawn from Eq. 2 in the main text, demonstrates that the MiSSE2 model with two states (M1) is congruent with MiSSE3 (M2), but is not congruent with MiSSE3 (M3) that violates lumpability.
 

@@ -9,7 +9,7 @@ params:
   output_dir: "/output"
 ---
 
-# Congruence under varying Sampling Fraction
+# Congruence under varying sampling fraction
 
 Hrein, we show that congruence holds under varying sampling fraction using the previous. This simulation is very close to the CID example from the section "Congruence between independent and dependent SSEs", except that we use different sampling fraction.
 

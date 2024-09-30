@@ -9,7 +9,7 @@ params:
   output_dir: "/output"
 ---
 
-# Validation of HiClaSSE
+# HiClaSSE: validation
 
 
 Here, we validate HiClaSSE against available models from diversitree package.
