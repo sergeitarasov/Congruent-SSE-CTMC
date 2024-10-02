@@ -9,7 +9,7 @@ params:
   output_dir: "/output"
 ---
 
-# Simulate Data
+# Simulate Data used in this study
 
 ```{r, setup, include=FALSE}
 library(DT)
@@ -60,7 +60,7 @@ print(La4[v,v])
 
 ```
 
-## Simulate: 100 tips, 10 trees
+## Simulate CID with 5 pars: 100 tips, 10 trees
 
 ```{r}
 
@@ -98,13 +98,13 @@ for (i in 1:NSIM){
 
 }
 
-#saveRDS(phy, file='R/data/phy_CID4.RDS')
-phy <- readRDS(file='R/data/phy_CID4.RDS')
+#saveRDS(phy, file='R/data/sim/phy_CID4-10tr.RDS')
+phy <- readRDS(file='R/data/sim/phy_CID4-10tr.RDS')
 
 ```
 
-## ------
-## Simulation Settings
+
+## Simulate CID for infference with SEM models: CID with 4 pars (1q, 2lam, 1mu)
 
 ```{r}
 
@@ -113,9 +113,9 @@ NSIM= 100 # N of trees to simulate
 ```
 
 
-## Simulate: 100 tips, 100 trees
+### Simulate: 100 tips, 100 trees
 
-```{r}
+```{r eval=FALSE}
 
 
 max.taxa = 100
@@ -142,16 +142,19 @@ for (i in 1:NSIM){
   simulated.result <- SimulateHisse(div.pars$turnover, div.pars$eps, Q_cid, max.taxa=max.taxa, x0 = sample(0:3, 1), nstart = 2)
   simulated.result
   phy[[i]] <- SimToPhylo(simulated.result$results, include.extinct=FALSE)
+  #phy[[i]]$tip.state
 
 }
 
-#saveRDS(phy, file='R/data/phy_CID4-100tips-100tr.RDS')
+#which(is.na(phy))
+#saveRDS(phy, file='R/data/sim/phy_CID4-100tips-100tr.RDS')
+#phy <- readRDS(file='R/data/sim/phy_CID4-100tips-100tr.RDS')
 ```
 
 
-## Simulate: 500 tips, 100 trees
+### Simulate: 500 tips, 100 trees
 
-```{r}
+```{r eval=FALSE}
 max.taxa = 500
 
 Q_cid <- Q_cid4.r/10
@@ -179,13 +182,14 @@ for (i in 1:NSIM){
 }
 
 #which(is.na(phy))
-saveRDS(phy, file='R/data/phy_CID4-500tips-100tr.RDS')
+#saveRDS(phy, file='R/data/sim/phy_CID4-500tips-100tr.RDS')
+#phy <- readRDS(file='R/data/sim/phy_CID4-500tips-100tr.RDS')
 ```
 
 
-## Simulate: 1000 tips, 100 trees
+### Simulate: 1000 tips, 100 trees
 
-```{r}
+```{r eval=FALSE}
 max.taxa = 1000
 
 Q_cid <- Q_cid4.r/10
@@ -213,7 +217,8 @@ for (i in 1:NSIM){
 
 }
 
-saveRDS(phy, file='R/data/phy_CID4-1000tips-100tr.RDS')
+#which(is.na(phy))
+#saveRDS(phy, file='R/data/sim/phy_CID4-1000tips-100tr.RDS')
 ```
 
 
