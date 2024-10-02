@@ -433,7 +433,7 @@ max(daic)
 
 # Read phylogeny from file
 base <- "phy_CID4-500tips-100tr"
-file <- file.path("R/data", paste0(base, '.RDS'))
+file <- file.path("R/data/sim", paste0(base, '.RDS'))
 print(paste0('Reading file: ', file))
 phy <- readRDS(file = file)
 
@@ -523,32 +523,23 @@ for (SIM in 1:NSIM){
 #### save
 
 ```{r}
-# file_out=paste0('R/data/non-congruent/best_results-EHE8_', base, '.RDS')
+
+# file_out=paste0('R/data/out/SEM/best_Ln-SEM8_', base, '.RDS')
 # saveRDS(best_results, file= file_out)
-# # 
-# file_out=paste0('R/data/non-congruent/best_Qs-EHE8_', base, '.RDS')
+# 
+# file_out=paste0('R/data/out/SEM/best_Qs-SEM8_', base, '.RDS')
 # saveRDS(best_Qs, file= file_out)
+
 ```
 
 
-#### res
+#### results
 
 ```{r}
-# get_item(result, 'lnLik')
-# # -318.1521 -318.1543 -318.6458 -318.1537 -318.1543 -318.1841
-# max(get_item(result, 'lnLik'))
-# # -318.1521
-
-dln=cid.lik$t500-get_item(best_results, 'lnLik')
-#best_Qs
-hist(dln)
-min(dln)
-max(dln)
-
-aic=get_item(best_results, 'lnLik') %>% get_aic(., 2)
-daic=cid$t500  -  aic
+cid.aic=get_item(readRDS(file='R/data/out/lik-CID4-phy_CID4-500tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4)
+sem.aic=get_item(readRDS(file='R/data/out/SEM/best_Ln-SEM8_phy_CID4-500tips-100tr.RDS'), 'lnLik') %>% get_aic(., 2)
+daic=cid.aic-sem.aic
 hist(daic)
-max(daic)
 ```
 
 
