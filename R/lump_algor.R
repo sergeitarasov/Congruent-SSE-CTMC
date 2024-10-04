@@ -56,7 +56,7 @@ is_slumpable(Q_ehe8_C.t, part_scheme)
 #----- check irreducibility
 
 # 100 tips
-Qs <- readRDS( file='R/data/out/SEM/best_Qs-SEM8_phy_CID4-100tips-100tr.RDS')
+Qs <- readRDS( file='R/data/out/SEM/best_Qs-SEM8_phy_CID4-500tips-100tr.RDS')
 vector_list <-lapply(Qs, function(x) c(x))
 vector_matrix <- do.call(rbind, vector_list)
 unique_vectors <- unique(vector_matrix)

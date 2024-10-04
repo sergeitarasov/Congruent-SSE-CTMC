@@ -1,4 +1,41 @@
 
+# number of unique Q matrices in the list
+N_unique_Qs <- function(Qs){
+  vector_list <-lapply(Qs, function(x) c(x))
+  vector_matrix <- do.call(rbind, vector_list)
+  unique_vectors <- unique(vector_matrix)
+  nrow(unique_vectors)
+}
+
+
+# check if Q is trait independent, note the states should be sorted as: a0 b0 c0 d0 a1 b1 c1 d1
+# works only for 8 states Qs
+# is_trait_INdependent(Q_ehe8_C.t)
+is_trait_INdependent <- function(Qin){
+  Q <- initQ(c('a', 'b', 'c', 'd'), c(1:12))
+  Q2<- initQ(c(0,1), c(13, 14))
+  smm=amaSMM(Q2, Q)
+  
+  i=3
+  # correlation according to Pagel
+  out <- c()
+  for (i in 1:12){
+    cells <- which(smm==i)
+    rates=Qin[cells]
+    res <- all(rates==rates[1])
+    out <- c(out, res)
+  }
+  
+  # dual transitions
+  #which((Q_ehe8_C.t + smm)==0)
+  duals = c(7,  8, 15, 16, 21, 22, 29, 30, 35, 36, 43, 44, 49, 50, 57, 58)
+  drates=Qin[duals]
+  res <- all(drates==0)
+  out <- c(out, res)
+  
+  return(all(out))
+}
+
 
 generateUpperTriangularMatrix <- function(element, N) {
   # Create an empty matrix

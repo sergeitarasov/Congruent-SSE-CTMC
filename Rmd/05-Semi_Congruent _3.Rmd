@@ -25,11 +25,12 @@ library(dplyr)
 library(knitr)
 library(kableExtra)
 library(here)
-knitr::opts_knit$set(root.dir = here::here())
+knitr::opts_knit$set(root.dir ="/Users/taravser/Library/CloudStorage/OneDrive-UniversityofHelsinki/My_papers/State_Curvature/Github/Congruent-SSE-CTMC")
+getwd()
 ```
 
 ```{r message=FALSE}
-
+setwd("/Users/taravser/Library/CloudStorage/OneDrive-UniversityofHelsinki/My_papers/State_Curvature/Github/Congruent-SSE-CTMC")
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##  ~ installations and dependencies  ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -225,7 +226,6 @@ pars.hc['lam646'] <- lam2
 pars.hc['lam777'] <- lam2
 pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <-mu
 
-
 # Define blocks
 blocks <- list(
   matrix(c(1, 1, 1, 0), 2, byrow = TRUE),
@@ -241,6 +241,7 @@ index <- list(
   matrix(c(5:6, 1:2,  5:6, 7:8,  5:6, 3:4), 3, 4, byrow = TRUE),
   matrix(c(7:8, 3:4,  7:8, 5:6,  7:8, 1:2), 3, 4, byrow = TRUE)
 )
+
 
 ```
 
@@ -283,6 +284,8 @@ find_elements(ar.re$lam.tensor, element)
 This algorithm selects the optimal rate matrixby iteratively testing 36 different models for each simulation trial. It works by dividing Q into a 4x4 block matrix, based on the states: a0b0; c0d0; a1b1; c1d1. For each block in a given row, the algorithm tests three different parameterizations and selects the best one before moving to the next block. Once a row is completed, the algorithm proceeds to the next row. Since there are four block rows in total, this results in testing 36 different models.
 
 ```{r, eval=FALSE}
+
+
 
 # Read phylogeny from file
 base <- "phy_CID4-100tips-100tr"
@@ -534,6 +537,7 @@ hist(daic)
 #### run
 
 ```{r, eval=FALSE}
+setwd("/Users/taravser/Library/CloudStorage/OneDrive-UniversityofHelsinki/My_papers/State_Curvature/Github/Congruent-SSE-CTMC")
 
 # Read phylogeny from file
 base <- "phy_CID4-1000tips-100tr"
@@ -543,17 +547,17 @@ phy <- readRDS(file = file)
 #plot(phy[[1]])
 
 # files to save
-file_out1=paste0('R/data/out/SEM/best_Ln-SEM8_', base, '.RDS')
-file_out2=paste0('R/data/out/SEM/best_Qs-SEM8_', base, '.RDS')
+file_out1=paste0('R/data/out/SEM/2-best_Ln-SEM8_', base, '.RDS')
+file_out2=paste0('R/data/out/SEM/2-best_Qs-SEM8_', base, '.RDS')
 
 
 # results
 best_Qs <- list()
 best_results <- list()
 #SIM=1
-for (SIM in 1:NSIM){
+#for (SIM in 1:NSIM){
 #for (SIM in 1:50){
-#for (SIM in 51:NSIM){
+for (SIM in 51:NSIM){
   tree <- phy[[SIM]]
   states <- mapvalues(tree$tip.state, from = c("0", "1", "2", "3"), to = c(0, 1, 0, 1))
   root <- rep(1/8, 8)
@@ -643,20 +647,17 @@ for (SIM in 1:NSIM){
 ```
 
 ```{r}
-# to speed computations, I ran them by parts
-# combining the results
-
-res1 <- readRDS("R/data/out/SEM/1-best_Ln-SEM8_phy_CID4-1000tips-100tr.RDS")
-res2 <- readRDS("R/data/out/SEM/2-best_Ln-SEM8_phy_CID4-1000tips-100tr.RDS")
-length(res1)
-sapply(res1, length)
-sapply(res2, length)
-length(res2)
-
-best_results <- res2
-best_results[1:50] <- res1
-sapply(best_results, length)
-#saveRDS(best_results, file= "R/data/out/SEM/best_Ln-SEM8_phy_CID4-1000tips-100tr.RDS)
+# res1 <- readRDS('R/data/non-congruent/best_results-EHE8_phy_CID4-1000tips-100tr.RDS')
+# length(res1)
+# sapply(res1, length)
+# res2 <- readRDS('R/data/non-congruent/55-best_results-EHE8_phy_CID4-1000tips-100tr.RDS')
+# sapply(res2, length)
+# length(res2)
+# 
+# best_results <- res2
+# best_results[1:54] <- res1
+# sapply(best_results, length)
+#saveRDS(best_results, file= 'best_results-EHE8_phy_CID4-1000tips-100tr.RDS')
 
 b <- readRDS('best_results-EHE8_phy_CID4-1000tips-100tr.RDS')
 length(b)
