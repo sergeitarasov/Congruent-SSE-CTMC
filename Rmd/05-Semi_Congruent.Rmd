@@ -12,11 +12,13 @@ cache: TRUE
 
 # SEM: semicongruent models
 
-In this example, we data simulated under the CID4 model for three different scenarios: 100, 500, and 1000 tips. Subsequently, we conduct ML inference using two models: the original CID4 and the semi-congruent EHE8-C model. The CID4 model has four parameters, while the EHE8-C model has only two.
 
-We observe that the likelihood of the CID4 model is always better than that of the EHE8-C model across all scenarios. However, due to fewer parameters, the AIC of the EHE8-C tends to be better in most trials.
+In this example, data are simulated under the CID4 model for three different scenarios: 100, 500, and 1000 tips. We conduct ML inference using the original CID models and a set of SEM models which are optimized iteratively over 36 steps to select the best SEM model by testing various Q matrices.
 
-It's worth noting that lumping the semi-congruent EHE8-C model produces the CID4 model. In other words, if we create an irreducible model from the EHE8-C model, we obtain the original CID4 model with its four parameters.
+This algorithm  works by dividing Q into a 4x4 block matrix, based on the states: a0b0; c0d0; a1b1; c1d1. For each block in a given row, the algorithm tests three different parameterizations and selects the best one before moving to the next block. Once a row is completed, the algorithm proceeds to the next row. Since there are four block rows in total, this results in testing 36 different models.
+
+The tested SEM. models constantly show better AIC compared to the original CID model.
+
 
 ```{r,  include=FALSE}
 library(DT)
@@ -280,7 +282,7 @@ find_elements(ar.re$lam.tensor, element)
 
 #### run
 
-This algorithm selects the optimal rate matrixby iteratively testing 36 different models for each simulation trial. It works by dividing Q into a 4x4 block matrix, based on the states: a0b0; c0d0; a1b1; c1d1. For each block in a given row, the algorithm tests three different parameterizations and selects the best one before moving to the next block. Once a row is completed, the algorithm proceeds to the next row. Since there are four block rows in total, this results in testing 36 different models.
+
 
 ```{r, eval=FALSE}
 
@@ -636,15 +638,11 @@ for (SIM in 1:NSIM){
 ```
 
 
-
-
-```{r}
-#best_Qs
-```
+to speed computations, I ran the above by parts, now combining the results
 
 ```{r}
 # to speed computations, I ran them by parts
-# combining the results
+# combining the results for Ln
 
 res1 <- readRDS("R/data/out/SEM/1-best_Ln-SEM8_phy_CID4-1000tips-100tr.RDS")
 res2 <- readRDS("R/data/out/SEM/2-best_Ln-SEM8_phy_CID4-1000tips-100tr.RDS")
@@ -656,24 +654,22 @@ length(res2)
 best_results <- res2
 best_results[1:50] <- res1
 sapply(best_results, length)
-#saveRDS(best_results, file= "R/data/out/SEM/best_Ln-SEM8_phy_CID4-1000tips-100tr.RDS)
+#saveRDS(best_results, file= "R/data/out/SEM/best_Ln-SEM8_phy_CID4-1000tips-100tr.RDS")
 
-b <- readRDS('best_results-EHE8_phy_CID4-1000tips-100tr.RDS')
-length(b)
-sapply(b, length)
-get_item(b, 'lnlik')
 
-# q1 <- readRDS('R/data/non-congruent/best_Qs-EHE8_phy_CID4-1000tips-100tr.RDS')
-# length(q1)
-# sapply(q1, length)
-# q2 <- readRDS('R/data/non-congruent/55-best_Qs-EHE8_phy_CID4-1000tips-100tr.RDS')
-# sapply(q2, length)
-# length(q2)
-# 
-# best_Qs <- q2
-# best_Qs[1:54] <- q1
-# sapply(best_Qs, length)
-# saveRDS(best_Qs, file= 'best_best_Qs-EHE8_phy_CID4-1000tips-100tr.RDS')
+
+# combining the results for Qs
+q1 <- readRDS("R/data/out/SEM/1-best_Qs-SEM8_phy_CID4-1000tips-100tr.RDS")
+q2 <- readRDS("R/data/out/SEM/2-best_Qs-SEM8_phy_CID4-1000tips-100tr.RDS")
+length(q1)
+sapply(q1, length)
+sapply(q2, length)
+length(q2)
+
+best_Qs <- q2
+best_Qs[1:50] <- q1
+sapply(best_Qs, length)
+#saveRDS(best_Qs, file= "R/data/out/SEM/best_Qs-SEM8_phy_CID4-1000tips-100tr.RDS")
 
 ```
 
@@ -682,25 +678,11 @@ get_item(b, 'lnlik')
 #### results
 
 ```{r}
-# get_item(result, 'lnLik')
-# # -318.1521 -318.1543 -318.6458 -318.1537 -318.1543 -318.1841
-# max(get_item(result, 'lnLik'))
-# # -318.1521
-
-dln=cid.lik$t1000-get_item(best_results, 'lnLik')
-#best_Qs
-hist(dln)
-min(dln)
-max(dln)
-
-aic=get_item(best_results, 'lnLik') %>% get_aic(., 2)
-daic=cid$t1000  -  aic
+cid.aic=get_item(readRDS(file='R/data/out/lik-CID4-phy_CID4-1000tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4)
+sem.aic=get_item(readRDS(file='R/data/out/SEM/best_Ln-SEM8_phy_CID4-1000tips-100tr.RDS'), 'lnLik') %>% get_aic(., 2)
+daic=cid.aic-sem.aic
 hist(daic)
-max(daic)
 ```
-
-
-
 
 
 ## Results
@@ -720,7 +702,7 @@ A high number of unique Q matrices indicates that, by chance, a different model 
 # 100 tips
 Q_100 <- readRDS( file='R/data/out/SEM/best_Qs-SEM8_phy_CID4-100tips-100tr.RDS')
 N_unique_Qs(Q_100)
-# [1] 93
+# [1] 92
 
 # 500 tips
 Q_500 <- readRDS( file='R/data/out/SEM/best_Qs-SEM8_phy_CID4-500tips-100tr.RDS')
@@ -730,7 +712,7 @@ N_unique_Qs(Q_500)
 # 1000 tips
 Q_1000 <- readRDS( file='R/data/out/SEM/best_Qs-SEM8_phy_CID4-1000tips-100tr.RDS')
 N_unique_Qs(Q_1000)
-# [1] 70
+# [1] 68
 ```
 ### Checking if the selected models are irreducible and trait-dependent
 
@@ -775,27 +757,27 @@ plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirec
 # read the results
 cid.aic <- tibble(
   t100=get_item(readRDS(file='R/data/out/lik-CID4-phy_CID4-100tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4),
-  t500=get_item(readRDS(file='R/data/out/lik-CID4-phy_CID4-500tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4)
-  #t1000=get_item(readRDS(file='R/data/out/lik-CID4-phy_CID4-1000tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4)
+  t500=get_item(readRDS(file='R/data/out/lik-CID4-phy_CID4-500tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4),
+  t1000=get_item(readRDS(file='R/data/out/lik-CID4-phy_CID4-1000tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4)
 )
 
 cid.lik <- tibble(
   t100=get_item(readRDS(file='R/data/out/lik-CID4-phy_CID4-100tips-100tr.RDS'), 'lnLik'),
-  t500=get_item(readRDS(file='R/data/out/lik-CID4-phy_CID4-500tips-100tr.RDS'), 'lnLik') 
-  #t1000=get_item(readRDS(file='R/data/out/lik-CID4-phy_CID4-1000tips-100tr.RDS'), 'lnLik')
+  t500=get_item(readRDS(file='R/data/out/lik-CID4-phy_CID4-500tips-100tr.RDS'), 'lnLik'), 
+  t1000=get_item(readRDS(file='R/data/out/lik-CID4-phy_CID4-1000tips-100tr.RDS'), 'lnLik')
 )
 
 sem.aic <- tibble(
   t100=get_item(readRDS( file='R/data/out/SEM/best_Ln-SEM8_phy_CID4-100tips-100tr.RDS'), 'lnLik') %>% get_aic(., 2),
-  t500=get_item(readRDS( file='R/data/out/SEM/best_Ln-SEM8_phy_CID4-500tips-100tr.RDS'), 'lnLik') %>% get_aic(., 2)
-  #t1000=get_item(readRDS(file='R/data/out/SEM/best_Ln-SEM8_phy_CID4-1000tips-100tr.RDS'), 'lnLik') %>% get_aic(., 2)
+  t500=get_item(readRDS( file='R/data/out/SEM/best_Ln-SEM8_phy_CID4-500tips-100tr.RDS'), 'lnLik') %>% get_aic(., 2),
+  t1000=get_item(readRDS(file='R/data/out/SEM/best_Ln-SEM8_phy_CID4-1000tips-100tr.RDS'), 'lnLik') %>% get_aic(., 2)
 )
 
 
 sem.lik <- tibble(
   t100=get_item(readRDS( file='R/data/out/SEM/best_Ln-SEM8_phy_CID4-100tips-100tr.RDS'), 'lnLik'),
-  t500=get_item(readRDS( file='R/data/out/SEM/best_Ln-SEM8_phy_CID4-500tips-100tr.RDS'), 'lnLik')
-  #t1000=get_item(readRDS(file='R/data/out/SEM/best_Ln-SEM8_phy_CID4-1000tips-100tr.RDS'), 'lnLik')
+  t500=get_item(readRDS( file='R/data/out/SEM/best_Ln-SEM8_phy_CID4-500tips-100tr.RDS'), 'lnLik'),
+  t1000=get_item(readRDS(file='R/data/out/SEM/best_Ln-SEM8_phy_CID4-1000tips-100tr.RDS'), 'lnLik')
 )
 
 ```
@@ -822,27 +804,28 @@ Get dAIC
 # get max delta aic
 del.aic <- cid.aic-sem.aic
 apply(del.aic, 2, max)
+apply(del.aic, 2, min)
 
 # Calculate ECDF for each column
 ecdf_del <- del.aic %>%
   summarise(
     t100_ecdf = ecdf(t100),
-    t500_ecdf = ecdf(t500)
-    #t1000_ecdf = ecdf(t1000)
+    t500_ecdf = ecdf(t500),
+    t1000_ecdf = ecdf(t1000)
   )
 
 
-# Create a data frame for plotting
-ecdf_data <- data.frame(
-  Value = c(del.aic$t100, del.aic$t500),
-  Group = rep(c("100 tips", "500 tips"), each = nrow(del.aic))
-)
-
 # # Create a data frame for plotting
 # ecdf_data <- data.frame(
-#   Value = c(del.aic$t100, del.aic$t500, del.aic$t1000),
-#   Group = rep(c("100 tips", "500 tips", "1000 tips"), each = nrow(del.aic))
+#   Value = c(del.aic$t100, del.aic$t500),
+#   Group = rep(c("100 tips", "500 tips"), each = nrow(del.aic))
 # )
+
+# Create a data frame for plotting
+ecdf_data <- data.frame(
+  Value = c(del.aic$t100, del.aic$t500, del.aic$t1000),
+  Group = rep(c("100 tips", "500 tips", "1000 tips"), each = nrow(del.aic))
+)
 
 
 ```
@@ -864,18 +847,17 @@ Plot NOT all
 
 # Define linetypes for each group
 linetypes <- c("100 tips" = "dotted", "500 tips" = "dashed", "1000 tips" = "solid")
-
-linetypes <- c("100 tips" = "dotted", "500 tips" = "dashed")
+#linetypes <- c("100 tips" = "dotted", "500 tips" = "dashed")
 
 # Plot the ECDFs for each group with varying linetypes
 cdf_plot <- ggplot() +
-  stat_ecdf(data = ecdf_data, aes(x = Value, linetype = Group, color=Group), geom = "step", pad = F, size = .4) +
+  stat_ecdf(data = ecdf_data, aes(x = Value, linetype = Group, color=Group), geom = "step", pad = F, size = .5) +
   labs(x = expression(Delta~AIC), y = "CDF") +
   theme_minimal()+
   scale_x_continuous(
-    limits = c(-4, 12),
+    limits = c(-4, 14),
     #breaks = seq(-4, 12, by = 1)
-    breaks = seq(-4, 12, by = 2)
+    breaks = seq(-4, 14, by = 2)
   ) +
   scale_linetype_manual(values = linetypes) + # Apply manual linetype scale
   theme(
@@ -883,7 +865,7 @@ cdf_plot <- ggplot() +
     panel.grid.minor.y = element_blank()
   ) +
   #guides(color = guide_legend(title = NULL)) +
-  guides(color = "none") +
+  #guides(color = "none") +
   geom_vline(xintercept = 2, linetype = "dashed", color = "black", size = 0.5) +
   theme(
     #plot.background = element_rect(fill = "white"),
@@ -898,8 +880,8 @@ cdf_plot <- ggplot() +
 cdf_plot
 
 # Save the plot with a specific width in centimeters
-# ggsave("Figs/cdf-nc-c.eps", plot = cdf_plot , width = 8.7, height = 5, units = "cm")
-# ggsave("Figs/cdf-nc-c.png", plot = cdf_plot , width = 8.7, height = 5, units = "cm")
+# ggsave("Figs/cdf-sem.eps", plot = cdf_plot , width = 8.7, height = 5, units = "cm")
+ggsave("Figs/cdf-sem.png", plot = cdf_plot , width = 8.7, height = 5, units = "cm")
 
 ```
 
