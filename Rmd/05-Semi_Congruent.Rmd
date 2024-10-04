@@ -847,6 +847,7 @@ Plot NOT all
 
 # Define linetypes for each group
 linetypes <- c("100 tips" = "dotted", "500 tips" = "dashed", "1000 tips" = "solid")
+colortypes <- c("100 tips" = "blue", "500 tips" = "green", "1000 tips" = "red")
 #linetypes <- c("100 tips" = "dotted", "500 tips" = "dashed")
 
 # Plot the ECDFs for each group with varying linetypes
@@ -860,12 +861,13 @@ cdf_plot <- ggplot() +
     breaks = seq(-4, 14, by = 2)
   ) +
   scale_linetype_manual(values = linetypes) + # Apply manual linetype scale
+  scale_color_manual(values = colortypes) +
   theme(
     panel.grid.minor.x = element_blank(),  # Remove minor grid lines on the x-axis
     panel.grid.minor.y = element_blank()
   ) +
   #guides(color = guide_legend(title = NULL)) +
-  #guides(color = "none") +
+  #guides(color = 'none') +
   geom_vline(xintercept = 2, linetype = "dashed", color = "black", size = 0.5) +
   theme(
     #plot.background = element_rect(fill = "white"),

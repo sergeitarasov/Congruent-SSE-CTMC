@@ -42,7 +42,7 @@ source('R/hiclasse/HiClaSSE_cpp.R') # fast implementation
 
 ```{r}
 NSIM = 10
-phy <- readRDS(file='R/data/phy_CID4.RDS')
+phy <- readRDS(file='R/data/sim/phy_CID4-10tr.RDS')
 ```
 
 ## Setting-up Q matrices for inference
@@ -325,8 +325,7 @@ print(ehe8)
 print(cid4-ehe8)
 
 # > print(cid4-ehe8)
-#  [1] 2.922985e-06 2.760492e-06 3.440786e-06 3.040528e-06 2.149453e-06 3.493703e-06 2.752414e-06 2.570285e-06 2.996501e-06
-# [10] 3.601493e-06
+# [1] 2.312997e-06 3.124771e-06 2.978048e-06 3.399846e-06 2.912895e-06 3.217663e-06 2.855278e-06 2.998213e-06 2.200219e-06 2.856476e-06
 ```
 
 

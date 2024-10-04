@@ -38,7 +38,7 @@ source('R/hiclasse/HiClaSSE_cpp.R') # fast implementation
 
 ```{r}
 NSIM = 10
-phy <- readRDS(file='R/data/phy_CID4.RDS')
+phy <- readRDS(file='R/data/sim/phy_CID4-10tr.RDS')
 ```
 
 ## Setting-up Q matrices for inference
@@ -1248,56 +1248,3 @@ ggplot(delta_values, aes(x = Delta, y = Value, label = sprintf("%.2e", Value))) 
 
 ```
 
-
-
-## !!!!!!!!
-
-## Lambda tensor Kronecker !!! DELETE
-
-```{r}
-Args <- list(
-  Nstates = 2L,
-  y = list(
-    c(0,0, 1,1),
-    c(0,0, 1,1)
-  ))
-
-newArgs <- makeArgs(Args)
-#printArgsGlobal()
-args <- argnames_HiClaSSE(2)
-args$arrays
-
-#lam=args$arrays$lam.tensor[[1]]
-lam=matrix(c(2,3,0,4),2,2,byrow = T)
-M=matrix(c(1,0,0,0),2,2,byrow = T)
-M1=matrix(c(0,0,0,1),2,2,byrow = T)
-amaSMM(lam, M)
-kronecker(lam, M)
-kronecker(lam, M1)
-
-args2 <- argnames_HiClaSSE(4)
-args2$arrays
-args2$arrays$lam.tensor[[2]]
-
-# $lam.tensor[[1]]
-#      [,1]     [,2]     [,3]     [,4]    
-# [1,] "lam000" "lamxxx" "lam002" "lamxxx"
-# [2,] "0"      "lamxxx" "lamxxx" "lamxxx"
-# [3,] "0"      "0"      "lam022" "lamxxx"
-# [4,] "0"      "0"      "0"      "lamxxx"
-
-# Define the arrays
-array1 <- list(
-  matrix(c(1, 2, 0, 3), nrow = 2, byrow = TRUE),
-  matrix(c(4, 5, 0, 6), nrow = 2, byrow = TRUE)
-)
-
-array2 <- list(
-  matrix(c(1, 0,0,0), nrow = 2, byrow = TRUE),
-  matrix(c(0,0,0, 1), nrow = 2, byrow = TRUE)
-)
-
-
-kronecker_3d(array1, array2)
-
-```

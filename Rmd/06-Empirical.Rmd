@@ -887,7 +887,7 @@ Args <- list(
 newArgs <- makeArgs(Args)
 #printArgsGlobal()
 args <- argnames_HiClaSSE(4)
-args$arrays
+#args$arrays
 #args$pars
 #length(args$pars)
 #reoder_lambdas(args$arrays, c(1,3, 2,4))
@@ -991,20 +991,6 @@ pars.hc['lam777'] <- 0.05
 
 pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <-0.1
 
-# Best0
-# Q_sem_best.t <- matrix(c(
-#   -4,  0,  1,  1,  1,  1,  0,  0,
-#    0, -4,  1,  1,  1,  1,  0,  0,
-#    1,  1, -4,  0,  0,  0,  1,  1,
-#    1,  1,  0, -4,  0,  0,  1,  1,
-#    1,  1,  0,  0, -4,  0,  1,  1,
-#    1,  1,  0,  0,  0, -4,  1,  1,
-#    0,  0,  1,  1,  1,  1, -4,  0,
-#    0,  0,  1,  1,  1,  1,  0, -4),
-#   nrow = 8, byrow = TRUE,
-#   dimnames = list(c("a0", "b0", "c0", "d0", "a1", "b1", "c1", "d1"), c("a0", "b0", "c0", "d0", "a1", "b1", "c1", "d1"))
-# )
-
 # Best
 Q_sem_best.t <- matrix(c(
   -4,  0,  1,  1,  1,  1,  0,  0,
@@ -1082,167 +1068,6 @@ SEM8$lnLik
 get_aic(SEM8$lnLik, 4)
 ```
 
-#### Gridy search for the best SEM (NOT INCLUDED)
-
-```{r eval=FALSE, include=FALSE}
-
-
-
-# Define blocks
-blocks <- list(
-  matrix(c(1, 1, 1, 0), 2, byrow = TRUE),
-  matrix(c(1, 1, 0, 0), 2, byrow = TRUE),
-  matrix(c(1, 0, 0, 0), 2, byrow = TRUE)
-  #matrix(c(0, 0, 0, 0), 2, byrow = TRUE)
-)
-
-# Define index
-index <- list(
-  matrix(c(1:2, 3:4,  1:2, 5:6,  1:2, 7:8), 3, 4, byrow = TRUE),
-  matrix(c(3:4, 1:2,  3:4, 7:8,  3:4, 5:6), 3, 4, byrow = TRUE),
-  matrix(c(5:6, 1:2,  5:6, 7:8,  5:6, 3:4), 3, 4, byrow = TRUE),
-  matrix(c(7:8, 3:4,  7:8, 5:6,  7:8, 1:2), 3, 4, byrow = TRUE)
-)
-
-# results
-best_Qs <- list()
-best_results <- list()
-
-# Initialize result list
-# Q_ehe8_C.r
-Qtmp <- Q_sem_best.t
-result <- list()
-
-# Iterate over index
-i=1
-for (i in c(4:1)) {
-  index.mat <- index[[i]]
-  
-  # Iterate over Q rows
-  # j=3
-  for (j in 1:nrow(index.mat)) {
-    cells <- index.mat[j, ]
-    # Update Qnew with block
-    Qnew <- Qtmp
-    # Iterate over precooked blocks
-    # bi=2
-    for (bi in 1:3) {
-      #print(paste('Working on tree: ',  SIM))
-      print(paste('matrix: ',  i, j, bi))
-      
-      # Make new Qnew
-      Qnew[cells[1:2], cells[3:4]] <- blocks[[bi]]
-      
-      # Make pars for inference
-      v=c(1,5,2,6, 3,7,4,8)
-      Qnew.r <- Qnew[v,v]
-      qs <- extract_off_diagonal(Qnew.r/10)
-      qsl=length(qs)
-      pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
-      zero.constr <- formulas_zero_pars(pars.hc)
-      f.qs <- assign_classes_pairwise(Qnew.r/10, args$arrays$Q)
-      
-      f.mu <- c(mu1 ~ mu0, mu2 ~ mu0, mu3 ~ mu0,  mu5 ~ mu4, mu6 ~ mu4, mu7 ~ mu4)
-      
-      f.lams <- c(  lam002 ~ lam000, lam022 ~ lam000,
-                    lam200 ~ lam000, lam202 ~ lam000, lam222 ~ lam000,
-                    lam111 ~ lam000, lam113 ~ lam000, lam133 ~ lam000,
-                    lam311 ~ lam000, lam313 ~ lam000, lam333 ~ lam000,
-                    lam555 ~ lam000, lam777 ~ lam000,
-                    #lam666 ~ lam000, 
-                    #lam444 ~ lam000,
-                    lam466 ~ lam000,
-                    lam604 ~ lam000
-        )
-      #
-      # f.lams <- c(  lam002 ~ q01, lam022 ~ q01,
-      #               lam200 ~ q01, lam202 ~ q01, lam222 ~ q01,
-      #               lam111 ~ q01, lam113 ~ q01, lam133 ~ q01,
-      #               lam311 ~ q01, lam313 ~ q01, lam333 ~ q01,
-      #               lam555 ~ q01, lam666 ~ q01, lam777 ~ q01,
-      #               lam444 ~ q01,
-      #               lam000 ~ q01
-      # )
-      
-      f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
-      
-      # Perform ML inference
-      lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
-      lik.const <- constrain(lik.c, formulae = f.list)
-      arg.const <- argnames(lik.const)
-      #CID4.given$par
-      starting.point <- pars.hc[arg.const]
-      
-      # starting.point[['lam000']] <-4.890879e-02
-      # starting.point[['mu0']] <- 3.656202e-02
-      # starting.point[['mu4']] <-5.875093e-05
-      # starting.point[4] <- 0.0005864678
-      
-      starting.point[['lam000']] <-0.3231599281
-      starting.point[['mu0']] <- 1.4947999228
-      starting.point[['mu4']] <-0.0287763212
-      starting.point[4] <- 0.0003463041 
-      
-      
-      mle <- find.mle(lik.const, starting.point, intermediates=F,  method="subplex", keep.func=F, root=ROOT.GIVEN,
-                       root.p=root8.cong,
-                       condition.surv=TRUE)
-      # mle$lnLik
-      # mle$par
-      # # Perform ML inference
-      # lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
-      # lik.const <- constrain(lik.c, formulae = f.list)
-      # arg.const <- argnames(lik.const)
-      # starting.point <- pars.hc[arg.const]
-      # mle <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
-      
-      # Store result
-      b_ind <- (j - 1) * 3 + bi
-      result[[b_ind]] <- mle
-      result[[b_ind]]$sim_index <- c(j, bi)
-      print(result[[b_ind]]$lnLik)
-    }
-  }
-  # Select best and update Qtmp
-  ln <- get_item(result, 'lnLik')
-  #ln
-  maxln <- which.max(ln)
-  
-  best <- result[[maxln]]
-  sim_index <- best$sim_index
-  cells <- index.mat[sim_index[1], ]
-  Qtmp[cells[1:2], cells[3:4]] <- blocks[[sim_index[2]]]
-}
-  #best_results[[SIM]] <- best
-  #best_Qs[[SIM]] <- Qtmp
-
-
-
-
-```
-
-```{r}
-# 
-# [1] -984.2505
-# [1] "matrix:  1 2 2"
-# [1] "Recoding: 0010 -> 0.9250.9250.9250.9250.9250.9250.9250.9250.07500.07500.07500.0750"
-# [1] "Recoding: 0001 -> 0.9250.9250.9250.9250.9250.9250.9250.92500.07500.07500.07500.075"
-
-result[[1]]$lnLik
-lapply(result, function(x) x$lnLik) %>% unlist
-
-ar <- pars_to_arrays(best$par.full, 8)
-Qpl <- names2array(ar, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))  %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
-Qpl <-Qpl$Q
-g <- create_graph_from_matrix(Qpl)
-unidirectional_edges <- is_unidirectional(g)
-plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
-
-#round(Qpl, 4)
-v=c(1,3,5,7, 2,4,6,8)
-round(Qpl, 4)[v,v]
-```
-
 
 ```{r}
 # a0 a1 b0 b1 c0 c1 d0 d1
@@ -1290,32 +1115,6 @@ plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirec
 ```
 
 
-
-
-
-
-
-#### Independent SEM (NOT INCLUDED)
-
-```{r eval=FALSE, include=FALSE}
-# trait
-Q4 <- initQ(c('a','b', 'c', 'd'), c(1, 1))
-
-# diversification regime
-Q2 <- initQ(c(0,1), c(1))
-
-Q8.r <- amaSMM(Q4, Q2)
-
-v=c(1,3,5,7, 2,4,6,8)
-Q8.t <- Q8.r[v,v]
-
-
-# Plot the graph
-g <- create_graph_from_matrix(Q8.t)
-unidirectional_edges <- is_unidirectional(g)
-plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
-
-```
 
 
 

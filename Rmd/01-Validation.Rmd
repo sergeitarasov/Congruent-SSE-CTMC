@@ -206,9 +206,6 @@ print(bisse-hiclasse)
 ## HiSSE4 and HiClaSSE4
 
 
-
-
-
 ### HiClaSSE4
 
 ```{r}

@@ -41,7 +41,7 @@ Read in data:
 
 ```{r}
 NSIM = 10
-phy <- readRDS(file='R/data/phy_CID4.RDS')
+phy <- readRDS(file='R/data/sim/phy_CID4-10tr.RDS')
 ```
 
 
@@ -124,8 +124,8 @@ for (i in 1:NSIM){
 
 Some helper function to assess the inference parameters
 ```{r}
-get_item(Misse2, 'lnLik')
-pars_to_arrays(Misse2[[1]]$par.full, 2)
+# get_item(Misse2, 'lnLik')
+# pars_to_arrays(Misse2[[1]]$par.full, 2)
 ```
 
 
@@ -142,9 +142,9 @@ Args <- list(
 newArgs <- makeArgs(Args)
 printArgsGlobal()
 args <- argnames_HiClaSSE(3)
-args
-args$pars
-length(args$pars)
+#args
+#args$pars
+#length(args$pars)
 
 Q30 <- Q3
 Q30 <- Q30[-4,-4]
@@ -198,9 +198,9 @@ for (i in 1:NSIM){
 
 Some helper function to assess the inference parameters
 ```{r}
-get_item(Misse3C, 'lnLik')
-#get_item(Misse2, 'lnLik')
-pars_to_arrays(Misse3C[[1]]$par.full, 3)
+# get_item(Misse3C, 'lnLik')
+# #get_item(Misse2, 'lnLik')
+# pars_to_arrays(Misse3C[[1]]$par.full, 3)
 ```
 
 
@@ -252,11 +252,11 @@ Args <- list(
   ))
 
 newArgs <- makeArgs(Args)
-printArgsGlobal()
+#printArgsGlobal()
 args <- argnames_HiClaSSE(3)
-args
-args$pars
-length(args$pars)
+# args
+# args$pars
+# length(args$pars)
 
 Q30 <- Q3
 Q30 <- Q30[-4,-4]
@@ -273,8 +273,8 @@ pars.hc['mu0'] <-pars.hc['mu1'] <-pars.hc['mu2'] <-0.1
 qs <- extract_off_diagonal(Q30)
 pars.hc[22:27] <- qs
 
-pars.hc
-pars_to_arrays(pars.hc, 3)
+# pars.hc
+# pars_to_arrays(pars.hc, 3)
 
 zero.constr <- formulas_zero_pars(pars.hc)
 f.qs <- c(q12 ~ q20, q01 ~ q20)
@@ -518,8 +518,8 @@ get_item(Misse2[1], 'par')
 get_item(Misse3C[1], 'par')
 get_item(Misse3[1], 'par')
 
-pars_to_arrays(Misse2[[1]]$par.full, 2)
-pars_to_arrays(Misse3C[[1]]$par.full, 3)
-pars_to_arrays(Misse3[[1]]$par.full, 3)
+# pars_to_arrays(Misse2[[1]]$par.full, 2)
+# pars_to_arrays(Misse3C[[1]]$par.full, 3)
+# pars_to_arrays(Misse3[[1]]$par.full, 3)
 ```
 
