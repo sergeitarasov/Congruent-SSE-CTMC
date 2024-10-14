@@ -694,62 +694,6 @@ library(dplyr)
 library(tidyr)  # Load tidyr package
 ```
 
-### Unique Q matrices
-
-A high number of unique Q matrices indicates that, by chance, a different model is almost always selected as the best.
-
-```{r}
-# 100 tips
-Q_100 <- readRDS( file='R/data/out/SEM/best_Qs-SEM8_phy_CID4-100tips-100tr.RDS')
-N_unique_Qs(Q_100)
-# [1] 92
-
-# 500 tips
-Q_500 <- readRDS( file='R/data/out/SEM/best_Qs-SEM8_phy_CID4-500tips-100tr.RDS')
-N_unique_Qs(Q_500)
-# [1] 86
-
-# 1000 tips
-Q_1000 <- readRDS( file='R/data/out/SEM/best_Qs-SEM8_phy_CID4-1000tips-100tr.RDS')
-N_unique_Qs(Q_1000)
-# [1] 68
-```
-### Checking if the selected models are irreducible and trait-dependent
-
-Checking if Qs are lumpable, if they are not lumpable,  it means they are irreducible models. In our analyses, all selected best models are irreducible.
-
-```{r}
-
-# all Qs are not lumpable: is_slumpable() -> False
-
-part_scheme=list(c(1, 2), c(3,4), c(5,6), c(7,8))
-lapply(Q_100, function(x) is_slumpable(x, part_scheme)) %>% unlist %>% any()
-lapply(Q_500, function(x) is_slumpable(x, part_scheme)) %>% unlist %>% any()
-lapply(Q_1000, function(x) is_slumpable(x, part_scheme)) %>% unlist %>% any()
-```
-
-All SEM models tested are trait-dependent due to their lambda tensor. However, we can also examine how many of the selected models have a Q matrix that implies trait-dependence as well. Note a small proportion of Qs in each analysis are trait-independent. However, typically these Q's imply that trait evolution is diversity-dependent though.
-
-```{r}
-
-# the function is_trait_INdependent() checks if Q is trait-INdependent
-lapply(Q_100, function(x) is_trait_INdependent(x)) %>% unlist %>% sum()
-lapply(Q_500, function(x) is_trait_INdependent(x)) %>% unlist %>% sum()
-lapply(Q_1000, function(x) is_trait_INdependent(x)) %>% unlist %>% sum()
-
-```
-
-### Plot Q's
-
-```{r}
-Qfocal <- Q_100[[1]]
-Qfocal
-# Plot the graph
-g <- create_graph_from_matrix(Qfocal)
-unidirectional_edges <- is_unidirectional(g)
-plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
-```
-
 ### Plot AIC results
 
 ```{r}
@@ -840,14 +784,14 @@ ECDF: Proportion of trials with dAIC > 2.
 
 ```
 
-Plot NOT all
+Plot
 
 ```{r}
 
 
 # Define linetypes for each group
 linetypes <- c("100 tips" = "dotted", "500 tips" = "dashed", "1000 tips" = "solid")
-colortypes <- c("100 tips" = "blue", "500 tips" = "green", "1000 tips" = "red")
+colortypes <- c("100 tips" = "#619CFF", "500 tips" = "#00BA38", "1000 tips" = "#F8766D")
 #linetypes <- c("100 tips" = "dotted", "500 tips" = "dashed")
 
 # Plot the ECDFs for each group with varying linetypes
@@ -888,3 +832,92 @@ ggsave("Figs/cdf-sem.png", plot = cdf_plot , width = 8.7, height = 5, units = "c
 ```
 
 
+
+### Unique Q matrices
+
+A high number of unique Q matrices indicates that, by chance, a different model is almost always selected as the best.
+
+```{r}
+# 100 tips
+Q_100 <- readRDS( file='R/data/out/SEM/best_Qs-SEM8_phy_CID4-100tips-100tr.RDS')
+N_unique_Qs(Q_100)
+# [1] 92
+
+# 500 tips
+Q_500 <- readRDS( file='R/data/out/SEM/best_Qs-SEM8_phy_CID4-500tips-100tr.RDS')
+N_unique_Qs(Q_500)
+# [1] 86
+
+# 1000 tips
+Q_1000 <- readRDS( file='R/data/out/SEM/best_Qs-SEM8_phy_CID4-1000tips-100tr.RDS')
+N_unique_Qs(Q_1000)
+# [1] 68
+```
+
+
+Here, we calculate proportions of unique Qs in models with dAIC >2 (SEM8 is preffered)
+
+```{r}
+#del.aic$t100, del.aic$t500, del.aic$t1000
+
+# 100 tips
+Q_100 <- readRDS( file='R/data/out/SEM/best_Qs-SEM8_phy_CID4-100tips-100tr.RDS')
+index=which(del.aic$t100 >2 )
+Q_selected=Q_100[index]
+Q_unique=N_unique_Qs(Q_selected)
+length(Q_selected)/length(Q_unique)
+
+# 500 tips
+Q_500 <- readRDS( file='R/data/out/SEM/best_Qs-SEM8_phy_CID4-500tips-100tr.RDS')
+index=which(del.aic$t500 >2 )
+Q_selected=Q_500[index]
+Q_unique=N_unique_Qs(Q_selected)
+length(Q_selected)/length(Q_unique)
+
+# 1000 tips
+Q_1000 <- readRDS( file='R/data/out/SEM/best_Qs-SEM8_phy_CID4-1000tips-100tr.RDS')
+index=which(del.aic$t1000 >2 )
+Q_selected=Q_1000[index]
+Q_unique=N_unique_Qs(Q_selected)
+length(Q_selected)/length(Q_unique)
+
+
+```
+
+
+
+### Checking if the selected models are irreducible and trait-dependent
+
+Checking if Qs are lumpable, if they are not lumpable,  it means they are irreducible models. In our analyses, all selected best models are irreducible.
+
+```{r}
+
+# all Qs are not lumpable: is_slumpable() -> False
+
+part_scheme=list(c(1, 2), c(3,4), c(5,6), c(7,8))
+lapply(Q_100, function(x) is_slumpable(x, part_scheme)) %>% unlist %>% any()
+lapply(Q_500, function(x) is_slumpable(x, part_scheme)) %>% unlist %>% any()
+lapply(Q_1000, function(x) is_slumpable(x, part_scheme)) %>% unlist %>% any()
+```
+
+All SEM models tested are trait-dependent due to their lambda tensor. However, we can also examine how many of the selected models have a Q matrix that implies trait-dependence as well. Note a small proportion of Qs in each analysis are trait-independent. However, typically these Q's imply that trait evolution is diversity-dependent though.
+
+```{r}
+
+# the function is_trait_INdependent() checks if Q is trait-INdependent
+lapply(Q_100, function(x) is_trait_INdependent(x)) %>% unlist %>% sum()
+lapply(Q_500, function(x) is_trait_INdependent(x)) %>% unlist %>% sum()
+lapply(Q_1000, function(x) is_trait_INdependent(x)) %>% unlist %>% sum()
+
+```
+
+### Plot Q's
+
+```{r}
+Qfocal <- Q_100[[1]]
+Qfocal
+# Plot the graph
+g <- create_graph_from_matrix(Qfocal)
+unidirectional_edges <- is_unidirectional(g)
+plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+```

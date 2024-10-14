@@ -47,6 +47,7 @@ tree <- phy
 is.ultrametric(tree)
 states <- as.numeric(dat$SSW)
 names(states) <- dat$Tip
+#which(states==1) %>% length
 ```
 
 ## Setting-up Q matrices for inference
@@ -827,7 +828,7 @@ plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirec
 ```
 
 
-### EHE
+### EHE25-C
 
 EHE models can have thousands of states, depending on the rounding of the original rates. In this example, we round the original rates to rounding to three decimal places, which results in EHE with 25 hidden states. This EHE is a close approximation to the original model as we will see given its similar likelihood value.
 
@@ -1169,12 +1170,13 @@ kable(estimates_tibble, "html", digits = 2) %>%
 
 simmap <- make.simmap(tree, states, model="SYM", nsim=1)
 # #7F7F7F
-cols<-setNames(c("#B2B2B2","#DF536B"), c("0","1"))
+#cols<-setNames(c("#B2B2B2","#DF536B"), c("0","1"))
+#cols<-setNames(c("#2D7600","#DF536B"), c("0","1"))
+cols<-setNames(c("#000000","#E65100"), c("0","1"))
 
-
-#png("Figs/Phasmatodea.png")
-plot(simmap, cols, type='fan', pts=F, ftype="off",lwd=4, outline=F)
-#dev.off()
+png("Figs/Phasmatodea.png")
+plot(simmap, cols, type='fan', pts=F, ftype="off",lwd=5, outline=F)
+dev.off()
 ```
 
 
