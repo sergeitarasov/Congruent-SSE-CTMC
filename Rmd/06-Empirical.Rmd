@@ -123,8 +123,11 @@ plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirec
 Q_cor8_C.t <- Q_cid8.t
 
 
-Q_cor8_C.t['b0', 'd0'] <- 0
-Q_cor8_C.t['b0', 'c0'] <- 0.1
+# Q_cor8_C.t['b0', 'd0'] <- 0
+# Q_cor8_C.t['b0', 'c0'] <- 0.1
+
+Q_cor8_C.t['b1', 'd1'] <- 0
+Q_cor8_C.t['b1', 'c1'] <- 0.1
 
 v=c(1,5, 2,6, 3,7, 4,8)
 Q_cor8_C.r <- Q_cor8_C.t[v,v]
@@ -147,8 +150,11 @@ plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirec
 # not congruent
 Q_cor8_NC.t <- Q_cid8.t
 
-Q_cor8_NC.t['b0', 'd0'] <- 0
-Q_cor8_NC.t['b0', 'c0'] <- 0
+# Q_cor8_NC.t['b0', 'd0'] <- 0
+# Q_cor8_NC.t['b0', 'c0'] <- 0
+
+Q_cor8_NC.t['b1', 'd1'] <- 0
+Q_cor8_NC.t['b1', 'c1'] <- 0
 
 v=c(1,5, 2,6, 3,7, 4,8)
 Q_cor8_NC.r <- Q_cor8_NC.t[v,v]
@@ -194,6 +200,19 @@ print(CID2.p$loglik)
 #2*5-2*CID2.p$loglik
 print(CID2.p$AIC)
 # 1986.766
+```
+
+### BiSSE
+
+```{r}
+#BiSSE Null Model (implemented in HiSSE)
+turnover.anc = c(1,1,0,0)
+eps.anc = c(1,1,0,0)
+trans.rates.bisse = TransMatMaker.old(hidden.states=FALSE)
+BiSSE.null.p <-  hisse.old(mytree.p, mydata.p.sse, f=c(0.075,0.075), hidden.states=FALSE,
+                           turnover.anc=turnover.anc, eps.anc=eps.anc, trans.rate=trans.rates.bisse, output.type = "raw")
+BiSSE.null.p
+# -991.0471
 ```
 
 
@@ -355,6 +374,47 @@ CID4.given2$lnLik
 # pars_to_arrays(pars.hc, 8)$Q[v,v]
 
 ```
+
+### CID2 (BiSSE)
+
+```{r}
+
+s1 <- 0.075
+s2 <- 0.075
+
+sam.fr2 = list(
+  c(1-s1, 1-s2,   s1, 0),
+  c(1-s1, 1-s2,   0, s2)
+)
+
+Args <- list(
+  Nstates = 2L,
+  y = sam.fr2)
+
+newArgs <- makeArgs(Args)
+args <- argnames_HiClaSSE(2)
+
+
+f.list<- c(lam001 ~ 0, lam011 ~ 0, lam100 ~ 0, lam101 ~ 0, lam111 ~ lam000, mu0 ~ mu1)
+
+lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+lik.const <- constrain(lik.c, formulae = f.list)
+starting.point <- c()
+starting.point['lam000'] <-0.1487245
+starting.point['mu1'] <-0.04179899
+starting.point['q01'] <- 0.001084268
+starting.point['q10'] <- 2.061154e-09
+
+
+CID2 <- find.mle(lik.const, starting.point, intermediates=F,  method="subplex", keep.func=F, root=ROOT.OBS,condition.surv=TRUE)
+CID2$lnLik
+#  -991.0454
+get_aic(CID2$lnLik, 4)
+# 1990.091
+
+```
+
+
 
 ### CID8
 
@@ -619,10 +679,10 @@ COR8_NC  <- find.mle(lik.const, starting.point, intermediates=F,  method="subple
                  root.p=root8.cong,
                  condition.surv=TRUE)
 COR8_NC$lnLik
-# -988.7989
+# -988.2076
 #COR8_NC$par
 get_aic(COR8_NC$lnLik, 5)
-# 1987.598
+# 1986.415
 ```
 
 
@@ -809,9 +869,9 @@ starting.point[['q01']] <- 0.001190693
 CLA8_NC <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root8.cong, condition.surv=TRUE)
 
 CLA8_NC$lnLik
-# -992.2101
+# -992.1789
 get_aic(CLA8_NC$lnLik, 5)
-# 1994.42
+# 1994.358
 #CLA8_NC$par
 ```
 
@@ -1063,9 +1123,8 @@ SEM8 <- find.mle(lik.const, starting.point, intermediates=F,  method="subplex", 
                  root.p=root8.cong,
                  condition.surv=TRUE)
 SEM8$lnLik
-#  -984.7164
-#SEM8$par
-#SEM8$par.full
+#  -984.2077
+
 get_aic(SEM8$lnLik, 4)
 ```
 
@@ -1119,7 +1178,6 @@ plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirec
 
 
 
-
 ## Results 
 
 ### Estimates
@@ -1133,10 +1191,11 @@ get_delta_aic <- function(aic_values) {
 
 # Create data frame with model names as rows and AIC values, Ln values, number of parameters, and delta AIC values as columns
 estimates <- data.frame(
-  Model = c("CID4", "CID8", "COR8-C", "CLA8-C", "COR8-NC", "CLA8-NC", "EHE", "SEM8"),
-  npars = c(5, 5, 5, 5, 5, 5, 3, 4),
-  Ln = c(CID4.given$lnLik, CID8$lnLik, COR8_C$lnLik, CLA8_C$lnLik, COR8_NC$lnLik, CLA8_NC$lnLik, EHE$lnLik, SEM8$lnLik),
+  Model = c("CID4", "CID2", "CID8", "COR8-C", "CLA8-C", "COR8-NC", "CLA8-NC", "EHE", "SEM8"),
+  npars = c(5, 4, 5, 5, 5, 5, 5, 3, 4),
+  Ln = c(CID4.given$lnLik, CID2$lnLik, CID8$lnLik, COR8_C$lnLik, CLA8_C$lnLik, COR8_NC$lnLik, CLA8_NC$lnLik, EHE$lnLik, SEM8$lnLik),
   AIC = c(get_aic(CID4.given$lnLik, 5), 
+          get_aic(CID2$lnLik, 4),
           get_aic(CID8$lnLik, 5), 
           get_aic(COR8_C$lnLik, 5), 
           get_aic(CLA8_C$lnLik, 5), 

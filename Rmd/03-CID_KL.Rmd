@@ -1,0 +1,854 @@
+---
+#title: " Congruence between independent and dependent SSEs"
+author: "Sergei Tarasov"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+params:
+  output_dir: "/output"
+---
+
+# CID is congruent to trait-dependent SSEs
+
+
+```{r,  include=FALSE}
+library(DT)
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(here)
+knitr::opts_knit$set(root.dir = here::here(), cache = TRUE)
+```
+
+```{r message=FALSE}
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ installations and dependencies  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+source('R/utils/dependencies.R')
+source('R/hiclasse/HiClaSSE-R.R') # pure R implementation of HiCLaSSE
+source('R/hiclasse/HiClaSSE_cpp.R') # fast implementation
+
+
+```
+
+## Read in data
+
+```{r}
+NSIM = 100
+#phy <- readRDS(file='R/data/sim/phy_CID4-500tips-100tr.RDS')
+files_base <- c('phy_CID4-100tips-100tr', 'phy_CID4-500tips-100tr', 'phy_CID4-1000tips-100tr')
+
+```
+
+
+
+## Setting-up Q matrices for inference
+
+### CID4
+
+```{r}
+# trait
+Q_t <- initQ(c(0,1), c(.1, .1))
+
+# diversification regime
+Q_r2 <- initQ(c('A','B'), c(.1,.1))
+
+
+# speciation rates for tracking the order
+La4 <- diag(c(-0.1,-0.05),2)
+La4 = La4 %x% diag(1,2)
+# order according to regimes
+Q_cid4.r <- amaSMM(Q_r2, Q_t)
+
+# order according to trait
+v=c(1,3, 2,4)
+Q_cid4.t <- Q_cid4.r[v,v]
+
+print(Q_cid4.r)
+print(La4)
+print(Q_cid4.t)
+print(La4[v,v])
+
+```
+
+
+
+### CID8 (congruent to CID4)
+
+```{r}
+# diversification regime
+#Q_r4 <- initQ(c('a','b', 'c', 'd'), c(.01,.01))
+
+Q_r4 <-amaSMM(Q_t, Q_t) 
+colnames(Q_r4) <- rownames(Q_r4) <- c('a','b', 'c', 'd')
+
+# speciation rates for tracking the order
+La8 <- diag(c(-0.1,-0.05),2)
+La8 = La8 %x% diag(1,4)
+
+# order according to regimes
+Q_cid8.r <- amaSMM(Q_r4, Q_t) 
+
+# order according to trait
+v=c(1,3,5,7, 2,4,6,8)
+Q_cid8.t <- Q_cid8.r[v,v]
+
+print(Q_cid8.r)
+print(La8)
+print(Q_cid8.t)
+print(La8[v,v])
+
+```
+### CID8-NC ++++
+
+```{r}
+# diversification regime
+Q_r4 <- initQ(c('a','b', 'c', 'd'), c(.1,.1))
+
+Q_r4[1,3] <- 0
+Q_r4[1,4] <- 0
+Q_r4[2,3] <- 0
+
+print(Q_r4)
+
+#Q_r4 <-amaSMM(Q_t, Q_t) 
+#colnames(Q_r4) <- rownames(Q_r4) <- c('a','b', 'c', 'd')
+
+
+# order according to regimes
+Q_cid8_NC.r <- amaSMM(Q_r4, Q_t) 
+
+# order according to trait
+v=c(1,3,5,7, 2,4,6,8)
+Q_cid8_NC.t <- Q_cid8_NC.r[v,v]
+
+print(Q_cid8_NC.r)
+print(Q_cid8_NC.t)
+
+```
+
+```{r}
+
+# Plot the graph
+g <- create_graph_from_matrix(Q_cid8_NC.t)
+unidirectional_edges <- is_unidirectional(g)
+plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+
+```
+
+
+### COR8-C (correlated evolution, congruent to CID4)
+
+```{r}
+# like CID8 but with correlation
+Q_cor8_C.t <- Q_cid8.t
+
+
+Q_cor8_C.t['b0', 'd0'] <- 0
+Q_cor8_C.t['b0', 'c0'] <- 0.1
+
+v=c(1,5, 2,6, 3,7, 4,8)
+Q_cor8_C.r <- Q_cor8_C.t[v,v]
+
+print(Q_cor8_C.r*10)
+#print(La8)
+print(Q_cor8_C.t*10)
+#print(La8[v,v])
+
+# Plot the graph
+g <- create_graph_from_matrix(Q_cor8_C.t)
+unidirectional_edges <- is_unidirectional(g)
+plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+
+```
+
+### COR8-NC (Correlated evolution, noncongruent to CID4)
+
+```{r}
+# not congruent
+Q_cor8_NC.t <- Q_cid8.t
+
+Q_cor8_NC.t['b0', 'd0'] <- 0
+Q_cor8_NC.t['b0', 'c0'] <- 0
+
+v=c(1,5, 2,6, 3,7, 4,8)
+Q_cor8_NC.r <- Q_cor8_NC.t[v,v]
+
+print(Q_cor8_NC.r*10)
+#print(La8)
+print(Q_cor8_NC.t*10)
+#print(La8[v,v])
+
+# Plot the graph
+g <- create_graph_from_matrix(Q_cor8_NC.t)
+unidirectional_edges <- is_unidirectional(g)
+plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+
+```
+
+
+## Maximum Likelihood. 
+
+### CID4: true model
+
+```{r}
+
+
+Args <- list(
+  Nstates = 4L,
+  y = list(
+    c(0,0,0,0, 1,0,1,0),
+    c(0,0,0,0, 0,1,0,1)
+  ))
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(4)
+#args$arrays
+#args$pars
+#length(args$pars)
+reoder_lambdas(args$arrays, c(1,3, 2,4))
+
+pars.hc <- rep(0, length(args$pars))
+names(pars.hc) <- args$pars
+pars.hc['lam000'] <- 0.1
+pars.hc['lam111'] <- 0.1
+pars.hc['lam222'] <- 0.05
+pars.hc['lam333'] <- 0.05
+pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <-0.1
+qs <- extract_off_diagonal(Q_cid4.r)
+qsl=length(qs)
+pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+
+#pars.hc
+#pars_to_arrays(pars.hc,4)
+#args
+
+zero.constr <- formulas_zero_pars(pars.hc)
+f.qs <- assign_classes_pairwise(Q_cid4.r, args$arrays$Q)
+f.mu <- c(mu1 ~ mu0, mu2 ~ mu0, mu3 ~ mu0)
+f.lams <- c(lam111 ~ lam000, lam333 ~ lam222)
+f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
+
+```
+
+Run inference
+
+```{r message=FALSE}
+
+#base="phy_CID4-100tips-100tr"
+for (base in files_base[1:3]){
+  file=file.path("R/data/sim", paste0(base, '.RDS'))
+  print(paste0('Reading file: ',file))
+  phy <- readRDS(file=file)
+
+  CID4 <- list()
+  #i=1
+  for (i in 1:NSIM){
+    print(paste0('Working on: ', i))
+    tree <- phy[[i]]
+    states<- tree$tip.state
+    states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+    root <- c(1/4, 1/4, 1/4, 1/4)
+    
+    lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+    lik.const <- constrain(lik.c, formulae = f.list)
+    arg.const <- argnames(lik.const)
+    starting.point <- pars.hc[arg.const]
+    starting.point['lam000'] <- 0.3
+    starting.point['lam222'] <- 0.1
+    starting.point['mu0'] <- 0.01
+    starting.point['q01'] <- 0.2
+    CID4[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
+  }
+  
+  file_out=paste0('R/data/out/topo-bridges/CID4-', base, '.RDS')
+  saveRDS(CID4, file= file_out)
+
+}
+
+```
+
+
+
+### CID8-NC 
+
+```{r}
+
+
+Args <- list(
+  Nstates = 8L,
+  y = list(
+    c(0,0,0,0,0,0,0,0, 1,0,1,0,1,0,1,0),
+    c(0,0,0,0,0,0,0,0, 0,1,0,1,0,1,0,1)
+  ))
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(8)
+#args$arrays
+#args$pars
+#length(args$pars)
+
+pars.hc <- rep(0, length(args$pars))
+names(pars.hc) <- args$pars
+pars.hc['lam000'] <- 0.1
+pars.hc['lam111'] <- 0.1
+pars.hc['lam222'] <- 0.1
+pars.hc['lam333'] <- 0.1
+pars.hc['lam444'] <- 0.05
+pars.hc['lam555'] <- 0.05
+pars.hc['lam666'] <- 0.05
+pars.hc['lam777'] <- 0.05
+pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <-0.1
+qs <- extract_off_diagonal(Q_cid8_NC.r)
+qsl=length(qs)
+#unique(qs)
+pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+
+#pars.hc
+#pars_to_arrays(pars.hc,8)
+#args
+
+zero.constr <- formulas_zero_pars(pars.hc)
+f.qs <- assign_classes_pairwise(Q_cid8_NC.r, args$arrays$Q)
+f.mu <- c(mu1 ~ mu0, mu2 ~ mu0, mu3 ~ mu0, mu4 ~ mu0, mu5 ~ mu0, mu6 ~ mu0, mu7 ~ mu0)
+f.lams <- c(lam111 ~ lam000, lam222 ~ lam000, lam333 ~ lam000,   
+            lam555 ~ lam444, lam666 ~ lam444, lam777 ~ lam444)
+f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
+
+```
+
+
+
+Run inference
+
+```{r}
+for (base in files_base[1:3]){
+  file=file.path("R/data/sim", paste0(base, '.RDS'))
+  print(paste0('Reading file: ',file))
+  phy <- readRDS(file=file)
+  
+  CID8_NC <- list()
+  i=1
+  for (i in 1:NSIM){
+    print(paste0('Working on: ', i))
+    tree <- phy[[i]]
+    states<- tree$tip.state
+    states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+    root <- rep(1/8, 8)
+    
+    lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+    lik.const <- constrain(lik.c, formulae = f.list)
+    arg.const <- argnames(lik.const)
+    starting.point <- pars.hc[arg.const]
+    #starting.point <- pars.hc[arg.const]
+    starting.point['lam000'] <- 0.3
+    starting.point['lam444'] <- 0.1
+    starting.point['mu0'] <- 0.01
+    starting.point['q01'] <- 0.1
+    
+    CID8_NC[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
+  }
+  
+  file_out=paste0('R/data/out/topo-bridges/CID8_NC-', base, '.RDS')
+  saveRDS(CID8_NC, file= file_out)
+
+}
+```
+
+
+### CID8a-NC
+
+```{r}
+
+
+Args <- list(
+  Nstates = 8L,
+  y = list(
+    c(0,0,0,0,0,0,0,0, 1,0,1,0,1,0,1,0),
+    c(0,0,0,0,0,0,0,0, 0,1,0,1,0,1,0,1)
+  ))
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(8)
+#args$arrays
+#args$pars
+#length(args$pars)
+
+pars.hc <- rep(0, length(args$pars))
+names(pars.hc) <- args$pars
+pars.hc['lam000'] <- 0.1
+pars.hc['lam111'] <- 0.1
+pars.hc['lam222'] <- 0.1
+pars.hc['lam333'] <- 0.1
+
+pars.hc['lam204'] <- 0.1
+pars.hc['lam315'] <- 0.1
+
+pars.hc['lam444'] <- 0.05
+pars.hc['lam555'] <- 0.05
+pars.hc['lam666'] <- 0.05
+pars.hc['lam777'] <- 0.05
+
+# pars.hc['lam602'] <- 0.05
+# pars.hc['lam713'] <- 0.05
+
+pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <-0.1
+qs <- extract_off_diagonal(Q_cid8_NC.r)
+qsl=length(qs)
+#unique(qs)
+pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+
+#pars.hc
+#pars_to_arrays(pars.hc,8)
+#args
+
+zero.constr <- formulas_zero_pars(pars.hc)
+f.qs <- assign_classes_pairwise(Q_cid8_NC.r, args$arrays$Q)
+f.mu <- c(mu1 ~ mu0, mu2 ~ mu0, mu3 ~ mu0, mu4 ~ mu0, mu5 ~ mu0, mu6 ~ mu0, mu7 ~ mu0)
+f.lams <- c(lam111 ~ lam000, lam222 ~ lam000, lam333 ~ lam000, 
+            lam204 ~ lam000, lam315 ~ lam000,
+            #lam602 ~ lam444, lam713 ~ lam444,
+            lam555 ~ lam444, lam666 ~ lam444, lam777 ~ lam444)
+f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
+
+```
+
+Let's check the model rates
+```{r}
+# a0 a1 b0 b1 c0 c1 d0 d1
+ar=names2array(args$arrays, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))
+ar.re=reoder_lambdas(ar, c(1,3,5,7, 2,4,6,8))
+#ar.re$lam.tensor
+
+
+# rates that will be used to setup model
+element <- c( 
+             'lam204',
+             'lam315',
+             'lam602',
+             'lam713'
+             )
+find_elements(ar.re$lam.tensor, element)
+```
+
+Run inference
+
+```{r}
+for (base in files_base[1:3]){
+  file=file.path("R/data/sim", paste0(base, '.RDS'))
+  print(paste0('Reading file: ',file))
+  phy <- readRDS(file=file)
+
+  CID8a_NC <- list()
+  #i=1
+  for (i in 1:NSIM){
+    print(paste0('Working on: ', i))
+    tree <- phy[[i]]
+    states<- tree$tip.state
+    states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+    root <- rep(1/8, 8)
+    
+    lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+    lik.const <- constrain(lik.c, formulae = f.list)
+    arg.const <- argnames(lik.const)
+    starting.point <- pars.hc[arg.const]
+    #starting.point <- pars.hc[arg.const]
+    starting.point['lam000'] <- 0.3
+    starting.point['lam444'] <- 0.1
+    starting.point['mu0'] <- 0.01
+    starting.point['q01'] <- 0.1
+    
+    CID8a_NC[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
+  }
+  
+  file_out=paste0('R/data/out/topo-bridges/CID8a_NC', base, '.RDS')
+  saveRDS(CID4, file= file_out)
+
+}
+```
+
+
+
+### COR8-C
+
+```{r}
+
+
+Args <- list(
+  Nstates = 8L,
+  y = list(
+    c(0,0,0,0,0,0,0,0, 1,0,1,0,1,0,1,0),
+    c(0,0,0,0,0,0,0,0, 0,1,0,1,0,1,0,1)
+  ))
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(8)
+#args
+#args$pars
+#length(args$pars)
+
+pars.hc <- rep(0, length(args$pars))
+names(pars.hc) <- args$pars
+pars.hc['lam000'] <- 0.1
+pars.hc['lam111'] <- 0.1
+pars.hc['lam222'] <- 0.1
+pars.hc['lam333'] <- 0.1
+pars.hc['lam444'] <- 0.05
+pars.hc['lam555'] <- 0.05
+pars.hc['lam666'] <- 0.05
+pars.hc['lam777'] <- 0.05
+pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <-0.1
+qs <- extract_off_diagonal(Q_cor8_C.r)
+qsl=length(qs)
+pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+
+#pars.hc
+#pars_to_arrays(pars.hc,8)
+#args
+
+zero.constr <- formulas_zero_pars(pars.hc)
+f.qs <- assign_classes_pairwise(Q_cor8_C.r, args$arrays$Q)
+f.mu <- c(mu1 ~ mu0, mu2 ~ mu0, mu3 ~ mu0, mu4 ~ mu0, mu5 ~ mu0, mu6 ~ mu0, mu7 ~ mu0)
+f.lams <- c(lam111 ~ lam000, lam222 ~ lam000, lam333 ~ lam000,   
+            lam555 ~ lam444, lam666 ~ lam444, lam777 ~ lam444)
+f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
+
+```
+
+
+
+Run inference
+
+```{r}
+for (base in files_base[1:3]){
+  file=file.path("R/data/sim", paste0(base, '.RDS'))
+  print(paste0('Reading file: ',file))
+  phy <- readRDS(file=file)
+  
+  COR8_C <- list()
+  i=1
+  for (i in 1:NSIM){
+    print(paste0('Working on: ', i))
+    tree <- phy[[i]]
+    states<- tree$tip.state
+    states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+    root <- rep(1/8, 8)
+    
+    lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+    lik.const <- constrain(lik.c, formulae = f.list)
+    arg.const <- argnames(lik.const)
+    starting.point <- pars.hc[arg.const]
+    starting.point['lam000'] <- 0.3
+    starting.point['lam444'] <- 0.1
+    starting.point['mu0'] <- 0.01
+    starting.point['q01'] <- 0.2
+    COR8_C[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
+  }
+  
+  file_out=paste0('R/data/out/topo-bridges/COR8_C-', base, '.RDS')
+  saveRDS(COR8_C, file= file_out)
+
+}
+
+
+```
+
+
+
+### COR8-NC
+
+```{r}
+
+
+Args <- list(
+  Nstates = 8L,
+  y = list(
+    c(0,0,0,0,0,0,0,0, 1,0,1,0,1,0,1,0),
+    c(0,0,0,0,0,0,0,0, 0,1,0,1,0,1,0,1)
+  ))
+
+newArgs <- makeArgs(Args)
+#printArgsGlobal()
+args <- argnames_HiClaSSE(8)
+#args
+#args$pars
+#length(args$pars)
+
+pars.hc <- rep(0, length(args$pars))
+names(pars.hc) <- args$pars
+pars.hc['lam000'] <- 0.1
+pars.hc['lam111'] <- 0.1
+pars.hc['lam222'] <- 0.1
+pars.hc['lam333'] <- 0.1
+pars.hc['lam444'] <- 0.05
+pars.hc['lam555'] <- 0.05
+pars.hc['lam666'] <- 0.05
+pars.hc['lam777'] <- 0.05
+pars.hc['mu0'] <-pars.hc['mu1'] <- pars.hc['mu2'] <- pars.hc['mu3'] <- pars.hc['mu4']<- pars.hc['mu5']<- pars.hc['mu6']<- pars.hc['mu7'] <-0.1
+qs <- extract_off_diagonal(Q_cor8_NC.r)
+qsl=length(qs)
+pars.hc[c(length(pars.hc)-qsl+1):length(pars.hc)] <- qs
+
+#pars.hc
+#pars_to_arrays(pars.hc,8)
+#args
+
+zero.constr <- formulas_zero_pars(pars.hc)
+f.qs <- assign_classes_pairwise(Q_cor8_NC.r, args$arrays$Q)
+f.mu <- c(mu1 ~ mu0, mu2 ~ mu0, mu3 ~ mu0, mu4 ~ mu0, mu5 ~ mu0, mu6 ~ mu0, mu7 ~ mu0)
+f.lams <- c(lam111 ~ lam000, lam222 ~ lam000, lam333 ~ lam000,   
+            lam555 ~ lam444, lam666 ~ lam444, lam777 ~ lam444)
+f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
+
+```
+
+Run inference
+
+```{r}
+for (base in files_base[1:3]){
+  file=file.path("R/data/sim", paste0(base, '.RDS'))
+  print(paste0('Reading file: ',file))
+  phy <- readRDS(file=file)
+  
+  COR8_NC <- list()
+  i=1
+  for (i in 1:NSIM){
+    print(paste0('Working on: ', i))
+    tree <- phy[[i]]
+    states<- tree$tip.state
+    states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
+    root <- rep(1/8, 8)
+    
+    lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
+    lik.const <- constrain(lik.c, formulae = f.list)
+    arg.const <- argnames(lik.const)
+    # starting.point <- pars.hc[arg.const]
+    starting.point <- get_item(COR8_C[i], 'par')
+    COR8_NC[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
+  }
+  
+  file_out=paste0('R/data/out/topo-bridges/COR8_NC-', base, '.RDS')
+  saveRDS(COR8_NC, file= file_out)
+
+}
+```
+
+
+
+## Results
+
+```{r}
+# get_item(CID4, 'lnLik')
+# #get_item(CID8, 'lnLik')
+# get_item(COR8_NC, 'lnLik')
+# get_item(CID8[1], 'par')
+#pars_to_arrays(COR8_NC[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+
+get_item(CID4, 'lnLik') %>% mean()
+get_item(CID8, 'lnLik') %>% mean()
+get_item(COR8_C, 'lnLik') %>% mean()
+get_item(CID8_NC, 'lnLik') %>% mean()
+get_item(CID8cl_NC , 'lnLik') %>% mean()
+get_item(COR8_NC, 'lnLik') %>% mean()
+# [1] -304.7515
+# [1] -304.7515
+# [1] -304.7515
+# [1] -304.7844
+# [1] -304.8106
+
+# [1] -304.7515
+# [1] -304.7515
+# [1] -304.7515
+# [1] -304.8702
+# [1] -304.8106
+
+#[1] -305.2818
+```
+```{r}
+get_item(CID4, 'lnLik') %>% get_aic(., 4) %>% mean()
+get_item(CID8, 'lnLik') %>% get_aic(., 4) %>% mean()
+get_item(COR8_C, 'lnLik') %>% get_aic(., 4) %>% mean()
+get_item(CID8_NC, 'lnLik') %>% get_aic(., 4) %>% mean()
+get_item(CID8cl_NC , 'lnLik') %>% get_aic(., 4) %>% mean()
+get_item(COR8_NC, 'lnLik') %>% get_aic(., 4) %>% mean()
+
+
+# 3120.353
+# 3120.709
+# 
+# 3122.331
+# 3125.625
+```
+```{r}
+get_item(CID4, 'lnLik') %>% get_aic(., 4) %>% mean()
+get_item(COR8_C, 'lnLik') %>% get_aic(., 4) %>% mean()
+
+get_item(CID8_NC, 'lnLik') %>% get_aic(., 4) %>% mean()
+get_item(CID8cl_NC , 'lnLik') %>% get_aic(., 4) %>% mean()
+
+```
+```{r}
+3120.709 - 3120.353 
+3122.331 - 3120.353
+3125.625 - 3120.353
+```
+
+
+
+```{r}
+
+hist(get_item(COR8_NC, 'lnLik'), col='red', breaks=30)
+hist(get_item(CID8_NC, 'lnLik'), col = rgb(0, 0, 1, 0.5), add = TRUE, breaks=30)
+```
+```{r}
+hist(get_item(COR8_NC, 'lnLik') - get_item(CID8_NC, 'lnLik'), breaks=30)
+
+```
+
+
+
+#----------------------------
+
+
+
+
+
+<!-- ## Results  -->
+
+<!-- ### Inferences using parameters from CID4 -->
+
+<!-- #### Likelihood table -->
+
+<!-- ```{r} -->
+
+
+<!-- cid4 = get_item(CID4, 'lnLik') -->
+
+<!-- cor.pars <- tibble( -->
+<!-- "N" = c(1:NSIM), -->
+<!-- "cid4" = cid4, -->
+<!-- "CID8.pars"= CID8.pars %>% unlist, -->
+<!-- "COR8-C.pars"= COR8_C.pars %>% unlist, -->
+<!-- "CLA8-C.pars" = CLA8_C.pars %>% unlist, -->
+<!-- "COR8-NC.pars" = COR8_NC.pars %>% unlist, -->
+<!-- "CLA8-NC.pars" = CLA8_NC.pars %>% unlist, -->
+<!-- ) -->
+
+<!-- kable(cor.pars, "html") %>% -->
+<!--   kable_styling(bootstrap_options = c("striped", "hover")) -->
+<!-- ``` -->
+
+
+<!-- #### Mean absolute error -->
+
+<!-- ```{r} -->
+
+<!-- dcor.pars <- tibble( -->
+<!-- "cid4" = cid4, -->
+<!-- "CID8.pars"= CID8.pars %>% unlist, -->
+<!-- "COR8-C.pars"= COR8_C.pars %>% unlist, -->
+<!-- "CLA8-C.pars" = CLA8_C.pars %>% unlist, -->
+<!-- "COR8-NC.pars" = COR8_NC.pars %>% unlist, -->
+<!-- "CLA8-NC.pars" = CLA8_NC.pars %>% unlist, -->
+<!-- ) -->
+<!-- cid4t <- cid4 -->
+<!-- dcor.pars <- dcor.pars %>% -->
+<!--   mutate_all(~ abs(cid4t - .) ) -->
+
+<!-- column_means <- dcor.pars %>% -->
+<!--   summarise_all(~ mean(.)) -->
+
+<!-- # Data -->
+<!-- delta_values <- tibble( -->
+<!--   Delta = names(column_means), -->
+<!--   Value = column_means %>% slice(1) %>% unlist() -->
+<!-- ) -->
+
+<!-- kable(column_means, "html") %>% -->
+<!--   kable_styling(bootstrap_options = c("striped", "hover")) -->
+
+<!-- # Create the plot -->
+<!-- ggplot(delta_values, aes(x = Delta, y = Value, label = sprintf("%.2e", Value))) + -->
+<!--   geom_col(fill = c("blue", "blue", "blue", "blue", "red",  "red")) + -->
+<!--   geom_text(vjust = -0.5, angle = 45) + -->
+<!--   labs(title = "Comparison of Ln Differences", x = "Deltas", y = "Magnitude") + -->
+<!--   theme_minimal() -->
+
+
+<!-- ``` -->
+
+<!-- ### Maximum Likelihood estimates -->
+
+<!-- #### Likelihood table -->
+
+<!-- ```{r} -->
+
+<!-- cor.pars <- tibble( -->
+<!-- "N" = c(1:NSIM), -->
+<!-- "cid4" = cid4, -->
+<!-- "CID8"= get_item(CID8, 'lnLik'), -->
+<!-- "COR8-C"= get_item(COR8_C, 'lnLik'), -->
+<!-- "CLA8-C" = get_item(CLA8_C, 'lnLik'), -->
+<!-- "COR8-NC" = get_item(COR8_NC, 'lnLik'), -->
+<!-- "CLA8-NC" = append(get_item(CLA8_NC, 'lnLik'), NA, after=3), -->
+<!-- ) -->
+
+<!-- kable(cor.pars, "html") %>% -->
+<!--   kable_styling(bootstrap_options = c("striped", "hover")) -->
+<!-- ``` -->
+
+
+<!-- #### Mean absolute error -->
+
+<!-- ```{r} -->
+
+<!-- dcor.pars <- tibble( -->
+<!-- "cid4" = cid4, -->
+<!-- "CID8"= get_item(CID8, 'lnLik'), -->
+<!-- "COR8-C"= get_item(COR8_C, 'lnLik'), -->
+<!-- "CLA8-C" = get_item(CLA8_C, 'lnLik'), -->
+<!-- "COR8-NC" = get_item(COR8_NC, 'lnLik'), -->
+<!-- "CLA8-NC" = append(get_item(CLA8_NC, 'lnLik'), NA, after=3), -->
+<!-- ) -->
+
+<!-- # dcor.pars <- tibble( -->
+<!-- # "cid4" = cid4, -->
+<!-- # "CID8.pars"= CID8.pars %>% unlist, -->
+<!-- # "COR8-C.pars"= COR8_C.pars %>% unlist, -->
+<!-- # "CLA8-C.pars" = CLA8_C.pars %>% unlist, -->
+<!-- # "COR8-NC.pars" = COR8_NC.pars %>% unlist, -->
+<!-- # "CLA8-NC.pars" = CLA8_NC.pars %>% unlist, -->
+<!-- # ) -->
+<!-- cid4t <- cid4 -->
+<!-- dcor.pars <- dcor.pars %>% -->
+<!--   mutate_all(~ abs(cid4t - .) ) -->
+
+<!-- column_means <- dcor.pars %>% -->
+<!--   summarise_all(~ mean(., na.rm = TRUE)) -->
+
+<!-- # Data -->
+<!-- delta_values <- tibble( -->
+<!--   Delta = names(column_means), -->
+<!--   Value = column_means %>% slice(1) %>% unlist() -->
+<!-- ) -->
+
+<!-- kable(column_means, "html") %>% -->
+<!--   kable_styling(bootstrap_options = c("striped", "hover")) -->
+
+<!-- # Create the plot -->
+<!-- ggplot(delta_values, aes(x = Delta, y = Value, label = sprintf("%.2e", Value))) + -->
+<!--   geom_col(fill = c("blue", "blue", "blue", "blue", "red",  "red")) + -->
+<!--   geom_text(vjust = -0.5, angle = 45) + -->
+<!--   labs(title = "Comparison of Ln Differences", x = "Deltas", y = "Magnitude") + -->
+<!--   theme_minimal() -->
+
+
+<!-- ``` -->
+

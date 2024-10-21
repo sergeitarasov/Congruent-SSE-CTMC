@@ -504,6 +504,10 @@ get_aic <- function(vec, npar){
   2*npar - 2*vec
 }
 
+get_bic <- function(vec, npar, N){
+  npar*log(N) - 2*vec
+}
+
 #X=pars.hc
 formulas_zero_pars <- function(X) {
   # Find the names of the entities that have a value of 0

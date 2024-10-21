@@ -62,8 +62,8 @@ print(La4[v,v])
 ## Set up
 
 ```{r}
-NSIM=100 # N of trees to simulate
-max.taxa = 5
+NSIM=1 # N of trees to simulate
+max.taxa = 100
 ```
 
 
@@ -98,7 +98,7 @@ for (i in 1:NSIM){
 }
 
 #phy[[1]]$tip.state
-plot(phy[[2]])
+plot(phy[[1]])
 
 which(is.na(phy))
 #saveRDS(phy, file='R/data/sim/p-10tr.RDS')
@@ -164,4 +164,53 @@ for (i in 1:NSIM){
 #phy <- readRDS(file='R/data/sim/phy_CID4-100tips-100tr.RDS')
 ```
 
+## Read in data
+
+```{r}
+NSIM = 10
+#phy <- readRDS(file='R/data/sim/phy_CID4-10tr.RDS')
+phy <- readRDS(file='R/data/sim/phy_CID4-100tips-100tr.RDS')
+phy <- phy[1:10]
+```
+
+
+
 # Inference
+
+```{r}
+
+tree <- phy[[1]]
+
+trans.rates = TransMatMaker.old(hidden.states=TRUE)
+trans.rates.nodual = ParDrop(trans.rates, c(3,5,8,10))
+#setting all transition rates equal
+trans.rates.nodual.allequal = ParEqual(trans.rates.nodual, c(1,2,1,3,1,4,1,5,1,6,1,7,1,8))
+trans.rates.nodual.allequal
+
+turnover.anc = c(1,1,2,2)
+eps.anc = c(1,1,2,2)
+#--------------------------------
+mytree.p <- tree
+mydata.p.sse <- dat
+
+#CID-2 Model
+turnover.anc = c(1,1,2,2)
+eps.anc = c(1,1,2,2)
+#full 8 transition model
+trans.rates = TransMatMaker.old(hidden.states=TRUE)
+trans.rates.nodual = ParDrop(trans.rates, c(3,5,8,10))
+#setting all transition rates equal
+trans.rates.nodual.allequal = ParEqual(trans.rates.nodual, c(1,2,1,3,1,4,1,5,1,6,1,7,1,8))
+trans.rates.nodual.allequal
+CID2.p <-  hisse.old(mytree.p, mydata.p.sse, f=c(1,1), hidden.states=TRUE, turnover.anc=turnover.anc, eps.anc=eps.anc, trans.rate=trans.rates.nodual.allequal,output.type="raw")
+
+print(CID2.p$loglik)
+#-988.3828
+
+#2*5-2*CID2.p$loglik
+print(CID2.p$AIC)
+# 1986.766
+```
+
+
+
