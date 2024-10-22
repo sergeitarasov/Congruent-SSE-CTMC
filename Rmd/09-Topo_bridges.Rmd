@@ -692,8 +692,10 @@ aic=rbind(t100=t100, t500=t500, t1000=t1000)
 daic=apply(aic, 2, function(x) x-aic[,1]) %>% round(., 3)
 
 ```
+
+### dAIC is a proxy to relative KL divergence
 ```{r}
-# dAIC is a proxy to relative KL divergence
+
 print(daic)
 ```
 
