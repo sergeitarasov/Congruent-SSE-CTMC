@@ -10,14 +10,16 @@ Tarasov, S. and Uyeda, J., 2024. Nonidentifiability of state-dependent diversifi
 ## Quick start guide
 
 
-- `Report.zip` is the main file to see the reports for all simulation performed by the study. This file is the zipped version of the `Report` folder. You need to download it, unzip it and click on index.html to browse through the reports. It contains the following sections:
-  - Setting-up HiClaSSE
-  - Validation of HiClaSSE
-  - MiSSE Congruence
-  - Congruence between independent and dependent SSEs
-  - Equal Rate Hidden Expansion (EHE)
-  - Semi-congruent Behavior
-  - Congruence under varying Sampling Fraction
+- `Report` is the main directory to see the reports for all simulation performed by the study. It contains the following sections:
+  - 01-Validation.Rmd
+  - 02-MiSSE.Rmd
+  - 03-CID.Rmd
+  - 04-EHE.Rmd
+  - 05-Semi_Congruent.Rmd
+  - 06-Empirical.Rmd 
+  - 07-Sampling_Fraction.Rmd
+  - 08-Sim_Data.Rmd
+  - 09-Topo_bridges.Rmd
 - `Rmd` contains the code to reprodice the reports and simulation.
 - `R` contains necessary R functions.
   - `/R/hiclasse/src/` includes C code for HiClaSSE ODEs.
