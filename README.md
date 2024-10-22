@@ -10,16 +10,16 @@ Tarasov, S. and Uyeda, J., 2024. Nonidentifiability of state-dependent diversifi
 ## Quick start guide
 
 
-- `Report` is the main directory to see the reports for all simulation performed by the study. It contains the following sections:
-  - 01-Validation.Rmd
-  - 02-MiSSE.Rmd
-  - 03-CID.Rmd
-  - 04-EHE.Rmd
-  - 05-Semi_Congruent.Rmd
-  - 06-Empirical.Rmd 
-  - 07-Sampling_Fraction.Rmd
-  - 08-Sim_Data.Rmd
-  - 09-Topo_bridges.Rmd
+- `Report` is the main directory to see the html reports for all simulation performed by the study. It contains the following sections:
+  - 01-Validation.html
+  - 02-MiSSE.html
+  - 03-CID.html
+  - 04-EHE.html
+  - 05-Semi_Congruent.html
+  - 06-Empirical.html
+  - 07-Sampling_Fraction.html
+  - 08-Sim_Data.html
+  - 09-Topo_bridges.html
 - `Rmd` contains the code to reprodice the reports and simulation.
 - `R` contains necessary R functions.
   - `/R/hiclasse/src/` includes C code for HiClaSSE ODEs.
