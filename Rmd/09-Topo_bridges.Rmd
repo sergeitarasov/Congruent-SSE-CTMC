@@ -9,7 +9,9 @@ params:
   output_dir: "/output"
 ---
 
-# CID is congruent to trait-dependent SSEs
+# Topological Bridges
+
+Here, we show that CID4 may be probabilistically closer to irreducible trait-dependent models than to other irreducible CID models.
 
 
 ```{r,  include=FALSE}
@@ -102,7 +104,7 @@ print(Q_cid8.t)
 print(La8[v,v])
 
 ```
-### CID8-NC ++++
+### CID8-NC
 
 ```{r}
 # diversification regime
@@ -130,7 +132,7 @@ print(Q_cid8_NC.t)
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 
 # Plot the graph
 g <- create_graph_from_matrix(Q_cid8_NC.t)
@@ -142,7 +144,7 @@ plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirec
 
 ### COR8-C (correlated evolution, congruent to CID4)
 
-```{r}
+```{r, eval=FALSE}
 # like CID8 but with correlation
 Q_cor8_C.t <- Q_cid8.t
 
@@ -167,7 +169,7 @@ plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirec
 
 ### COR8-NC (Correlated evolution, noncongruent to CID4)
 
-```{r}
+```{r, eval=FALSE}
 # not congruent
 Q_cor8_NC.t <- Q_cid8.t
 
@@ -194,7 +196,7 @@ plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirec
 
 ### CID4: true model
 
-```{r}
+```{r, eval=FALSE}
 
 
 Args <- list(
@@ -237,7 +239,7 @@ f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
 
 Run inference
 
-```{r message=FALSE}
+```{r message=FALSE, eval=FALSE}
 
 #base="phy_CID4-100tips-100tr"
 for (base in files_base[1:3]){
@@ -276,7 +278,7 @@ for (base in files_base[1:3]){
 
 ### CID8-NC 
 
-```{r}
+```{r, eval=FALSE}
 
 
 Args <- list(
@@ -326,7 +328,7 @@ f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
 
 Run inference
 
-```{r}
+```{r, eval=FALSE}
 for (base in files_base[1:3]){
   file=file.path("R/data/sim", paste0(base, '.RDS'))
   print(paste0('Reading file: ',file))
@@ -420,7 +422,7 @@ f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
 ```
 
 Let's check the model rates
-```{r}
+```{r, eval=FALSE}
 # a0 a1 b0 b1 c0 c1 d0 d1
 ar=names2array(args$arrays, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))
 ar.re=reoder_lambdas(ar, c(1,3,5,7, 2,4,6,8))
@@ -439,7 +441,7 @@ find_elements(ar.re$lam.tensor, element)
 
 Run inference
 
-```{r}
+```{r, eval=FALSE}
 for (base in files_base[1:3]){
   file=file.path("R/data/sim", paste0(base, '.RDS'))
   print(paste0('Reading file: ',file))
@@ -467,8 +469,8 @@ for (base in files_base[1:3]){
     CID8a_NC[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
   }
   
-  file_out=paste0('R/data/out/topo-bridges/CID8a_NC', base, '.RDS')
-  saveRDS(CID4, file= file_out)
+  file_out=paste0('R/data/out/topo-bridges/CID8a_NC-', base, '.RDS')
+  saveRDS(CID8a_NC, file= file_out)
 
 }
 ```
@@ -477,7 +479,7 @@ for (base in files_base[1:3]){
 
 ### COR8-C
 
-```{r}
+```{r, eval=FALSE}
 
 
 Args <- list(
@@ -526,7 +528,7 @@ f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
 
 Run inference
 
-```{r}
+```{r, eval=FALSE}
 for (base in files_base[1:3]){
   file=file.path("R/data/sim", paste0(base, '.RDS'))
   print(paste0('Reading file: ',file))
@@ -611,7 +613,7 @@ f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
 
 Run inference
 
-```{r}
+```{r, eval=FALSE}
 for (base in files_base[1:3]){
   file=file.path("R/data/sim", paste0(base, '.RDS'))
   print(paste0('Reading file: ',file))
@@ -645,210 +647,56 @@ for (base in files_base[1:3]){
 ## Results
 
 ```{r}
-# get_item(CID4, 'lnLik')
-# #get_item(CID8, 'lnLik')
-# get_item(COR8_NC, 'lnLik')
-# get_item(CID8[1], 'par')
-#pars_to_arrays(COR8_NC[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+`%+%` <- function(a, b) {
+  paste0(a, b)
+}
 
-get_item(CID4, 'lnLik') %>% mean()
-get_item(CID8, 'lnLik') %>% mean()
-get_item(COR8_C, 'lnLik') %>% mean()
-get_item(CID8_NC, 'lnLik') %>% mean()
-get_item(CID8cl_NC , 'lnLik') %>% mean()
-get_item(COR8_NC, 'lnLik') %>% mean()
-# [1] -304.7515
-# [1] -304.7515
-# [1] -304.7515
-# [1] -304.7844
-# [1] -304.8106
-
-# [1] -304.7515
-# [1] -304.7515
-# [1] -304.7515
-# [1] -304.8702
-# [1] -304.8106
-
-#[1] -305.2818
+'a' %+% 'b'
 ```
-```{r}
-get_item(CID4, 'lnLik') %>% get_aic(., 4) %>% mean()
-get_item(CID8, 'lnLik') %>% get_aic(., 4) %>% mean()
-get_item(COR8_C, 'lnLik') %>% get_aic(., 4) %>% mean()
-get_item(CID8_NC, 'lnLik') %>% get_aic(., 4) %>% mean()
-get_item(CID8cl_NC , 'lnLik') %>% get_aic(., 4) %>% mean()
-get_item(COR8_NC, 'lnLik') %>% get_aic(., 4) %>% mean()
-
-
-# 3120.353
-# 3120.709
-# 
-# 3122.331
-# 3125.625
-```
-```{r}
-get_item(CID4, 'lnLik') %>% get_aic(., 4) %>% mean()
-get_item(COR8_C, 'lnLik') %>% get_aic(., 4) %>% mean()
-
-get_item(CID8_NC, 'lnLik') %>% get_aic(., 4) %>% mean()
-get_item(CID8cl_NC , 'lnLik') %>% get_aic(., 4) %>% mean()
-
-```
-```{r}
-3120.709 - 3120.353 
-3122.331 - 3120.353
-3125.625 - 3120.353
-```
-
 
 
 ```{r}
 
-hist(get_item(COR8_NC, 'lnLik'), col='red', breaks=30)
-hist(get_item(CID8_NC, 'lnLik'), col = rgb(0, 0, 1, 0.5), add = TRUE, breaks=30)
+#CID8_NC[[1]]$par
+
+get_item(readRDS(file='R/data/out/topo-bridges/COR8_NC-phy_CID4-1000tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean
+
+Ntips=100
+t100 <- c(
+CID4=get_item(readRDS(file='R/data/out/topo-bridges/CID4-phy_CID4-' %+% Ntips %+% 'tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean,
+COR8_C=get_item(readRDS(file='R/data/out/topo-bridges/COR8_C-phy_CID4-' %+% Ntips %+% 'tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean,
+COR8_NC=get_item(readRDS(file='R/data/out/topo-bridges/COR8_NC-phy_CID4-' %+% Ntips %+% 'tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean,
+CID8_NC=get_item(readRDS(file='R/data/out/topo-bridges/CID8_NC-phy_CID4-' %+% Ntips %+% 'tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean,
+CID8a_NC=get_item(readRDS(file='R/data/out/topo-bridges/CID8a_NC-phy_CID4-' %+% Ntips %+% 'tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean
+)
+
+Ntips=500
+t500 <- c(
+CID4=get_item(readRDS(file='R/data/out/topo-bridges/CID4-phy_CID4-' %+% Ntips %+% 'tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean,
+COR8_C=get_item(readRDS(file='R/data/out/topo-bridges/COR8_C-phy_CID4-' %+% Ntips %+% 'tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean,
+COR8_NC=get_item(readRDS(file='R/data/out/topo-bridges/COR8_NC-phy_CID4-' %+% Ntips %+% 'tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean,
+CID8_NC=get_item(readRDS(file='R/data/out/topo-bridges/CID8_NC-phy_CID4-' %+% Ntips %+% 'tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean,
+CID8a_NC=get_item(readRDS(file='R/data/out/topo-bridges/CID8a_NC-phy_CID4-' %+% Ntips %+% 'tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean
+)
+
+Ntips=1000
+t1000 <- c(
+CID4=get_item(readRDS(file='R/data/out/topo-bridges/CID4-phy_CID4-' %+% Ntips %+% 'tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean,
+COR8_C=get_item(readRDS(file='R/data/out/topo-bridges/COR8_C-phy_CID4-' %+% Ntips %+% 'tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean,
+COR8_NC=get_item(readRDS(file='R/data/out/topo-bridges/COR8_NC-phy_CID4-' %+% Ntips %+% 'tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean,
+CID8_NC=get_item(readRDS(file='R/data/out/topo-bridges/CID8_NC-phy_CID4-' %+% Ntips %+% 'tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean,
+CID8a_NC=get_item(readRDS(file='R/data/out/topo-bridges/CID8a_NC-phy_CID4-' %+% Ntips %+% 'tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4) %>% mean
+)
+
+aic=rbind(t100=t100, t500=t500, t1000=t1000)
+daic=apply(aic, 2, function(x) x-aic[,1]) %>% round(., 3)
+
 ```
 ```{r}
-hist(get_item(COR8_NC, 'lnLik') - get_item(CID8_NC, 'lnLik'), breaks=30)
-
+# dAIC is a proxy to relative KL divergence
+print(daic)
 ```
 
 
 
-#----------------------------
-
-
-
-
-
-<!-- ## Results  -->
-
-<!-- ### Inferences using parameters from CID4 -->
-
-<!-- #### Likelihood table -->
-
-<!-- ```{r} -->
-
-
-<!-- cid4 = get_item(CID4, 'lnLik') -->
-
-<!-- cor.pars <- tibble( -->
-<!-- "N" = c(1:NSIM), -->
-<!-- "cid4" = cid4, -->
-<!-- "CID8.pars"= CID8.pars %>% unlist, -->
-<!-- "COR8-C.pars"= COR8_C.pars %>% unlist, -->
-<!-- "CLA8-C.pars" = CLA8_C.pars %>% unlist, -->
-<!-- "COR8-NC.pars" = COR8_NC.pars %>% unlist, -->
-<!-- "CLA8-NC.pars" = CLA8_NC.pars %>% unlist, -->
-<!-- ) -->
-
-<!-- kable(cor.pars, "html") %>% -->
-<!--   kable_styling(bootstrap_options = c("striped", "hover")) -->
-<!-- ``` -->
-
-
-<!-- #### Mean absolute error -->
-
-<!-- ```{r} -->
-
-<!-- dcor.pars <- tibble( -->
-<!-- "cid4" = cid4, -->
-<!-- "CID8.pars"= CID8.pars %>% unlist, -->
-<!-- "COR8-C.pars"= COR8_C.pars %>% unlist, -->
-<!-- "CLA8-C.pars" = CLA8_C.pars %>% unlist, -->
-<!-- "COR8-NC.pars" = COR8_NC.pars %>% unlist, -->
-<!-- "CLA8-NC.pars" = CLA8_NC.pars %>% unlist, -->
-<!-- ) -->
-<!-- cid4t <- cid4 -->
-<!-- dcor.pars <- dcor.pars %>% -->
-<!--   mutate_all(~ abs(cid4t - .) ) -->
-
-<!-- column_means <- dcor.pars %>% -->
-<!--   summarise_all(~ mean(.)) -->
-
-<!-- # Data -->
-<!-- delta_values <- tibble( -->
-<!--   Delta = names(column_means), -->
-<!--   Value = column_means %>% slice(1) %>% unlist() -->
-<!-- ) -->
-
-<!-- kable(column_means, "html") %>% -->
-<!--   kable_styling(bootstrap_options = c("striped", "hover")) -->
-
-<!-- # Create the plot -->
-<!-- ggplot(delta_values, aes(x = Delta, y = Value, label = sprintf("%.2e", Value))) + -->
-<!--   geom_col(fill = c("blue", "blue", "blue", "blue", "red",  "red")) + -->
-<!--   geom_text(vjust = -0.5, angle = 45) + -->
-<!--   labs(title = "Comparison of Ln Differences", x = "Deltas", y = "Magnitude") + -->
-<!--   theme_minimal() -->
-
-
-<!-- ``` -->
-
-<!-- ### Maximum Likelihood estimates -->
-
-<!-- #### Likelihood table -->
-
-<!-- ```{r} -->
-
-<!-- cor.pars <- tibble( -->
-<!-- "N" = c(1:NSIM), -->
-<!-- "cid4" = cid4, -->
-<!-- "CID8"= get_item(CID8, 'lnLik'), -->
-<!-- "COR8-C"= get_item(COR8_C, 'lnLik'), -->
-<!-- "CLA8-C" = get_item(CLA8_C, 'lnLik'), -->
-<!-- "COR8-NC" = get_item(COR8_NC, 'lnLik'), -->
-<!-- "CLA8-NC" = append(get_item(CLA8_NC, 'lnLik'), NA, after=3), -->
-<!-- ) -->
-
-<!-- kable(cor.pars, "html") %>% -->
-<!--   kable_styling(bootstrap_options = c("striped", "hover")) -->
-<!-- ``` -->
-
-
-<!-- #### Mean absolute error -->
-
-<!-- ```{r} -->
-
-<!-- dcor.pars <- tibble( -->
-<!-- "cid4" = cid4, -->
-<!-- "CID8"= get_item(CID8, 'lnLik'), -->
-<!-- "COR8-C"= get_item(COR8_C, 'lnLik'), -->
-<!-- "CLA8-C" = get_item(CLA8_C, 'lnLik'), -->
-<!-- "COR8-NC" = get_item(COR8_NC, 'lnLik'), -->
-<!-- "CLA8-NC" = append(get_item(CLA8_NC, 'lnLik'), NA, after=3), -->
-<!-- ) -->
-
-<!-- # dcor.pars <- tibble( -->
-<!-- # "cid4" = cid4, -->
-<!-- # "CID8.pars"= CID8.pars %>% unlist, -->
-<!-- # "COR8-C.pars"= COR8_C.pars %>% unlist, -->
-<!-- # "CLA8-C.pars" = CLA8_C.pars %>% unlist, -->
-<!-- # "COR8-NC.pars" = COR8_NC.pars %>% unlist, -->
-<!-- # "CLA8-NC.pars" = CLA8_NC.pars %>% unlist, -->
-<!-- # ) -->
-<!-- cid4t <- cid4 -->
-<!-- dcor.pars <- dcor.pars %>% -->
-<!--   mutate_all(~ abs(cid4t - .) ) -->
-
-<!-- column_means <- dcor.pars %>% -->
-<!--   summarise_all(~ mean(., na.rm = TRUE)) -->
-
-<!-- # Data -->
-<!-- delta_values <- tibble( -->
-<!--   Delta = names(column_means), -->
-<!--   Value = column_means %>% slice(1) %>% unlist() -->
-<!-- ) -->
-
-<!-- kable(column_means, "html") %>% -->
-<!--   kable_styling(bootstrap_options = c("striped", "hover")) -->
-
-<!-- # Create the plot -->
-<!-- ggplot(delta_values, aes(x = Delta, y = Value, label = sprintf("%.2e", Value))) + -->
-<!--   geom_col(fill = c("blue", "blue", "blue", "blue", "red",  "red")) + -->
-<!--   geom_text(vjust = -0.5, angle = 45) + -->
-<!--   labs(title = "Comparison of Ln Differences", x = "Deltas", y = "Magnitude") + -->
-<!--   theme_minimal() -->
-
-
-<!-- ``` -->
 

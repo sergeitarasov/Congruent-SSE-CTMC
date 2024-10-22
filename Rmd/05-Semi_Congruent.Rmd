@@ -953,7 +953,7 @@ cdf_plot <- ggplot() +
 cdf_plot
 
 # Save the plot with a specific width in centimeters
-ggsave("Figs/cdf.png", plot = cdf_plot , width = 8.7, height = 5, units = "cm")
+#ggsave("Figs/cdf.png", plot = cdf_plot , width = 8.7, height = 5, units = "cm")
 
 ```
 
