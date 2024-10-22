@@ -119,9 +119,9 @@ print(Q_cor8_C.t*10)
 #print(La8[v,v])
 
 # Plot the graph
-g <- create_graph_from_matrix(Q_cor8_C.t)
-unidirectional_edges <- is_unidirectional(g)
-plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+# g <- create_graph_from_matrix(Q_cor8_C.t)
+# unidirectional_edges <- is_unidirectional(g)
+# plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
 
 ```
 
@@ -143,9 +143,9 @@ print(Q_cor8_NC.t*10)
 #print(La8[v,v])
 
 # Plot the graph
-g <- create_graph_from_matrix(Q_cor8_NC.t)
-unidirectional_edges <- is_unidirectional(g)
-plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+# g <- create_graph_from_matrix(Q_cor8_NC.t)
+# unidirectional_edges <- is_unidirectional(g)
+# plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
 
 ```
 
@@ -696,9 +696,9 @@ Show model topology
 # Plot the graph
 ar <- pars_to_arrays(CID8[[1]]$par.full, 8)
 Qpl <- names2array(ar, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))$Q
-g <- create_graph_from_matrix(Qpl)
-unidirectional_edges <- is_unidirectional(g)
-plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+# g <- create_graph_from_matrix(Qpl)
+# unidirectional_edges <- is_unidirectional(g)
+# plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
 ```
 
 
@@ -791,9 +791,9 @@ Show model topology
 # Plot the graph
 ar <- pars_to_arrays(COR8_C[[1]]$par.full, 8)
 Qpl <- names2array(ar, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))$Q
-g <- create_graph_from_matrix(Qpl)
-unidirectional_edges <- is_unidirectional(g)
-plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+# g <- create_graph_from_matrix(Qpl)
+# unidirectional_edges <- is_unidirectional(g)
+# plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
 ```
 
 ### COR8-NC
@@ -881,9 +881,9 @@ Show model topology
 # Plot the graph
 ar <- pars_to_arrays(COR8_NC[[1]]$par.full, 8)
 Qpl <- names2array(ar, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))$Q
-g <- create_graph_from_matrix(Qpl)
-unidirectional_edges <- is_unidirectional(g)
-plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+# g <- create_graph_from_matrix(Qpl)
+# unidirectional_edges <- is_unidirectional(g)
+# plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
 ```
 
 
@@ -994,9 +994,9 @@ Show model topology
 # Plot the graph
 ar <- pars_to_arrays(CLA8_C[[1]]$par.full, 8)
 Qpl <- names2array(ar, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))$Q
-g <- create_graph_from_matrix(Qpl)
-unidirectional_edges <- is_unidirectional(g)
-plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+# g <- create_graph_from_matrix(Qpl)
+# unidirectional_edges <- is_unidirectional(g)
+# plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
 ```
 
 
@@ -1111,9 +1111,9 @@ get_item(CLA8_NC[1], 'par')
 # Plot the graph
 ar <- pars_to_arrays(CLA8_NC[[1]]$par.full, 8)
 Qpl <- names2array(ar, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))$Q
-g <- create_graph_from_matrix(Qpl)
-unidirectional_edges <- is_unidirectional(g)
-plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+# g <- create_graph_from_matrix(Qpl)
+# unidirectional_edges <- is_unidirectional(g)
+# plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
 ```
 
 ## Results 

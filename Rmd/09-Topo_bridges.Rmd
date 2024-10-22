@@ -169,7 +169,7 @@ plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirec
 
 ### COR8-NC (Correlated evolution, noncongruent to CID4)
 
-```{r, eval=FALSE}
+```{r}
 # not congruent
 Q_cor8_NC.t <- Q_cid8.t
 
@@ -187,7 +187,7 @@ print(Q_cor8_NC.t*10)
 # Plot the graph
 g <- create_graph_from_matrix(Q_cor8_NC.t)
 unidirectional_edges <- is_unidirectional(g)
-plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
+#plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, "red", "black"))
 
 ```
 

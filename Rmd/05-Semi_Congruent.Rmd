@@ -17,7 +17,7 @@ In this example, data are simulated under the CID4 model for three different sce
 
 This algorithm  works by dividing Q into a 4x4 block matrix, based on the states: a0b0; c0d0; a1b1; c1d1. For each block in a given row, the algorithm tests three different parameterizations and selects the best one before moving to the next block. Once a row is completed, the algorithm proceeds to the next row. Since there are four block rows in total, this results in testing 36 different models.
 
-The tested SEM. models constantly show better AIC compared to the original CID model.
+The tested SEM. models constantly show better AIC and BIC compared to the original CID model.
 
 
 ```{r,  include=FALSE}
@@ -156,7 +156,7 @@ f.list<- c(zero.constr,  f.qs, f.mu, f.lams)
 
 Run inference
 
-```{r eval=FALSE}
+```{r, eval=FALSE}
 #base="phy_CID4-100tips-100tr"
 for (base in files_base[1:3]){
   file=file.path("R/data/sim", paste0(base, '.RDS'))
@@ -390,7 +390,7 @@ for (SIM in 1:NSIM){
 
 #### check pars
 
-```{r}
+```{r, eval=FALSE}
 # Plot the graph
 ar <- pars_to_arrays(mle$par.full, 8)
 ar <- names2array(ar, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))
@@ -402,14 +402,6 @@ plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirec
 ar %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
-#### results
-
-```{r}
-cid.aic=get_item(readRDS(file='R/data/out/lik-CID4-phy_CID4-100tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4)
-sem.aic=get_item(readRDS(file='R/data/out/SEM/best_Ln-SEM8_phy_CID4-100tips-100tr.RDS'), 'lnLik') %>% get_aic(., 2)
-daic=cid.aic-sem.aic
-hist(daic)
-```
 
 ### SEM8: 500 tips
 
@@ -521,7 +513,7 @@ for (SIM in 1:NSIM){
 
 #### results
 
-```{r}
+```{r, eval=FALSE}
 cid.aic=get_item(readRDS(file='R/data/out/lik-CID4-phy_CID4-500tips-100tr.RDS'), 'lnLik') %>% get_aic(., 4)
 sem.aic=get_item(readRDS(file='R/data/out/SEM/best_Ln-SEM8_phy_CID4-500tips-100tr.RDS'), 'lnLik') %>% get_aic(., 2)
 daic=cid.aic-sem.aic
@@ -638,9 +630,9 @@ for (SIM in 1:NSIM){
 ```
 
 
-to speed computations, I ran the above by parts, now combining the results
+to speed up computations, I ran the above by parts, now combining the results
 
-```{r}
+```{r, eval=FALSE}
 # to speed computations, I ran them by parts
 # combining the results for Ln
 

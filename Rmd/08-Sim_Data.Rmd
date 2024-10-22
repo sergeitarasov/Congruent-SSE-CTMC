@@ -62,7 +62,7 @@ print(La4[v,v])
 
 ## Simulate CID with 5 pars: 100 tips, 10 trees
 
-```{r}
+```{r, eval=FALSE}
 
 
 NSIM=10 # N of trees to simulate

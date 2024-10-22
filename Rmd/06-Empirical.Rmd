@@ -1043,10 +1043,8 @@ pars.hc['lam000'] <- pars.hc['lam002'] <- pars.hc['lam022'] <- 0.1/2
 pars.hc['lam200'] <- pars.hc['lam202'] <- pars.hc['lam222'] <- 0.1/2
 pars.hc['lam111'] <- pars.hc['lam113'] <- pars.hc['lam133'] <- 0.1/2
 pars.hc['lam311'] <- pars.hc['lam313'] <- pars.hc['lam333'] <- 0.1/2
-#pars.hc['lam444'] <- 0.05
 pars.hc['lam466'] <- 0.05
 pars.hc['lam555'] <- 0.05
-#pars.hc['lam666'] <- 0.05
 pars.hc['lam604'] <- 0.05
 pars.hc['lam777'] <- 0.05
 
@@ -1090,10 +1088,8 @@ f.lams <- c(  lam002 ~ lam000, lam022 ~ lam000,
               lam200 ~ lam000, lam202 ~ lam000, lam222 ~ lam000,
               lam111 ~ lam000, lam113 ~ lam000, lam133 ~ lam000,
               lam311 ~ lam000, lam313 ~ lam000, lam333 ~ lam000,
-              #lam666 ~ lam000,
               lam604 ~ lam000,
               lam777 ~ lam000,
-              #lam444 ~ lam000,
               lam466 ~ lam000,
               lam555 ~ lam000
 )
@@ -1228,14 +1224,11 @@ kable(estimates_tibble, "html", digits = 2) %>%
 ```{r}
 
 simmap <- make.simmap(tree, states, model="SYM", nsim=1)
-# #7F7F7F
-#cols<-setNames(c("#B2B2B2","#DF536B"), c("0","1"))
-#cols<-setNames(c("#2D7600","#DF536B"), c("0","1"))
 cols<-setNames(c("#000000","#E65100"), c("0","1"))
 
-png("Figs/Phasmatodea.png")
-plot(simmap, cols, type='fan', pts=F, ftype="off",lwd=5, outline=F)
-dev.off()
+# png("Figs/Phasmatodea.png")
+# plot(simmap, cols, type='fan', pts=F, ftype="off",lwd=5, outline=F)
+# dev.off()
 ```
 
 

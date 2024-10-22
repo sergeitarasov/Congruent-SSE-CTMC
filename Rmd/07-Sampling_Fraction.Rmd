@@ -11,20 +11,7 @@ params:
 
 # Congruence under varying sampling fraction
 
-Hrein, we show that congruence holds under varying sampling fraction using the previous. This simulation is very close to the CID example from the section "Congruence between independent and dependent SSEs", except that we use different sampling fraction.
-
-
-| Model    | np | pars                           | Cong. with CID4 | Trait & Div.     | Speciation Rates              |
-|----------|----|--------------------------------|---------------------|------------------|--------------------------------|
-| CID4     | 4  | 2d 1q 1mu                      | --                  | independent      | decoupled (d)                 |
-| CID8     | 4  | 2d 1q 1mu                      | yes                 | independent      | decoupled (d)                 |
-| COR8-C   | 4  | 2d 1q 1mu                      | yes                 | correlated       | decoupled (d)                 |
-| CLA8-C   | 4  | 2c 1q 1mu                      | yes                 | correlated       | coupled (c)                   |
-| COR8-NC  | 4  | 2d 1q 1mu                      | no                  | correlated*      | decoupled (d)                 |
-| CLA8-NC  | 4  | 2c 1q 1mu                      | no                  | correlated       | coupled* (c)                  |
-
-*indicates non-lumpable transition or speciation rates. See also, Fig. referenced and Table S1.
-
+Hrein, we show that congruence holds under varying sampling fraction using the previous. 
 
 ```{r,  include=FALSE}
 library(DT)
@@ -52,7 +39,7 @@ source('R/hiclasse/HiClaSSE_cpp.R') # fast implementation
 
 ```{r}
 NSIM = 10
-phy <- readRDS(file='R/data/phy_CID4.RDS')
+phy <- readRDS(file='R/data/sim/phy_CID4-10tr.RDS')
 ```
 
 
