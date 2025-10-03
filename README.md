@@ -1,14 +1,60 @@
-# Congruent SSEs
- The reports and R scripts for demonstrating model congruence in state-dependent diversification models (SSEs).
 
-## Preprint:
+# Congruent-SSE-CTMC
 
-Tarasov, S. and Uyeda, J., 2024. Nonidentifiability of state-dependent diversification models (SSEs) is ubiquitous but not problematic for phylogenetics. *bioRxiv*, [doi: https://doi.org/10.1101/2022.07.04.498736](https://www.biorxiv.org/content/10.1101/2022.07.04.498736v3)
+This repository contains R scripts and notebooks associated with the manuscript *Universal Congruence in State-Dependent Diversification Models (SSEs): Resolving Unidentifiability and Explaining High Error Rates*.  
+It demonstrates model congruence in state-dependent diversification (SSE) models and provides the code and data necessary to reproduce the main results and figures.  
 
+A Zenodo-archived snapshot of this repository is available at:  
+https://doi.org/10.5281/zenodo.17256718  
 
+---
 
-## Quick start guide
+## 1. System Requirements
 
+- **Operating System:** Tested on macOS (15.7), but should work equally on Linux and Windows.  
+- **R version:** ≥ 4.5.1  
+- **Dependencies:** No dependencies other than R and the associated R packages.  
+- **Hardware:** No special hardware required. Typical analyses run on a standard laptop/desktop with 8 GB RAM.  
+
+---
+
+## 2. Installation Guide
+
+1. Install R (≥ 4.5.1) from [CRAN](https://cran.r-project.org/).  
+2. Clone or download this repository:  
+   ```bash
+   git clone https://github.com/sergeitarasov/Congruent-SSE-CTMC.git
+   ```
+   Or download the ZIP archive and extract it.  
+3. Navigate to the `Rmd/` folder to run the R notebooks.  
+
+**Typical install time:** ~1 minute on a standard desktop computer.   
+
+---
+
+## 3. Demo
+
+A quick demo can be run using `Rmd/02-BiSSE.Rmd`.  
+
+**To run the demo:**  
+1. Open `Rmd/02-BiSSE.Rmd` in RStudio.  
+2. Execute the code blocks.  
+
+**Expected output:**  
+- Model fitting of BiSSE, congruent and non-congruent models.  
+- Plots of likelihood values.  
+
+**Expected run time:** < 5 minutes on a standard desktop computer.  
+
+---
+
+## 4. Instructions for Use
+
+- Execute all Rmd files in the `Rmd/` folder; they contain the necessary instructions and code to reproduce the analyses.    
+
+---
+
+## 5. Content
 
 - `Report` is the main directory to see the html reports for all simulation performed by the study. It contains the following sections:
   - 01-Validation.html
