@@ -12,7 +12,7 @@ Tarasov, S. and Uyeda, J., 2024. Nonidentifiability of state-dependent diversifi
 
 - `Report` is the main directory to see the html reports for all simulation performed by the study. It contains the following sections:
   - 01-Validation.html
-  - 02-MiSSE.html
+  - 02-BiSSE.html
   - 03-CID.html
   - 04-EHE.html
   - 05-Semi_Congruent.html
