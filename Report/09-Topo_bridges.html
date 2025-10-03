@@ -11,7 +11,7 @@
 
 <meta name="author" content="Sergei Tarasov" />
 
-<meta name="date" content="2024-10-22" />
+<meta name="date" content="2025-10-03" />
 
 <title>09-Topo_bridges.knit</title>
 
@@ -393,6 +393,9 @@ relative KL divergence</a></li>
 <p>Here, we show that CID4 may be probabilistically closer to
 irreducible trait-dependent models than to other irreducible CID
 models.</p>
+<p>Note the slight differences in model names between here and the main
+text. What is referred to as CID8-A and CID8-B in the main text
+corresponds to CID8a-NC and CID8-NC here, respectively.</p>
 <pre class="r"><code>##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##  ~ installations and dependencies  ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -643,9 +646,19 @@ print(Q_cor8_NC.t*10)</code></pre>
 <pre class="r"><code>#print(La8[v,v])
 
 # Plot the graph
-g &lt;- create_graph_from_matrix(Q_cor8_NC.t)
-unidirectional_edges &lt;- is_unidirectional(g)
-#plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, &quot;red&quot;, &quot;black&quot;))</code></pre>
+g &lt;- create_graph_from_matrix(Q_cor8_NC.t)</code></pre>
+<pre><code>## Warning: `graph.empty()` was deprecated in igraph 2.1.0.
+## ℹ Please use `make_empty_graph()` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre class="r"><code>unidirectional_edges &lt;- is_unidirectional(g)</code></pre>
+<pre><code>## Warning: `are.connected()` was deprecated in igraph 2.0.0.
+## ℹ Please use `are_adjacent()` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre class="r"><code>#plot(g, vertex.label = V(g)$name, vertex.size = 30, edge.color = ifelse(unidirectional_edges, &quot;red&quot;, &quot;black&quot;))</code></pre>
 </div>
 </div>
 <div id="maximum-likelihood." class="section level2">
@@ -1076,14 +1089,15 @@ CID8a_NC=get_item(readRDS(file=&#39;R/data/out/topo-bridges/CID8a_NC-phy_CID4-&#
 )
 
 aic=rbind(t100=t100, t500=t500, t1000=t1000)
-daic=apply(aic, 2, function(x) x-aic[,1]) %&gt;% round(., 3)</code></pre>
+daic=apply(aic, 2, function(x) x-aic[,1]) %&gt;% round(., 3)
+colnames(daic) &lt;- c(&quot;CID4&quot;,     &quot;COR8_C&quot;,   &quot;COR8_NC&quot;,  &quot;CID8-B:(CID8_NC)&quot;,  &quot;CID8-A:(CID8a_NC)&quot;)</code></pre>
 <div id="daic-is-a-proxy-to-relative-kl-divergence" class="section level3">
 <h3>dAIC is a proxy to relative KL divergence</h3>
 <pre class="r"><code>print(daic)</code></pre>
-<pre><code>##       CID4 COR8_C COR8_NC CID8_NC CID8a_NC
-## t100     0      0   0.136   1.060    1.698
-## t500     0      0   0.356   1.979    5.272
-## t1000    0      0   0.932   4.767   11.735</code></pre>
+<pre><code>##       CID4 COR8_C COR8_NC CID8-B:(CID8_NC) CID8-A:(CID8a_NC)
+## t100     0      0   0.136            1.060             1.698
+## t500     0      0   0.356            1.979             5.272
+## t1000    0      0   0.932            4.767            11.735</code></pre>
 </div>
 </div>
 </div>

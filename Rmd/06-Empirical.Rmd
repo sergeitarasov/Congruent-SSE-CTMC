@@ -200,6 +200,12 @@ print(CID2.p$loglik)
 #2*5-2*CID2.p$loglik
 print(CID2.p$AIC)
 # 1986.766
+
+# div at A (lam-mu)
+0.1291833-0.01168628
+
+# div at B (lam-mu)
+0.2884714-0.263662
 ```
 
 ### BiSSE

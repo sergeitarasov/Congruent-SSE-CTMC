@@ -13,6 +13,8 @@ params:
 
 Here, we show that CID4 may be probabilistically closer to irreducible trait-dependent models than to other irreducible CID models.
 
+Note the slight differences in model names between here and the main text. What is referred to as CID8-A and CID8-B in the main text corresponds to CID8a-NC and CID8-NC here, respectively.
+
 
 ```{r,  include=FALSE}
 library(DT)
@@ -690,8 +692,11 @@ CID8a_NC=get_item(readRDS(file='R/data/out/topo-bridges/CID8a_NC-phy_CID4-' %+% 
 
 aic=rbind(t100=t100, t500=t500, t1000=t1000)
 daic=apply(aic, 2, function(x) x-aic[,1]) %>% round(., 3)
-
+colnames(daic) <- c("CID4",     "COR8_C",   "COR8_NC",  "CID8-B:(CID8_NC)",  "CID8-A:(CID8a_NC)")
 ```
+
+
+
 
 ### dAIC is a proxy to relative KL divergence
 ```{r}

@@ -1,5 +1,5 @@
 ---
-#title: "Misse"
+#title: "BiSSE"
 author: "Sergei Tarasov"
 date: "`r Sys.Date()`"
 output:
@@ -9,9 +9,9 @@ params:
   output_dir: "/output"
 ---
 
-# MiSSE congruence
+# BiSSE congruence (M1-M3)
 
-This example, drawn from Eq. 2 in the main text, demonstrates that the MiSSE2 model with two states (M1) is congruent with MiSSE3 (M2), but is not congruent with MiSSE3 (M3) that violates lumpability.
+This example, drawn from Eq. 2 in the main text, demonstrates that the BiSSE2 model with two states (M1) is congruent with BiSSE3 (M2), but is not congruent with BiSSE3 (M3) that violates lumpability.
 
 ```{r, include=FALSE}
 library(DT)
@@ -42,6 +42,7 @@ Read in data:
 ```{r}
 NSIM = 10
 phy <- readRDS(file='R/data/sim/phy_CID4-10tr.RDS')
+
 ```
 
 
@@ -59,16 +60,16 @@ Q3
 
 
 
-## MiSSE-2 
+## BiSSE-2 
 
 ```{r}
 
-# this is character coding at tips. It sets MiSSE model
+# this is character coding at tips. It sets BiSSE model
 Args <- list(
   Nstates = 2L,
   y = list(
-    c(0,0, 1,1),
-    c(0,0, 1,1)
+    c(0,0, 1,0),
+    c(0,0, 0,1)
   ))
 
 newArgs <- makeArgs(Args)
@@ -103,20 +104,19 @@ Run inference
 
 ```{r message=FALSE}
 
-Misse2 <- list()
-i=1
+BiSSE2 <- list()
+# i=1
 for (i in 1:NSIM){
   print(paste0('Working on: ', i))
   tree <- phy[[i]]
   states<- tree$tip.state
   states<- mapvalues(states, from = c("0", "1", "2", "3"), to=c(0, 1, 0, 1) )
   root <- rep(1/2, 2)
-  
   lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
   lik.const <- constrain(lik.c, lam001~0, lam011~0, lam100~0, lam101~0, mu0 ~ mu1, q01 ~ q10)
   arg.const <- argnames(lik.const)
   starting.point <- pars.hc[arg.const]
-  Misse2[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
+  BiSSE2[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
 }
 
 ```
@@ -124,19 +124,19 @@ for (i in 1:NSIM){
 
 Some helper function to assess the inference parameters
 ```{r}
-# get_item(Misse2, 'lnLik')
-# pars_to_arrays(Misse2[[1]]$par.full, 2)
+# get_item(BiSSE2, 'lnLik')
+# pars_to_arrays(BiSSE2[[1]]$par.full, 2)
 ```
 
 
-## MiSSE-3     Congruent  
+## BiSSE-3     Congruent  
 ```{r}
 
 Args <- list(
   Nstates = 3L,
   y = list(
-    c(0,0,0, 1,1,1),
-    c(0,0,0, 1,1,1)
+    c(0,0,0, 1,0,0),
+    c(0,0,0, 0,1,1)
   ))
 
 newArgs <- makeArgs(Args)
@@ -178,7 +178,7 @@ f.list<- c(zero.constr,  f.lams, f.mu, f.qs)
  
 ```{r message=FALSE}
 
-Misse3C <- list()
+BiSSE3C <- list()
 i=1
 for (i in 1:NSIM){
   print(paste0('Working on: ', i))
@@ -191,30 +191,30 @@ for (i in 1:NSIM){
   lik.const <- constrain(lik.c, formulae = f.list)
   arg.const <- argnames(lik.const)
   starting.point <- pars.hc[arg.const]
-  Misse3C[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
+  BiSSE3C[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
 }
 ```
 
 
 Some helper function to assess the inference parameters
 ```{r}
-# get_item(Misse3C, 'lnLik')
-# #get_item(Misse2, 'lnLik')
-# pars_to_arrays(Misse3C[[1]]$par.full, 3)
+# get_item(BiSSE3C, 'lnLik')
+# #get_item(BiSSE2, 'lnLik')
+# pars_to_arrays(BiSSE3C[[1]]$par.full, 3)
 ```
 
 
-## MiSSE-3 Congruent, Inferred Pars  
+## BiSSE-3 Congruent, Inferred Pars  
 
-Mapping of parameters between congruent models is deterministic. Here, we derive the parameters directly from MiSSE2 model.
+Mapping of parameters between congruent models is deterministic. Here, we derive the parameters directly from BiSSE2 model.
 
 ```{r message=FALSE}
-Misse3C_pars <- list()
+BiSSE3C_pars <- list()
 i=1
 for (i in 1:NSIM){
   print(paste0('Working on: ', i))
   #---
-  mi2_est <- get_item(Misse2[i], 'par')
+  mi2_est <- get_item(BiSSE2[i], 'par')
   pars.hc <- rep(0, length(args$pars))
   names(pars.hc) <- args$pars
   pars.hc['lam000'] <- mi2_est['lam000']
@@ -232,7 +232,7 @@ for (i in 1:NSIM){
   root <- c(1/2, 1/4, 1/4)
   
   lik.c <- make.HiClasse_cpp(tree, states,  sampling.f=NULL,  strict=TRUE, control=list(backend = "gslode"), newArgs)
-  Misse3C_pars[[i]] <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
+  BiSSE3C_pars[[i]] <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
   
 }
 
@@ -240,15 +240,15 @@ for (i in 1:NSIM){
 
 
 
-## MiSSE-3     Non-congruent    
+## BiSSE-3     Non-congruent    
 
 ```{r}
 
 Args <- list(
   Nstates = 3L,
   y = list(
-    c(0,0,0, 1,1,1),
-    c(0,0,0, 1,1,1)
+    c(0,0,0, 1,0,0),
+    c(0,0,0, 0,1,1)
   ))
 
 newArgs <- makeArgs(Args)
@@ -288,7 +288,7 @@ Inference
 
 ```{r message=FALSE}
 
-Misse3 <- list()
+BiSSE3 <- list()
 i=1
 for (i in 1:NSIM){
   print(paste0('Working on: ', i))
@@ -302,7 +302,7 @@ for (i in 1:NSIM){
   lik.const <- constrain(lik.c, formulae = f.list)
   arg.const <- argnames(lik.const)
   starting.point <- pars.hc[arg.const]
-  Misse3[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
+  BiSSE3[[i]] <- find.mle(lik.const, starting.point, method="subplex", keep.func=F, root=ROOT.GIVEN, root.p=root, condition.surv=TRUE)
 }
 
 ```
@@ -312,7 +312,7 @@ for (i in 1:NSIM){
 ## Another Non-congruent Models
 
 
-If lumpability does not hold, then shuffling parameters within partition subsets results in different models. Below, M4 is identical to MiSSE4-NonCongruent, and M5 represents another distinct model where 'lam112' is set to 0.2.
+If lumpability does not hold, then shuffling parameters within partition subsets results in different models. Below, M4 is identical to BiSSE4-NonCongruent, and M5 represents another distinct model where 'lam112' is set to 0.2.
 
 ```{r message=FALSE}
 Qnc <- c(0.05, 0, 0.05, 0.05, 0, 0)
@@ -321,7 +321,7 @@ i=1
 for (i in 1:NSIM){
   print(paste0('Working on: ', i))
   #---
-  #mi2_est <- get_item(Misse2[i], 'par')
+  #mi2_est <- get_item(BiSSE2[i], 'par')
   pars.hc <- rep(0, length(args$pars))
   names(pars.hc) <- args$pars
   pars.hc['lam000'] <- 0.1
@@ -348,7 +348,7 @@ i=1
 for (i in 1:NSIM){
   print(paste0('Working on: ', i))
   #---
-  #mi2_est <- get_item(Misse2[i], 'par')
+  #mi2_est <- get_item(BiSSE2[i], 'par')
   pars.hc <- rep(0, length(args$pars))
   names(pars.hc) <- args$pars
   pars.hc['lam000'] <- 0.1
@@ -400,7 +400,7 @@ i=1
 for (i in 1:NSIM){
   print(paste0('Working on: ', i))
   #---
-  #mi2_est <- get_item(Misse2[i], 'par')
+  #mi2_est <- get_item(BiSSE2[i], 'par')
   pars.hc <- rep(0, length(args$pars))
   names(pars.hc) <- args$pars
   pars.hc['lam000'] <- 0.1
@@ -427,7 +427,7 @@ i=1
 for (i in 1:NSIM){
   print(paste0('Working on: ', i))
   #---
-  #mi2_est <- get_item(Misse2[i], 'par')
+  #mi2_est <- get_item(BiSSE2[i], 'par')
   pars.hc <- rep(0, length(args$pars))
   names(pars.hc) <- args$pars
   pars.hc['lam000'] <- 0.1
@@ -464,26 +464,26 @@ The likelihood scores of the used models.
 ```{r}
 
 
-mi2 = get_item(Misse2, 'lnLik')
-mi3c = get_item(Misse3C, 'lnLik')
-mi3c_pars = unlist(Misse3C_pars)
-mi3 = get_item(Misse3, 'lnLik')
+mi2 = get_item(BiSSE2, 'lnLik')
+mi3c = get_item(BiSSE3C, 'lnLik')
+mi3c_pars = unlist(BiSSE3C_pars)
+mi3 = get_item(BiSSE3, 'lnLik')
 
-misse <- tibble(
+BiSSE <- tibble(
 "N" = c(1:10),
-"MiSSE2" = mi2,
-"congruent MiSSE3 (MiSSE2)"=mi3c,
-"congruent MiSSE3 (pars of MiSSE2)"= mi3c_pars,
-"Non-congruent MiSSE3" = mi3)
+"BiSSE2" = mi2,
+"congruent BiSSE3 (BiSSE2)"=mi3c,
+"congruent BiSSE3 (pars of BiSSE2)"= mi3c_pars,
+"Non-congruent BiSSE3" = mi3)
 
-kable(misse, "html") %>%
+kable(BiSSE, "html") %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
 ### Mean absolute error
 
 
-The table and plot below demonstrate that the likelihoods of  MiSSE2 and MiSSE3-Congruent are the same; the differences arise solely from numerical integration. In constrast, the differences between MiSSE2 and MiSSE3-NonCongruent are substantial, indicating they are distinct models. 
+The table and plot below demonstrate that the likelihoods of  BiSSE2 and BiSSE3-Congruent are the same; the differences arise solely from numerical integration. In constrast, the differences between BiSSE2 and BiSSE3-NonCongruent are substantial, indicating they are distinct models. 
 
 ```{r}
 d1 =abs(mi2-mi3c) %>% mean()
@@ -514,12 +514,12 @@ ggplot(delta_values, aes(x = Delta, y = Value, label = sprintf("%.2e", Value))) 
 
 ```{r}
 
-get_item(Misse2[1], 'par')
-get_item(Misse3C[1], 'par')
-get_item(Misse3[1], 'par')
+get_item(BiSSE2[1], 'par')
+get_item(BiSSE3C[1], 'par')
+get_item(BiSSE3[1], 'par')
 
-# pars_to_arrays(Misse2[[1]]$par.full, 2)
-# pars_to_arrays(Misse3C[[1]]$par.full, 3)
-# pars_to_arrays(Misse3[[1]]$par.full, 3)
+# pars_to_arrays(BiSSE2[[1]]$par.full, 2)
+# pars_to_arrays(BiSSE3C[[1]]$par.full, 3)
+# pars_to_arrays(BiSSE3[[1]]$par.full, 3)
 ```
 
