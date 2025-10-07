@@ -2,7 +2,7 @@
 # Congruent-SSE-CTMC
 
 This repository contains R scripts and notebooks associated with the manuscript *Universal Congruence in State-Dependent Diversification Models (SSEs): Resolving Unidentifiability and Explaining High Error Rates*.  
-It demonstrates model congruence in state-dependent diversification (SSE) models and provides the code and data necessary to reproduce the main results and figures.  
+It demonstrates model congruence in state-dependent diversification (SSE) models and provides the code and data necessary to reproduce the main results.  
 
 A Zenodo-archived snapshot of this repository is available at:  
 https://doi.org/10.5281/zenodo.17256718  
@@ -69,7 +69,7 @@ A quick demo can be run using `Rmd/02-BiSSE.Rmd`.
 - `Rmd` contains the code to reprodice the reports and simulation.
 - `R` contains necessary R functions.
   - `/R/hiclasse/src/` includes C code for HiClaSSE ODEs.
-- `Mathematica` includes Mathematica Notebook that creates symbolic ODEs for HiClaSSE and can be used to generate C code.
+- `Mathematica` includes Mathematica Notebook that creates symbolic ODEs for HiClaSSE and can be used to generate C code (it is not necessary for reproducing the results).
 
 
 
