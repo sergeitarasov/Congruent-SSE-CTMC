@@ -230,6 +230,19 @@ get_item(CID4, 'lnLik')
 #get_item(CID4[1], 'par')
 ```
 
+
+Print nice to show matrix structure only
+
+```{r}
+# CID4[[1]]$par
+pp <- round(CID4[[1]]$par.full*100, 1)
+X <- pars_to_arrays(pp, 4) %>% reoder_lambdas(., c(1,3, 2,4))
+X <- names2array(X, c('A0',   'B0',   'A1',   'B1'))
+
+```
+
+
+
 ## Inferences using parameters from CID4
 
 ### CID8 (4 pars)
@@ -692,8 +705,19 @@ get_item(CID8, 'lnLik')
 # get_item(CID4[1], 'par')
 
 #pars_to_arrays(CID8[[1]]$par.full, 8)
-#pars_to_arrays(CID8[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+# pars_to_arrays(CID8[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
+
+Print nice to show matrix structure only
+
+```{r}
+#pars_to_arrays(CID8[[1]]$par.full, 8)
+pp <- round(CID8[[1]]$par.full*100, 1)
+X <- pars_to_arrays(pp, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+X <- names2array(X, c('a0', 'b0', 'c0',  'd0',  'a1',  'b1',  'c1',  'd1'))
+
+```
+
 
 
 Show model topology
@@ -994,6 +1018,18 @@ get_item(CLA8_C[1], 'par')
 #pars_to_arrays(CLA8_C[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
 
+Print nice to show matrix structure only
+
+```{r}
+
+pp <- CLA8_C[[1]]$par.full*100
+X <- pars_to_arrays(pp, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+X <- names2array(X, c('a0', 'b0', 'c0',  'd0',  'a1',  'b1',  'c1',  'd1'))
+
+```
+
+
+
 Show model topology
 
 ```{r}
@@ -1113,6 +1149,20 @@ get_item(CLA8_NC, 'lnLik')
 get_item(CLA8_NC[1], 'par')
 #pars_to_arrays(CLA8_C[[1]]$par.full, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
 ```
+
+Print nice to show matrix structure only
+
+```{r}
+
+pp <- CLA8_NC[[1]]$par.full*100
+X <- pars_to_arrays(pp, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+X <- names2array(X, c('a0', 'b0', 'c0',  'd0',  'a1',  'b1',  'c1',  'd1'))
+
+```
+
+
+
+
 ```{r}
 # Plot the graph
 ar <- pars_to_arrays(CLA8_NC[[1]]$par.full, 8)

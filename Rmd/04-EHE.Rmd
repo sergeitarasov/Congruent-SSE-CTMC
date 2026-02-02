@@ -199,6 +199,17 @@ This is CID4 model.
 ```
 
 
+Print nice to show matrix structure only
+
+```{r}
+
+pp <- pars.hc
+X <- pars_to_arrays(pp, 4) %>% reoder_lambdas(., c(1,3, 2,4))
+X <- names2array(X, c('A0', 'B0',   'A1',  'B1'))
+
+```
+
+
 ### EHE8-C (2 pars)
 
 Now we create EHE8-C by decomposing our known parameter estimates into just two parameters: (1.) speciation and transitions rates equal to 0.1; and extinction equal to 0.01.
@@ -290,6 +301,18 @@ for (i in 1:NSIM){
   EHE8_C.pars[[i]] <- lik.c(pars.hc, intermediates=F, root=ROOT.GIVEN, root.p=root, condition.surv=T)
   
 }
+
+```
+
+
+
+Print nice to show matrix structure only
+
+```{r}
+
+pp <- pars.hc
+X <- pars_to_arrays(pp, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+X <- names2array(X, c('a0', 'b0', 'c0',  'd0',  'a1',  'b1',  'c1',  'd1'))
 
 ```
 

@@ -1132,12 +1132,16 @@ get_aic(SEM8$lnLik, 4)
 
 
 ```{r}
+
+# SEM8$par
+
 # a0 a1 b0 b1 c0 c1 d0 d1
 ar=names2array(args$arrays, c('a0', 'a1', 'b0', 'b1', 'c0', 'c1', 'd0', 'd1'))
 ar.re=reoder_lambdas(ar, c(1,3,5,7, 2,4,6,8))
 #ar.re$lam.tensor
 
 element <- c(
+'lam000',
 'lam002', 
 'lam022', 
 'lam200', 
@@ -1158,6 +1162,17 @@ find_elements(ar.re$lam.tensor, element)
 
 
 ```
+
+Print nice to show matrix structure only
+
+```{r}
+
+pp <- SEM8$par.full*100
+X <- pars_to_arrays(pp, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+X <- names2array(X, c('a0', 'b0', 'c0',  'd0',  'a1',  'b1',  'c1',  'd1'))
+
+```
+
 
 
 
@@ -1235,7 +1250,12 @@ cols<-setNames(c("#000000","#E65100"), c("0","1"))
 # png("Figs/Phasmatodea.png")
 # plot(simmap, cols, type='fan', pts=F, ftype="off",lwd=5, outline=F)
 # dev.off()
+
+pdf("Figs/Phasmatodea.pdf")  # open a PDF device
+plot(simmap, cols, type = 'fan', pts = FALSE, ftype = "off", lwd = 5, outline = FALSE)
+dev.off()  # close the device
 ```
+
 
 
 

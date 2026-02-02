@@ -441,6 +441,18 @@ element <- c(
 find_elements(ar.re$lam.tensor, element)
 ```
 
+
+Print nice to show matrix structure only
+
+```{r}
+
+pp <- pars.hc
+X <- pars_to_arrays(pp, 8) %>% reoder_lambdas(., c(1,3,5,7, 2,4,6,8))
+X <- names2array(X, c('a0', 'b0', 'c0',  'd0',  'a1',  'b1',  'c1',  'd1'))
+
+```
+
+
 Run inference
 
 ```{r, eval=FALSE}
