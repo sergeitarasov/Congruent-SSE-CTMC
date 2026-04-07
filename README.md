@@ -60,6 +60,7 @@ A quick demo can be run using `Rmd/02-BiSSE.Rmd`.
   - 01-Validation.html
   - 02-BiSSE.html
   - 03-CID.html
+  - 03.1-CD.html
   - 04-EHE.html
   - 05-Semi_Congruent.html
   - 06-Empirical.html
